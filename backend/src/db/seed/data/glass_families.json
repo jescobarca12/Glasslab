@@ -1,0 +1,278 @@
+{
+  "version": "1.0",
+  "nota": "Estas familias describen conceptos de composición, NO especificaciones definitivas. Ningún espesor, referencia comercial ni configuración final debe asumirse sin validación de un profesional competente y del fabricante.",
+  "familias": [
+    {
+      "id": "monolitico",
+      "nombre": "Vidrio monolítico (float)",
+      "categoria": "Base",
+      "descripcion": "Vidrio float simple sin tratamiento térmico ni composición adicional.",
+      "ventajas": [
+        "Máxima claridad óptica",
+        "Económico",
+        "Amplia disponibilidad"
+      ],
+      "limitaciones": [
+        "No es vidrio de seguridad: fractura en fragmentos cortantes",
+        "Sin control solar, térmico ni acústico adicional",
+        "No apto donde exista riesgo de impacto humano o caída"
+      ],
+      "normas_referencia": [
+        "NTC 1578 (no clasifica como seguridad)"
+      ]
+    },
+    {
+      "id": "templado",
+      "nombre": "Vidrio templado (tempered)",
+      "categoria": "Seguridad",
+      "descripcion": "Tratamiento térmico que induce tensiones de compresión superficial, aumentando la resistencia mecánica y generando fractura en fragmentos pequeños romos.",
+      "ventajas": [
+        "Resistencia mecánica varias veces mayor al monolítico",
+        "Fractura en fragmentos de baja peligrosidad (vidrio de seguridad)",
+        "Resiste choque térmico"
+      ],
+      "limitaciones": [
+        "No se puede cortar, perforar ni pulir después del temple",
+        "Riesgo de rotura espontánea por inclusiones de sulfuro de níquel (NiS)",
+        "No garantiza permanencia en el vano posrotura por sí solo"
+      ],
+      "normas_referencia": [
+        "NTC 1578",
+        "ASTM C1048",
+        "EN 12150"
+      ]
+    },
+    {
+      "id": "termoendurecido",
+      "nombre": "Vidrio termoendurecido (heat-strengthened)",
+      "categoria": "Resistencia intermedia",
+      "descripcion": "Tratamiento térmico intermedio entre el monolítico y el templado.",
+      "ventajas": [
+        "Mayor resistencia mecánica que el monolítico",
+        "Menor riesgo de rotura espontánea por NiS que el templado"
+      ],
+      "limitaciones": [
+        "Fractura en fragmentos grandes similares al monolítico (no siempre clasifica como vidrio de seguridad)",
+        "Uso típico limitado a aplicaciones específicas de control de alabeo"
+      ],
+      "normas_referencia": [
+        "ASTM C1048 tipo Heat-Strengthened"
+      ]
+    },
+    {
+      "id": "laminado",
+      "nombre": "Vidrio laminado",
+      "categoria": "Seguridad / acústico",
+      "descripcion": "Dos o más láminas de vidrio unidas mediante una o varias interláminas (PVB, ionoplástica u otras).",
+      "ventajas": [
+        "Retiene fragmentos tras la rotura",
+        "Puede aportar reducción acústica según la interlámina",
+        "Bloquea gran parte de la radiación UV"
+      ],
+      "limitaciones": [
+        "Mayor peso y costo que el monolítico",
+        "El desempeño acústico/UV depende del tipo y espesor de interlámina, no solo del vidrio"
+      ],
+      "normas_referencia": [
+        "NTC 1578",
+        "EN 12600",
+        "ANSI Z97.1"
+      ]
+    },
+    {
+      "id": "templado_laminado",
+      "nombre": "Vidrio templado laminado",
+      "categoria": "Seguridad estructural",
+      "descripcion": "Combinación de láminas templadas unidas por interlámina.",
+      "ventajas": [
+        "Alta resistencia mecánica del templado + retención posrotura del laminado",
+        "Aplicable en barandas y zonas con riesgo de caída"
+      ],
+      "limitaciones": [
+        "Costo elevado",
+        "La permanencia posrotura estructural debe validarse con cálculo específico, no se asume automáticamente"
+      ],
+      "normas_referencia": [
+        "NTC 1578",
+        "EN 12600"
+      ]
+    },
+    {
+      "id": "multilaminado",
+      "nombre": "Vidrio multilaminado (3+ láminas)",
+      "categoria": "Alta exigencia estructural",
+      "descripcion": "Composición de tres o más láminas laminadas, usada en pisos, escaleras y cerramientos de alta exigencia.",
+      "ventajas": [
+        "Capacidad de carga residual si una lámina falla",
+        "Adecuado para aplicaciones transitables u horizontales"
+      ],
+      "limitaciones": [
+        "Peso elevado",
+        "Requiere diseño estructural específico del sistema de apoyo"
+      ],
+      "normas_referencia": [
+        "Verificación estructural especializada por aplicación"
+      ]
+    },
+    {
+      "id": "control_solar",
+      "nombre": "Vidrio de control solar",
+      "categoria": "Desempeño térmico-solar",
+      "descripcion": "Vidrio con recubrimiento (pirolítico o magnetrónico) o masa coloreada que reduce el factor solar (g/SHGC).",
+      "ventajas": [
+        "Reduce la ganancia de calor solar",
+        "Puede reducir el deslumbramiento"
+      ],
+      "limitaciones": [
+        "Puede reducir la transmisión luminosa",
+        "Puede alterar el color percibido desde el interior y el exterior"
+      ],
+      "normas_referencia": [
+        "Resolución 0549 de 2015 (MVCT)"
+      ]
+    },
+    {
+      "id": "lowe",
+      "nombre": "Vidrio Low-E (baja emisividad)",
+      "categoria": "Desempeño térmico",
+      "descripcion": "Vidrio con recubrimiento de baja emisividad que mejora el aislamiento térmico manteniendo alta transmisión luminosa.",
+      "ventajas": [
+        "Mejora la transmitancia térmica (U)",
+        "Mantiene buena entrada de luz natural"
+      ],
+      "limitaciones": [
+        "El desempeño depende de la posición del recubrimiento y de si va en cámara (DVH)",
+        "Selectividad luz/calor variable según el producto"
+      ],
+      "normas_referencia": [
+        "Resolución 0549 de 2015 (MVCT)",
+        "EDGE",
+        "LEED"
+      ]
+    },
+    {
+      "id": "dvh",
+      "nombre": "DVH — Doble vidriado hermético",
+      "categoria": "Aislamiento térmico/acústico",
+      "descripcion": "Dos vidrios separados por una cámara de aire o gas sellada herméticamente.",
+      "ventajas": [
+        "Mejora el aislamiento térmico",
+        "Aporta cierta mejora acústica",
+        "Reduce condensación superficial interior"
+      ],
+      "limitaciones": [
+        "El sello perimetral es crítico: una falla genera empañamiento interno irreversible",
+        "Mayor peso y espesor total"
+      ],
+      "normas_referencia": [
+        "Resolución 0549 de 2015 (MVCT)"
+      ]
+    },
+    {
+      "id": "dvh_laminado",
+      "nombre": "DVH con vidrio laminado",
+      "categoria": "Aislamiento + seguridad",
+      "descripcion": "Unidad de doble vidriado hermético donde al menos una de las hojas es laminada.",
+      "ventajas": [
+        "Combina aislamiento térmico con seguridad y/o acústica",
+        "Adecuado para fachadas y muros cortina de alto desempeño"
+      ],
+      "limitaciones": [
+        "Mayor costo y peso: la perfilería debe soportar la carga adicional",
+        "Mayor complejidad de fabricación e instalación"
+      ],
+      "normas_referencia": [
+        "NTC 1578",
+        "Resolución 0549 de 2015 (MVCT)"
+      ]
+    },
+    {
+      "id": "acustico",
+      "nombre": "Vidrio acústico (laminado especial)",
+      "categoria": "Confort acústico",
+      "descripcion": "Vidrio laminado con interlámina especial o composición asimétrica de espesores, optimizado para atenuación sonora.",
+      "ventajas": [
+        "Mayor reducción de decibeles que un laminado estándar",
+        "Útil en corredores viales, zonas aeroportuarias e industriales"
+      ],
+      "limitaciones": [
+        "El desempeño real depende del sistema completo: marco, sellos perimetrales y calidad de instalación, no solo del vidrio",
+        "Frecuencias bajas (tráfico pesado, aeronaves) requieren diseño especializado"
+      ],
+      "normas_referencia": [
+        "ISO 717-1 (índice Rw)",
+        "NTC"
+      ]
+    },
+    {
+      "id": "serigrafiado",
+      "nombre": "Vidrio serigrafiado",
+      "categoria": "Estética / privacidad",
+      "descripcion": "Vidrio con esmalte cerámico horneado en patrones, colores o superficie completa.",
+      "ventajas": [
+        "Control de privacidad",
+        "Valor estético y de marca",
+        "Puede aportar algo de control solar según el color/cobertura"
+      ],
+      "limitaciones": [
+        "No mejora de forma significativa el desempeño térmico o acústico por sí solo",
+        "Debe combinarse con templado/laminado si hay exigencia de seguridad"
+      ],
+      "normas_referencia": [
+        "NTC"
+      ]
+    },
+    {
+      "id": "impreso",
+      "nombre": "Vidrio impreso / grabado",
+      "categoria": "Estética / privacidad",
+      "descripcion": "Vidrio con textura o patrón impreso, grabado ácido o esmerilado.",
+      "ventajas": [
+        "Privacidad con difusión de luz natural",
+        "Valor estético"
+      ],
+      "limitaciones": [
+        "No es vidrio de seguridad por defecto",
+        "Debe combinarse con templado o laminado si existe riesgo de impacto"
+      ],
+      "normas_referencia": [
+        "NTC"
+      ]
+    },
+    {
+      "id": "curvo",
+      "nombre": "Vidrio curvo",
+      "categoria": "Geometría especial",
+      "descripcion": "Vidrio conformado en frío o en caliente según un radio de curvatura definido.",
+      "ventajas": [
+        "Permite geometrías curvas en fachadas, cerramientos y muros cortina"
+      ],
+      "limitaciones": [
+        "Mayores tolerancias dimensionales",
+        "Disponibilidad limitada de proveedores y radios mínimos de fabricación",
+        "Costos y tiempos de producción más altos"
+      ],
+      "normas_referencia": [
+        "Verificación de radios mínimos directamente con el fabricante"
+      ]
+    },
+    {
+      "id": "seguridad_especial",
+      "nombre": "Vidrio de seguridad especial",
+      "categoria": "Protección extrema",
+      "descripcion": "Composiciones especiales orientadas a resistencia balística, anti-vandalismo o resistencia a explosión.",
+      "ventajas": [
+        "Máxima protección ante amenazas específicas definidas por un estudio de riesgo"
+      ],
+      "limitaciones": [
+        "Peso y costo muy elevados",
+        "Requiere diseño certificado de todo el sistema: marco, anclaje y muro de soporte, no solo del vidrio"
+      ],
+      "normas_referencia": [
+        "UL 752",
+        "EN 1063",
+        "Norma específica según nivel de amenaza definido por el especialista de seguridad"
+      ]
+    }
+  ]
+}

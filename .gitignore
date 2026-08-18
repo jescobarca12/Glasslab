@@ -1,0 +1,26 @@
+# Dependencias
+node_modules/
+
+# Builds
+dist/
+build/
+
+# Variables de entorno / secretos
+.env
+.env.*
+!.env.example
+
+# Integraciones (bandeja de salida local)
+.outbox/
+
+# Vercel
+.vercel/
+
+# Estado local del agente
+.claude/
+
+# Logs y temporales
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db

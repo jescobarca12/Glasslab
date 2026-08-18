@@ -1,0 +1,112 @@
+{
+  "version": "1.0",
+  "retos": [
+    {
+      "id": "reto1",
+      "titulo": "Habitación de hotel cerca de un aeropuerto",
+      "narrativa": "Un hotel de negocios tiene habitaciones a 900 m de la cabecera de pista. Los huéspedes se quejan del ruido de despegue desde temprano.",
+      "aplicacion": "ventana",
+      "ciudadSugerida": "barranquilla",
+      "prefill": {
+        "usoInterior": "hospedaje",
+        "fuenteSonora": "aeropuerto",
+        "nivelExteriorDb": 78,
+        "horario": "madrugada y mañana",
+        "confortEsperadoDb": 35,
+        "estudioAcustico": false
+      }
+    },
+    {
+      "id": "reto2",
+      "titulo": "Fachada occidental en clima cálido",
+      "narrativa": "Un edificio de oficinas con el 60% de fachada occidental acristalada reporta sobrecalentamiento cada tarde y sobrecostos de climatización.",
+      "aplicacion": "fachada",
+      "ciudadSugerida": "cucuta",
+      "prefill": {
+        "orientacion": "occidente",
+        "pctFachadaAcristalada": 60,
+        "aireAcondicionado": true,
+        "transmisionDeseada": "media",
+        "nivelControlSolar": "alto"
+      }
+    },
+    {
+      "id": "reto3",
+      "titulo": "Baranda exterior en edificio alto",
+      "narrativa": "Baranda de vidrio en la terraza del piso 22 de un edificio residencial, sin dato de presión de viento de diseño todavía.",
+      "aplicacion": "baranda",
+      "ciudadSugerida": "cali",
+      "prefill": {
+        "riesgoCaida": true,
+        "alturaDesdePiso": 66,
+        "presionVientoConocida": false,
+        "permanenciaPosrotura": true
+      }
+    },
+    {
+      "id": "reto4",
+      "titulo": "Clínica próxima a una avenida",
+      "narrativa": "Ampliación de un área de hospitalización con ventanas hacia una avenida de tráfico denso.",
+      "aplicacion": "ventana",
+      "ciudadSugerida": "bogota",
+      "prefill": {
+        "usoInterior": "salud",
+        "nivelExteriorDb": 76,
+        "fuenteSonora": "trafico_vehicular",
+        "confortEsperadoDb": 35
+      }
+    },
+    {
+      "id": "reto5",
+      "titulo": "Ventana con riesgo de condensación",
+      "narrativa": "Apartamento en ciudad fría con calefacción activa; el propietario reporta vidrios empañados todas las mañanas.",
+      "aplicacion": "ventana",
+      "ciudadSugerida": "pasto",
+      "prefill": {
+        "tempInterior": 21,
+        "tempExterior": 7,
+        "humedadInterior": 60,
+        "climatizacion": "calefaccion",
+        "cercaniaMar": false,
+        "perfileria": "aluminio_simple"
+      }
+    },
+    {
+      "id": "reto6",
+      "titulo": "Fachada de alta transparencia y bajo deslumbramiento",
+      "narrativa": "Un edificio corporativo insignia exige máxima transparencia visual, apariencia neutra y baja reflexión exterior.",
+      "aplicacion": "fachada",
+      "ciudadSugerida": "medellin",
+      "prefill": {
+        "transmisionDeseada": "alta",
+        "nivelControlSolar": "alto",
+        "apariencia": "neutra",
+        "reflexionMaxima": 12
+      }
+    },
+    {
+      "id": "reto7",
+      "titulo": "Proyecto ubicado en zona sísmica alta",
+      "narrativa": "Muro cortina de 18 pisos en una ciudad clasificada en zona de amenaza sísmica alta según el NSR-10.",
+      "aplicacion": "muro_cortina",
+      "ciudadSugerida": "cali",
+      "prefill": {
+        "zonaSismica": "alta",
+        "movimientoEntrePisos": true,
+        "presionVientoConocida": false
+      }
+    },
+    {
+      "id": "reto8",
+      "titulo": "Cubierta de vidrio sobre zona de circulación",
+      "narrativa": "Lucernario/cubierta vidriada sobre el lobby principal, con alto tránsito peatonal debajo.",
+      "aplicacion": "cubierta",
+      "ciudadSugerida": "medellin",
+      "prefill": {
+        "aplicacionSobreCabeza": true,
+        "presionVientoConocida": false,
+        "riesgoImpactoHumano": false
+      }
+    }
+  ]
+}

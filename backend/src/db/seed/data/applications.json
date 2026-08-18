@@ -1,0 +1,96 @@
+{
+  "version": "1.0",
+  "aplicaciones": [
+    {
+      "id": "ventana",
+      "nombre": "Ventana",
+      "icono": "🪟",
+      "profundidad": "completa"
+    },
+    {
+      "id": "puerta",
+      "nombre": "Puerta",
+      "icono": "🚪",
+      "profundidad": "basica"
+    },
+    {
+      "id": "fachada",
+      "nombre": "Fachada",
+      "icono": "🏢",
+      "profundidad": "completa"
+    },
+    {
+      "id": "muro_cortina",
+      "nombre": "Muro cortina",
+      "icono": "🏙️",
+      "profundidad": "completa"
+    },
+    {
+      "id": "baranda",
+      "nombre": "Baranda",
+      "icono": "🛡️",
+      "profundidad": "completa"
+    },
+    {
+      "id": "cubierta",
+      "nombre": "Cubierta",
+      "icono": "☂️",
+      "profundidad": "completa"
+    },
+    {
+      "id": "marquesina",
+      "nombre": "Marquesina",
+      "icono": "🏛️",
+      "profundidad": "basica"
+    },
+    {
+      "id": "division_bano",
+      "nombre": "División de baño",
+      "icono": "🚿",
+      "profundidad": "basica"
+    },
+    {
+      "id": "division_interior",
+      "nombre": "División interior",
+      "icono": "🧱",
+      "profundidad": "basica"
+    },
+    {
+      "id": "vitrina",
+      "nombre": "Vitrina",
+      "icono": "🏪",
+      "profundidad": "basica"
+    },
+    {
+      "id": "ascensor",
+      "nombre": "Ascensor",
+      "icono": "🛗",
+      "profundidad": "basica"
+    },
+    {
+      "id": "piso",
+      "nombre": "Piso",
+      "icono": "⬛",
+      "profundidad": "basica"
+    },
+    {
+      "id": "lucernario",
+      "nombre": "Lucernario",
+      "icono": "🔆",
+      "profundidad": "completa"
+    },
+    {
+      "id": "sistema_curvo",
+      "nombre": "Sistema curvo",
+      "icono": "🌀",
+      "profundidad": "basica"
+    },
+    {
+      "id": "cerramiento_acustico",
+      "nombre": "Cerramiento acústico",
+      "icono": "🔇",
+      "profundidad": "basica"
+    }
+  ],
+  "nota": "Las aplicaciones marcadas 'completa' tienen un conjunto de reglas específico más profundo en esta versión (MVP). Las marcadas 'basica' usan el motor de reglas general (necesidades, seguridad, geometría) con menor profundidad especializada; se ampliarán en futuras versiones."
+}

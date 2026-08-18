@@ -1,0 +1,92 @@
+{
+  "version": "1.0",
+  "nota": "Textos de preguntas editables desde el Panel administrativo → Preguntas. Los cambios se guardan como una superposición local (localStorage) sin modificar este archivo original.",
+  "registro": {
+    "nombre": "Nombre del proyecto",
+    "ciudad": "Ciudad",
+    "direccion": "Dirección o ubicación",
+    "tipoProyecto": "Tipo de proyecto",
+    "etapa": "Etapa del proyecto",
+    "alturaTotal": "Altura total del edificio (m)",
+    "pisoAplicacion": "Piso donde se ubica la aplicación",
+    "m2": "Metros cuadrados estimados del vidrio",
+    "usoEspacio": "Uso del espacio"
+  },
+  "geometria": {
+    "ancho": "Ancho (m)",
+    "alto": "Alto (m)",
+    "area": "Área (m²)",
+    "modulos": "Cantidad de módulos",
+    "forma": "Forma",
+    "radio": "Radio de curvatura (m)",
+    "perforaciones": "¿Tiene perforaciones?",
+    "alturaDesdePiso": "Altura desde el piso (m)",
+    "sistemaApoyo": "Sistema de apoyo",
+    "numLadosApoyados": "Número de lados apoyados",
+    "tipoFijacion": "Tipo de fijación",
+    "ubicacion": "Interior o exterior"
+  },
+  "necesidades": {
+    "titulo": "Necesidades del proyecto (selección múltiple)",
+    "opciones": {
+      "seguridad": "Seguridad",
+      "control_solar": "Control solar",
+      "aislamiento_termico": "Aislamiento térmico",
+      "confort_acustico": "Confort acústico",
+      "control_condensacion": "Control de condensación",
+      "resistencia_estructural": "Resistencia estructural",
+      "proteccion_posrotura": "Protección posrotura",
+      "privacidad": "Privacidad",
+      "color": "Color",
+      "neutralidad": "Neutralidad",
+      "baja_reflexion": "Baja reflexión",
+      "alta_transmision": "Alta transmisión luminosa",
+      "sostenibilidad": "Sostenibilidad",
+      "proteccion_vandalismo": "Protección contra vandalismo"
+    }
+  },
+  "acustico": {
+    "fuenteSonora": "Tipo de fuente sonora",
+    "nivelExteriorDb": "Nivel exterior conocido o estimado (dB)",
+    "horario": "Horario predominante de la fuente",
+    "distanciaFuente": "Distancia aproximada a la fuente (m)",
+    "usoInterior": "Uso interior del espacio",
+    "confortEsperadoDb": "Confort esperado al interior (dB máx.)",
+    "estudioAcustico": "¿Existe un estudio acústico del proyecto?"
+  },
+  "solar": {
+    "orientacion": "Orientación predominante",
+    "pctFachadaAcristalada": "Porcentaje de fachada acristalada (%)",
+    "aireAcondicionado": "¿Se usará aire acondicionado?",
+    "tempObjetivo": "Temperatura interior objetivo (°C)",
+    "sombrasExteriores": "¿Existen sombras exteriores (voladizos, parasoles, vegetación)?",
+    "transmisionDeseada": "Transmisión luminosa deseada",
+    "nivelControlSolar": "Nivel de control solar deseado",
+    "apariencia": "Apariencia deseada",
+    "reflexionMaxima": "Reflexión exterior máxima deseada (%)",
+    "valorU": "Valor U conocido (W/m²K)",
+    "SHGC": "SHGC / factor solar conocido",
+    "coefSombra": "Coeficiente de sombra conocido"
+  },
+  "condensacion": {
+    "tempInterior": "Temperatura interior (°C)",
+    "tempExterior": "Temperatura exterior (°C)",
+    "humedadInterior": "Humedad relativa interior (%)",
+    "climatizacion": "Tipo de climatización",
+    "perfileria": "Tipo de perfilería / composición del vidrio",
+    "cercaniaMar": "¿El proyecto está cerca del mar?"
+  },
+  "seguridad": {
+    "riesgoImpactoHumano": "¿Existe riesgo de impacto humano?",
+    "riesgoCaida": "¿Existe riesgo de caída?",
+    "aplicacionSobreCabeza": "¿La aplicación queda sobre zonas de circulación de personas (sobre cabeza)?",
+    "presenciaNinos": "¿Hay presencia habitual de niños?",
+    "zonaHumeda": "¿Es una zona húmeda (baño, piscina)?",
+    "presionVientoConocida": "¿Se conoce la presión de viento de diseño?",
+    "cargaConocida": "Carga lineal o puntual conocida (si aplica)",
+    "movimientoEntrePisos": "¿Aplica movimiento/desplazamiento entre pisos (edificios altos)?",
+    "zonaSismica": "Zona sísmica (según NSR-10, autocompletada por ciudad; puede ajustarse)",
+    "tipoAnclaje": "Tipo de anclaje previsto",
+    "permanenciaPosrotura": "¿Se requiere permanencia en el vano posrotura?"
+  }
+}

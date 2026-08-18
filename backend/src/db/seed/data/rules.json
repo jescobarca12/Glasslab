@@ -1,0 +1,1064 @@
+{
+  "version": "1.0",
+  "fechaActualizacion": "2026-07-22",
+  "esquema": {
+    "campos": [
+      "id",
+      "nombre",
+      "aplicacion",
+      "condiciones",
+      "nivelRiesgo",
+      "preguntasAdicionales",
+      "familiasCompatibles",
+      "familiasNoRecomendadas",
+      "explicacionTecnica",
+      "advertencia",
+      "normaRelacionada",
+      "versionNorma",
+      "fechaActualizacion",
+      "profesionalRequerido"
+    ],
+    "operadores": [
+      "eq",
+      "neq",
+      "gte",
+      "lte",
+      "gt",
+      "lt",
+      "in",
+      "nin",
+      "exists",
+      "true",
+      "false"
+    ],
+    "nota": "Las condiciones de una regla se combinan con AND. El motor evalúa contra el objeto de respuestas aplanado del usuario. Editable desde el Panel administrativo."
+  },
+  "reglas": [
+    {
+      "id": "R-AC-01",
+      "nombre": "Ruido exterior alto en fachada acristalada",
+      "aplicacion": [
+        "ventana",
+        "fachada",
+        "muro_cortina",
+        "cerramiento_acustico"
+      ],
+      "condiciones": [
+        {
+          "campo": "nivelExteriorDb",
+          "operador": "gte",
+          "valor": 70
+        }
+      ],
+      "nivelRiesgo": "alto",
+      "preguntasAdicionales": [
+        "¿Existe estudio acústico del proyecto?",
+        "¿La fuente es de baja frecuencia (tráfico pesado, industria)?"
+      ],
+      "familiasCompatibles": [
+        "acustico",
+        "laminado",
+        "dvh_laminado"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico",
+        "templado"
+      ],
+      "explicacionTecnica": "Con niveles exteriores ≥70 dB, el vidrio simple o templado no ofrece atenuación suficiente. El desempeño acústico depende de la composición completa: asimetría de espesores, tipo de interlámina, cámara de aire y, de forma crítica, los sellos perimetrales y la calidad de instalación.",
+      "advertencia": "El índice de atenuación (Rw) de catálogo se mide en laboratorio; el desempeño real en obra puede ser menor si el marco o la instalación no acompañan al vidrio.",
+      "normaRelacionada": "ISO 717-1 / NTC",
+      "versionNorma": "vigente",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Consultor acústico"
+    },
+    {
+      "id": "R-AC-02",
+      "nombre": "Ruido exterior medio",
+      "aplicacion": [
+        "ventana",
+        "fachada",
+        "muro_cortina"
+      ],
+      "condiciones": [
+        {
+          "campo": "nivelExteriorDb",
+          "operador": "gte",
+          "valor": 55
+        },
+        {
+          "campo": "nivelExteriorDb",
+          "operador": "lt",
+          "valor": 70
+        }
+      ],
+      "nivelRiesgo": "medio",
+      "preguntasAdicionales": [
+        "¿Cuál es el uso interior del espacio (dormitorio, oficina, aula)?"
+      ],
+      "familiasCompatibles": [
+        "laminado",
+        "dvh",
+        "acustico"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico"
+      ],
+      "explicacionTecnica": "Niveles moderados de ruido exterior suelen resolverse con vidrio laminado estándar o DVH, dependiendo del confort esperado en el interior.",
+      "advertencia": "Confirmar el nivel de confort exigido según el uso (aula, dormitorio, oficina) antes de definir la composición.",
+      "normaRelacionada": "NTC",
+      "versionNorma": "vigente",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Consultor acústico (recomendado, no obligatorio)"
+    },
+    {
+      "id": "R-AC-03",
+      "nombre": "Uso hospitalario con ruido relevante",
+      "aplicacion": [
+        "ventana",
+        "fachada"
+      ],
+      "condiciones": [
+        {
+          "campo": "usoInterior",
+          "operador": "eq",
+          "valor": "salud"
+        },
+        {
+          "campo": "nivelExteriorDb",
+          "operador": "gte",
+          "valor": 55
+        }
+      ],
+      "nivelRiesgo": "alto",
+      "preguntasAdicionales": [
+        "¿El área es de hospitalización, cirugía o urgencias?"
+      ],
+      "familiasCompatibles": [
+        "acustico",
+        "dvh_laminado"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico",
+        "templado"
+      ],
+      "explicacionTecnica": "Los espacios de salud combinan exigencia acústica con hermeticidad para control de infecciones y estabilidad térmica.",
+      "advertencia": "Verificar los estándares de confort ambiental del Ministerio de Salud aplicables al tipo de área.",
+      "normaRelacionada": "Resolución 2003 de 2014 (MinSalud)",
+      "versionNorma": "2014",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Consultor acústico + arquitecto especializado en salud"
+    },
+    {
+      "id": "R-AC-04",
+      "nombre": "Fuente sonora aeroportuaria",
+      "aplicacion": [
+        "ventana",
+        "fachada",
+        "muro_cortina"
+      ],
+      "condiciones": [
+        {
+          "campo": "fuenteSonora",
+          "operador": "eq",
+          "valor": "aeropuerto"
+        }
+      ],
+      "nivelRiesgo": "alto",
+      "preguntasAdicionales": [
+        "¿Distancia aproximada a la cabecera de pista?",
+        "¿Existen restricciones de ruido aeroportuario en el POT local?"
+      ],
+      "familiasCompatibles": [
+        "acustico",
+        "dvh_laminado"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico",
+        "templado",
+        "laminado estándar sin diseño acústico"
+      ],
+      "explicacionTecnica": "El ruido aeroportuario incluye componentes de baja frecuencia difíciles de atenuar con vidrio laminado estándar; suele requerir composiciones asimétricas específicas.",
+      "advertencia": "Este escenario requiere obligatoriamente un estudio acústico especializado; no se recomienda especificar sin dicho estudio.",
+      "normaRelacionada": "ISO 717-1 / normativa aeroportuaria local",
+      "versionNorma": "vigente",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Consultor acústico especializado en ruido aeroportuario"
+    },
+    {
+      "id": "R-SOL-01",
+      "nombre": "Fachada occidente/suroccidente muy acristalada",
+      "aplicacion": [
+        "ventana",
+        "fachada",
+        "muro_cortina",
+        "vitrina"
+      ],
+      "condiciones": [
+        {
+          "campo": "orientacion",
+          "operador": "in",
+          "valor": [
+            "occidente",
+            "suroccidente"
+          ]
+        },
+        {
+          "campo": "pctFachadaAcristalada",
+          "operador": "gte",
+          "valor": 40
+        }
+      ],
+      "nivelRiesgo": "alto",
+      "preguntasAdicionales": [
+        "¿Existen elementos de sombra exterior (voladizos, parasoles)?"
+      ],
+      "familiasCompatibles": [
+        "control_solar",
+        "lowe",
+        "dvh"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico"
+      ],
+      "explicacionTecnica": "La orientación occidente combinada con alto porcentaje de área acristalada genera sobrecalentamiento por radiación solar directa en horas de la tarde.",
+      "advertencia": "El control solar del vidrio no sustituye la protección solar exterior (voladizos, parasoles) cuando es viable incluirla en el diseño arquitectónico.",
+      "normaRelacionada": "Resolución 0549 de 2015 (MVCT)",
+      "versionNorma": "2015",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Arquitecto / consultor de eficiencia energética"
+    },
+    {
+      "id": "R-SOL-02",
+      "nombre": "Clima cálido con climatización activa",
+      "aplicacion": [
+        "ventana",
+        "fachada",
+        "muro_cortina",
+        "vitrina",
+        "cubierta",
+        "lucernario"
+      ],
+      "condiciones": [
+        {
+          "campo": "climaCiudad",
+          "operador": "in",
+          "valor": [
+            "calido"
+          ]
+        },
+        {
+          "campo": "aireAcondicionado",
+          "operador": "true"
+        }
+      ],
+      "nivelRiesgo": "medio",
+      "preguntasAdicionales": [
+        "¿Se conoce el valor SHGC o factor solar objetivo?"
+      ],
+      "familiasCompatibles": [
+        "control_solar",
+        "lowe",
+        "dvh"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico"
+      ],
+      "explicacionTecnica": "En clima cálido con climatización mecánica, el factor solar del vidrio incide directamente en la carga de enfriamiento y el consumo energético del edificio.",
+      "advertencia": "El cumplimiento normativo de ahorro energético depende del conjunto del proyecto (envolvente, orientación, sombras), no solo del vidrio.",
+      "normaRelacionada": "Resolución 0549 de 2015 (MVCT)",
+      "versionNorma": "2015",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Consultor de eficiencia energética / EDGE-LEED"
+    },
+    {
+      "id": "R-SOL-03",
+      "nombre": "Clima frío de altura",
+      "aplicacion": [
+        "ventana",
+        "fachada",
+        "muro_cortina"
+      ],
+      "condiciones": [
+        {
+          "campo": "climaCiudad",
+          "operador": "eq",
+          "valor": "frio"
+        }
+      ],
+      "nivelRiesgo": "medio",
+      "preguntasAdicionales": [
+        "¿Se conoce el valor U objetivo del sistema?"
+      ],
+      "familiasCompatibles": [
+        "dvh",
+        "lowe"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico"
+      ],
+      "explicacionTecnica": "En clima frío de alta montaña la prioridad es reducir la transmitancia térmica (U) y evitar pérdidas de calor y condensación interior, más que el control solar.",
+      "advertencia": "Revisar simultáneamente el riesgo de condensación: mejorar el aislamiento sin ventilación adecuada puede desplazar el punto de condensación.",
+      "normaRelacionada": "Resolución 0549 de 2015 (MVCT)",
+      "versionNorma": "2015",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Arquitecto / consultor de eficiencia energética"
+    },
+    {
+      "id": "R-SOL-04",
+      "nombre": "Conflicto transparencia alta vs. control solar alto",
+      "aplicacion": [
+        "ventana",
+        "fachada",
+        "muro_cortina",
+        "vitrina"
+      ],
+      "condiciones": [
+        {
+          "campo": "transmisionDeseada",
+          "operador": "eq",
+          "valor": "alta"
+        },
+        {
+          "campo": "nivelControlSolar",
+          "operador": "eq",
+          "valor": "alto"
+        }
+      ],
+      "nivelRiesgo": "medio",
+      "preguntasAdicionales": [
+        "¿Es prioritaria la vista/transparencia o el ahorro energético?"
+      ],
+      "familiasCompatibles": [
+        "lowe"
+      ],
+      "familiasNoRecomendadas": [
+        "control_solar de alta reflexión"
+      ],
+      "explicacionTecnica": "Alta transmisión luminosa y bajo factor solar son parcialmente contrapuestos. La relación entre ambos (selectividad = LT/SHGC) determina qué tan bien un vidrio Low-E de alta selectividad puede acercarse a ambos objetivos simultáneamente.",
+      "advertencia": "No existe un vidrio que maximice ambos parámetros sin compromiso; se debe priorizar con el cliente cuál objetivo pesa más.",
+      "normaRelacionada": "N/A — criterio de desempeño",
+      "versionNorma": "—",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Asesor técnico de producto"
+    },
+    {
+      "id": "R-SOL-05",
+      "nombre": "Apariencia neutra con baja reflexión",
+      "aplicacion": [
+        "ventana",
+        "fachada",
+        "muro_cortina",
+        "vitrina"
+      ],
+      "condiciones": [
+        {
+          "campo": "apariencia",
+          "operador": "eq",
+          "valor": "neutra"
+        },
+        {
+          "campo": "reflexionMaxima",
+          "operador": "lte",
+          "valor": 15
+        }
+      ],
+      "nivelRiesgo": "bajo",
+      "preguntasAdicionales": [],
+      "familiasCompatibles": [
+        "lowe"
+      ],
+      "familiasNoRecomendadas": [
+        "control_solar de alta reflexión"
+      ],
+      "explicacionTecnica": "Los recubrimientos Low-E neutros permiten mantener baja reflexión exterior sin sacrificar tanto el desempeño térmico como un control solar reflectivo tradicional.",
+      "advertencia": "Confirmar con el fabricante el porcentaje de reflexión real del producto puntual, ya que varía entre líneas comerciales.",
+      "normaRelacionada": "N/A — criterio estético",
+      "versionNorma": "—",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Asesor técnico de producto"
+    },
+    {
+      "id": "R-COND-01",
+      "nombre": "Riesgo de condensación alto",
+      "aplicacion": [
+        "ventana",
+        "fachada",
+        "muro_cortina"
+      ],
+      "condiciones": [
+        {
+          "campo": "riesgoCondensacion",
+          "operador": "eq",
+          "valor": "alto"
+        }
+      ],
+      "nivelRiesgo": "alto",
+      "preguntasAdicionales": [
+        "¿La perfilería cuenta con rotura de puente térmico?",
+        "¿Existe control de humedad interior (ventilación, extracción)?"
+      ],
+      "familiasCompatibles": [
+        "dvh",
+        "lowe"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico"
+      ],
+      "explicacionTecnica": "El riesgo de condensación se estima comparando la temperatura de la superficie interior del vidrio con el punto de rocío del ambiente interior, calculado a partir de la temperatura y humedad relativa interiores.",
+      "advertencia": "Mejorar solo el vidrio sin revisar la perfilería y el control de humedad interior puede no resolver el problema.",
+      "normaRelacionada": "N/A — criterio físico (punto de rocío)",
+      "versionNorma": "—",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Arquitecto / consultor de fachada"
+    },
+    {
+      "id": "R-COND-02",
+      "nombre": "Cercanía al mar",
+      "aplicacion": [
+        "ventana",
+        "fachada",
+        "muro_cortina",
+        "baranda",
+        "puerta"
+      ],
+      "condiciones": [
+        {
+          "campo": "cercaniaMar",
+          "operador": "true"
+        }
+      ],
+      "nivelRiesgo": "medio",
+      "preguntasAdicionales": [],
+      "familiasCompatibles": [],
+      "familiasNoRecomendadas": [],
+      "explicacionTecnica": "La cercanía al mar no afecta directamente al vidrio, pero acelera la corrosión de herrajes, anclajes y perfilería metálica no protegida.",
+      "advertencia": "Especificar herrajes, anclajes y perfilería con protección anticorrosiva adecuada al ambiente marino; esto es independiente de la familia de vidrio elegida.",
+      "normaRelacionada": "N/A — criterio de durabilidad",
+      "versionNorma": "—",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Especialista en fachadas de ambiente costero"
+    },
+    {
+      "id": "R-SEG-01",
+      "nombre": "Riesgo de caída / aplicación en baranda",
+      "aplicacion": [
+        "baranda",
+        "piso",
+        "division_interior"
+      ],
+      "condiciones": [
+        {
+          "campo": "riesgoCaida",
+          "operador": "true"
+        }
+      ],
+      "nivelRiesgo": "alto",
+      "preguntasAdicionales": [
+        "¿Cuál es la altura de caída potencial?",
+        "¿El sistema requiere permanencia en el vano posrotura?"
+      ],
+      "familiasCompatibles": [
+        "templado_laminado",
+        "laminado",
+        "multilaminado"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico",
+        "templado sin laminar"
+      ],
+      "explicacionTecnica": "En aplicaciones con riesgo de caída, el sistema debe retener su integridad tras una eventual rotura, lo que exige composiciones laminadas y no solo templado simple.",
+      "advertencia": "Esta herramienta NO calcula el espesor ni la composición definitiva. La verificación de permanencia posrotura y capacidad estructural debe hacerla un ingeniero estructural o consultor de fachada.",
+      "normaRelacionada": "NTC 1578 / EN 12600",
+      "versionNorma": "vigente",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Ingeniero estructural / consultor de fachada"
+    },
+    {
+      "id": "R-SEG-02",
+      "nombre": "Aplicación sobre cabeza",
+      "aplicacion": [
+        "cubierta",
+        "lucernario",
+        "marquesina"
+      ],
+      "condiciones": [
+        {
+          "campo": "aplicacionSobreCabeza",
+          "operador": "true"
+        }
+      ],
+      "nivelRiesgo": "alto",
+      "preguntasAdicionales": [
+        "¿Existe zona de circulación de personas debajo?"
+      ],
+      "familiasCompatibles": [
+        "laminado",
+        "templado_laminado",
+        "dvh_laminado"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico",
+        "templado sin laminar"
+      ],
+      "explicacionTecnica": "En vidrio instalado sobre cabeza, un vidrio templado simple que se fracture puede caer en fragmentos; se requiere una lámina laminada que retenga los fragmentos en el sistema.",
+      "advertencia": "No calcular el espesor definitivo sin validación estructural; considerar además la carga de viento y nieve/agua acumulada según el clima local.",
+      "normaRelacionada": "NTC 1578 / EN 12600",
+      "versionNorma": "vigente",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Ingeniero estructural"
+    },
+    {
+      "id": "R-SEG-03",
+      "nombre": "Presencia de niños con riesgo de impacto",
+      "aplicacion": [
+        "ventana",
+        "puerta",
+        "division_interior",
+        "baranda",
+        "division_bano"
+      ],
+      "condiciones": [
+        {
+          "campo": "presenciaNinos",
+          "operador": "true"
+        },
+        {
+          "campo": "riesgoImpactoHumano",
+          "operador": "true"
+        }
+      ],
+      "nivelRiesgo": "alto",
+      "preguntasAdicionales": [],
+      "familiasCompatibles": [
+        "templado",
+        "laminado",
+        "templado_laminado"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico"
+      ],
+      "explicacionTecnica": "Las zonas con presencia de niños y riesgo de impacto humano requieren vidrio de seguridad clasificado según normas de impacto de cuerpo humano.",
+      "advertencia": "Confirmar la altura de instalación desde el piso; muchas normas exigen vidrio de seguridad en el rango típico de impacto (aprox. 0–1,5 m).",
+      "normaRelacionada": "NTC 1578 / ANSI Z97.1 / EN 12600",
+      "versionNorma": "vigente",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Arquitecto / consultor de seguridad en vidrio"
+    },
+    {
+      "id": "R-SEG-04",
+      "nombre": "Zona sísmica alta",
+      "aplicacion": [
+        "fachada",
+        "muro_cortina",
+        "baranda",
+        "cubierta",
+        "lucernario"
+      ],
+      "condiciones": [
+        {
+          "campo": "zonaSismica",
+          "operador": "eq",
+          "valor": "alta"
+        }
+      ],
+      "nivelRiesgo": "alto",
+      "preguntasAdicionales": [
+        "¿El sistema de anclaje contempla junta de dilatación sismo-resistente?"
+      ],
+      "familiasCompatibles": [],
+      "familiasNoRecomendadas": [],
+      "explicacionTecnica": "En zona de amenaza sísmica alta, el desempeño del sistema depende más del diseño del anclaje, la holgura perimetral y la tolerancia al desplazamiento estructural que de la familia de vidrio en sí.",
+      "advertencia": "Esta herramienta NO reemplaza el diseño sismo-resistente. El sistema de anclaje y las juntas deben ser calculados y validados por un ingeniero estructural conforme al NSR-10.",
+      "normaRelacionada": "NSR-10 Título A",
+      "versionNorma": "2010 (vigente)",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Ingeniero estructural"
+    },
+    {
+      "id": "R-SEG-05",
+      "nombre": "Movimiento entre pisos (edificios altos / muro cortina)",
+      "aplicacion": [
+        "muro_cortina",
+        "fachada"
+      ],
+      "condiciones": [
+        {
+          "campo": "movimientoEntrePisos",
+          "operador": "true"
+        }
+      ],
+      "nivelRiesgo": "alto",
+      "preguntasAdicionales": [
+        "¿Se conoce el desplazamiento relativo de piso (drift) de diseño?"
+      ],
+      "familiasCompatibles": [],
+      "familiasNoRecomendadas": [],
+      "explicacionTecnica": "Los sistemas de muro cortina en edificios altos deben absorber el desplazamiento relativo entre pisos (drift) sin transmitir esfuerzos excesivos al vidrio.",
+      "advertencia": "El drift de diseño debe ser suministrado por el ingeniero estructural del proyecto; no se debe asumir un valor genérico.",
+      "normaRelacionada": "NSR-10 Título A",
+      "versionNorma": "2010 (vigente)",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Consultor de fachada / ingeniero estructural"
+    },
+    {
+      "id": "R-SEG-06",
+      "nombre": "Presión de viento no conocida en aplicación de altura",
+      "aplicacion": [
+        "fachada",
+        "muro_cortina",
+        "baranda",
+        "cubierta",
+        "lucernario",
+        "marquesina"
+      ],
+      "condiciones": [
+        {
+          "campo": "presionVientoConocida",
+          "operador": "false"
+        },
+        {
+          "campo": "alturaDesdePiso",
+          "operador": "gte",
+          "valor": 9
+        }
+      ],
+      "nivelRiesgo": "medio",
+      "preguntasAdicionales": [],
+      "familiasCompatibles": [],
+      "familiasNoRecomendadas": [],
+      "explicacionTecnica": "A partir de cierta altura, la presión de viento de diseño se vuelve determinante para el espesor y la composición del vidrio.",
+      "advertencia": "Dato pendiente: presión de viento de diseño. No se debe calcular un espesor definitivo sin este dato, que debe obtenerse de un estudio de viento o del ingeniero estructural del proyecto.",
+      "normaRelacionada": "NSR-10 Título B (cargas de viento)",
+      "versionNorma": "2010 (vigente)",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Ingeniero estructural"
+    },
+    {
+      "id": "R-SEG-07",
+      "nombre": "Zona húmeda",
+      "aplicacion": [
+        "division_bano",
+        "puerta",
+        "ventana"
+      ],
+      "condiciones": [
+        {
+          "campo": "zonaHumeda",
+          "operador": "true"
+        }
+      ],
+      "nivelRiesgo": "medio",
+      "preguntasAdicionales": [],
+      "familiasCompatibles": [
+        "templado",
+        "laminado"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico"
+      ],
+      "explicacionTecnica": "Las zonas húmedas (baños, piscinas, duchas) requieren como mínimo vidrio de seguridad templado; si además hay riesgo de impacto relevante, se recomienda laminado.",
+      "advertencia": "Revisar también la resistencia a la corrosión de herrajes en ambientes húmedos.",
+      "normaRelacionada": "NTC 1578",
+      "versionNorma": "vigente",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Arquitecto"
+    },
+    {
+      "id": "R-SOST-01",
+      "nombre": "Necesidad de sostenibilidad",
+      "aplicacion": [
+        "ventana",
+        "fachada",
+        "muro_cortina",
+        "cubierta",
+        "lucernario"
+      ],
+      "condiciones": [
+        {
+          "campo": "necesidades",
+          "operador": "in",
+          "valor": [
+            "sostenibilidad"
+          ]
+        }
+      ],
+      "nivelRiesgo": "bajo",
+      "preguntasAdicionales": [
+        "¿El proyecto busca certificación EDGE o LEED?"
+      ],
+      "familiasCompatibles": [
+        "lowe",
+        "dvh",
+        "control_solar"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico"
+      ],
+      "explicacionTecnica": "El vidrio aporta a la certificación de sostenibilidad del edificio (no se certifica el vidrio en sí) principalmente a través de su desempeño térmico y lumínico.",
+      "advertencia": "La certificación EDGE o LEED depende del desempeño integral del edificio, no solo del vidrio especificado.",
+      "normaRelacionada": "EDGE / LEED / Resolución 0549 de 2015",
+      "versionNorma": "vigente",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Consultor EDGE/LEED"
+    },
+    {
+      "id": "R-EST-01",
+      "nombre": "Necesidad de privacidad",
+      "aplicacion": [
+        "division_interior",
+        "division_bano",
+        "fachada",
+        "ventana",
+        "puerta"
+      ],
+      "condiciones": [
+        {
+          "campo": "necesidades",
+          "operador": "in",
+          "valor": [
+            "privacidad"
+          ]
+        }
+      ],
+      "nivelRiesgo": "bajo",
+      "preguntasAdicionales": [],
+      "familiasCompatibles": [
+        "serigrafiado",
+        "impreso",
+        "laminado"
+      ],
+      "familiasNoRecomendadas": [],
+      "explicacionTecnica": "La privacidad puede lograrse con serigrafiado, vidrio impreso/grabado, o interláminas translúcidas en vidrio laminado, según el nivel de opacidad requerido.",
+      "advertencia": "Si además existe riesgo de impacto, combinar con templado o laminado de seguridad.",
+      "normaRelacionada": "N/A — criterio estético",
+      "versionNorma": "—",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Asesor técnico de producto"
+    },
+    {
+      "id": "R-EST-02",
+      "nombre": "Necesidad de baja reflexión",
+      "aplicacion": [
+        "ventana",
+        "fachada",
+        "muro_cortina",
+        "vitrina"
+      ],
+      "condiciones": [
+        {
+          "campo": "necesidades",
+          "operador": "in",
+          "valor": [
+            "baja_reflexion"
+          ]
+        }
+      ],
+      "nivelRiesgo": "bajo",
+      "preguntasAdicionales": [],
+      "familiasCompatibles": [
+        "lowe"
+      ],
+      "familiasNoRecomendadas": [
+        "control_solar de alta reflexión"
+      ],
+      "explicacionTecnica": "Los recubrimientos Low-E de baja reflexión permiten desempeño térmico sin el efecto espejo típico de algunos vidrios de control solar reflectivos.",
+      "advertencia": "Confirmar el porcentaje de reflexión exterior del producto específico con el fabricante.",
+      "normaRelacionada": "N/A — criterio estético",
+      "versionNorma": "—",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Asesor técnico de producto"
+    },
+    {
+      "id": "R-EST-03",
+      "nombre": "Necesidad de color",
+      "aplicacion": [
+        "fachada",
+        "muro_cortina",
+        "vitrina",
+        "division_interior"
+      ],
+      "condiciones": [
+        {
+          "campo": "necesidades",
+          "operador": "in",
+          "valor": [
+            "color"
+          ]
+        }
+      ],
+      "nivelRiesgo": "bajo",
+      "preguntasAdicionales": [],
+      "familiasCompatibles": [
+        "serigrafiado",
+        "control_solar"
+      ],
+      "familiasNoRecomendadas": [],
+      "explicacionTecnica": "El color puede lograrse mediante serigrafiado (patrón/color aplicado) o vidrio de control solar con masa coloreada en la composición.",
+      "advertencia": "El color con masa coloreada puede afectar el factor solar y la transmisión luminosa; validar ambos criterios juntos.",
+      "normaRelacionada": "N/A — criterio estético",
+      "versionNorma": "—",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Asesor técnico de producto"
+    },
+    {
+      "id": "R-VAND-01",
+      "nombre": "Necesidad de protección contra vandalismo",
+      "aplicacion": [
+        "fachada",
+        "vitrina",
+        "puerta",
+        "ventana"
+      ],
+      "condiciones": [
+        {
+          "campo": "necesidades",
+          "operador": "in",
+          "valor": [
+            "proteccion_vandalismo"
+          ]
+        }
+      ],
+      "nivelRiesgo": "alto",
+      "preguntasAdicionales": [
+        "¿Existe un estudio de riesgo o nivel de amenaza definido?"
+      ],
+      "familiasCompatibles": [
+        "templado_laminado",
+        "multilaminado",
+        "seguridad_especial"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico",
+        "templado simple"
+      ],
+      "explicacionTecnica": "La protección ante vandalismo requiere definir primero un nivel de amenaza (impacto con objeto, herramienta, etc.) antes de seleccionar la composición.",
+      "advertencia": "El nivel de protección debe ser definido por un especialista en seguridad; esta herramienta solo orienta la familia general de solución.",
+      "normaRelacionada": "UL 752 / EN 1063 (según nivel de amenaza)",
+      "versionNorma": "vigente",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Especialista en seguridad física"
+    },
+    {
+      "id": "R-CURV-01",
+      "nombre": "Geometría curva",
+      "aplicacion": [
+        "fachada",
+        "muro_cortina",
+        "sistema_curvo",
+        "baranda"
+      ],
+      "condiciones": [
+        {
+          "campo": "forma",
+          "operador": "eq",
+          "valor": "curva"
+        }
+      ],
+      "nivelRiesgo": "medio",
+      "preguntasAdicionales": [
+        "¿Cuál es el radio de curvatura requerido?"
+      ],
+      "familiasCompatibles": [
+        "curvo"
+      ],
+      "familiasNoRecomendadas": [],
+      "explicacionTecnica": "El vidrio curvo tiene radios mínimos de fabricación que varían por fabricante, espesor y tipo de tratamiento térmico.",
+      "advertencia": "Dato pendiente: radio exacto. Debe confirmarse directamente con el fabricante antes de avanzar en el diseño.",
+      "normaRelacionada": "N/A — verificar con fabricante",
+      "versionNorma": "—",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Fabricante / consultor de fachada"
+    },
+    {
+      "id": "R-INST-01",
+      "nombre": "Apoyo en bordes libres",
+      "aplicacion": [
+        "fachada",
+        "muro_cortina",
+        "baranda",
+        "piso",
+        "cubierta"
+      ],
+      "condiciones": [
+        {
+          "campo": "numLadosApoyados",
+          "operador": "lte",
+          "valor": 2
+        }
+      ],
+      "nivelRiesgo": "medio",
+      "preguntasAdicionales": [
+        "¿Qué lados quedan libres (sin apoyo)?"
+      ],
+      "familiasCompatibles": [],
+      "familiasNoRecomendadas": [],
+      "explicacionTecnica": "Los paños con bordes libres (apoyados en 1 o 2 lados) tienen un comportamiento estructural distinto al de un panel apoyado en 4 lados, generalmente requiriendo mayor espesor o refuerzo.",
+      "advertencia": "La configuración de apoyo condiciona directamente el cálculo estructural; debe validarse con el ingeniero del proyecto.",
+      "normaRelacionada": "N/A — criterio estructural",
+      "versionNorma": "—",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Ingeniero estructural / consultor de fachada"
+    },
+    {
+      "id": "R-VIS-01",
+      "nombre": "Perforaciones en el vidrio",
+      "aplicacion": [
+        "fachada",
+        "muro_cortina",
+        "baranda",
+        "piso",
+        "puerta"
+      ],
+      "condiciones": [
+        {
+          "campo": "perforaciones",
+          "operador": "true"
+        }
+      ],
+      "nivelRiesgo": "medio",
+      "preguntasAdicionales": [
+        "¿Las perforaciones son para anclaje puntual (spider/araña) u otro fin?"
+      ],
+      "familiasCompatibles": [
+        "templado",
+        "templado_laminado"
+      ],
+      "familiasNoRecomendadas": [
+        "laminado sin templar antes de laminar"
+      ],
+      "explicacionTecnica": "El vidrio debe perforarse y pulirse antes del proceso de temple; no puede perforarse después de templado.",
+      "advertencia": "Confirmar con el fabricante la posición, diámetro y distancia al borde de cada perforación antes de fabricar.",
+      "normaRelacionada": "NTC 1578",
+      "versionNorma": "vigente",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Fabricante / consultor de fachada"
+    },
+    {
+      "id": "R-APP-01",
+      "nombre": "Aplicación tipo vitrina comercial",
+      "aplicacion": [
+        "vitrina"
+      ],
+      "condiciones": [
+        {
+          "campo": "aplicacion",
+          "operador": "eq",
+          "valor": "vitrina"
+        },
+        {
+          "campo": "riesgoImpactoHumano",
+          "operador": "true"
+        }
+      ],
+      "nivelRiesgo": "medio",
+      "preguntasAdicionales": [],
+      "familiasCompatibles": [
+        "templado",
+        "laminado"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico"
+      ],
+      "explicacionTecnica": "Las vitrinas a nivel de calle, con alto tráfico peatonal, suelen clasificar como zona de riesgo de impacto humano y exigir vidrio de seguridad.",
+      "advertencia": "Revisar la normativa municipal de fachadas comerciales aplicable, si existe.",
+      "normaRelacionada": "NTC 1578",
+      "versionNorma": "vigente",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Arquitecto"
+    },
+    {
+      "id": "R-APP-02",
+      "nombre": "Ascensor panorámico",
+      "aplicacion": [
+        "ascensor"
+      ],
+      "condiciones": [
+        {
+          "campo": "aplicacion",
+          "operador": "eq",
+          "valor": "ascensor"
+        }
+      ],
+      "nivelRiesgo": "alto",
+      "preguntasAdicionales": [
+        "¿El sistema cuenta con certificación específica del fabricante del ascensor?"
+      ],
+      "familiasCompatibles": [
+        "templado_laminado"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico",
+        "templado sin laminar"
+      ],
+      "explicacionTecnica": "El vidrio para cabinas o cerramientos de ascensor debe cumplir la normativa específica de ascensores, adicional a las normas generales de vidrio de seguridad.",
+      "advertencia": "Debe coordinarse directamente con el fabricante/instalador del sistema de ascensor; esta herramienta no cubre normativa de ascensores en detalle.",
+      "normaRelacionada": "Normativa técnica de ascensores aplicable (a validar con el fabricante) + NTC 1578",
+      "versionNorma": "vigente",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Fabricante de ascensores / ingeniero especializado"
+    },
+    {
+      "id": "R-APP-03",
+      "nombre": "Piso de vidrio transitable",
+      "aplicacion": [
+        "piso"
+      ],
+      "condiciones": [
+        {
+          "campo": "aplicacion",
+          "operador": "eq",
+          "valor": "piso"
+        }
+      ],
+      "nivelRiesgo": "alto",
+      "preguntasAdicionales": [
+        "¿Cuál es la carga viva esperada (peatonal, vehicular ligero)?"
+      ],
+      "familiasCompatibles": [
+        "multilaminado"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico",
+        "templado simple",
+        "laminado de 2 hojas estándar"
+      ],
+      "explicacionTecnica": "Los pisos de vidrio transitables requieren capacidad de carga residual: si una lámina falla, las restantes deben soportar la carga hasta su reemplazo.",
+      "advertencia": "Esta es una de las aplicaciones de mayor exigencia estructural; el diseño debe ser calculado y certificado por un ingeniero estructural.",
+      "normaRelacionada": "Verificación estructural especializada",
+      "versionNorma": "—",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Ingeniero estructural"
+    },
+    {
+      "id": "R-APP-04",
+      "nombre": "Cerramiento acústico especializado",
+      "aplicacion": [
+        "cerramiento_acustico"
+      ],
+      "condiciones": [
+        {
+          "campo": "aplicacion",
+          "operador": "eq",
+          "valor": "cerramiento_acustico"
+        }
+      ],
+      "nivelRiesgo": "medio",
+      "preguntasAdicionales": [
+        "¿Cuál es el nivel de atenuación (Rw) objetivo?"
+      ],
+      "familiasCompatibles": [
+        "acustico",
+        "dvh_laminado"
+      ],
+      "familiasNoRecomendadas": [
+        "monolitico"
+      ],
+      "explicacionTecnica": "Los cerramientos acústicos dedicados (salas, estudios, oficinas de alta exigencia) suelen requerir composiciones asimétricas de alto desempeño.",
+      "advertencia": "El desempeño acústico global depende del sistema completo (marco, sellos, puerta si existe), no solo del vidrio.",
+      "normaRelacionada": "ISO 717-1",
+      "versionNorma": "vigente",
+      "fechaActualizacion": "2026-07-22",
+      "profesionalRequerido": "Consultor acústico"
+    }
+  ]
+}

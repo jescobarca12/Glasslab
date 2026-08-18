@@ -1,0 +1,155 @@
+import { useEffect } from "react";
+import { useBorrador } from "../../../state/BorradorContext";
+import { useUsuario } from "../../../state/UsuarioContext";
+import { aBodyBackend } from "../../../domain/borrador";
+import { useAsync } from "../../../hooks/useAsync";
+import { completeChallenge, createDiagnosis, evaluateDiagnosis } from "../../../api/endpoints";
+import type { EvaluateResponse, Route } from "../../../api/types";
+import { CheckField } from "../../ui/Fields";
+
+function RouteCard({ ruta, elegida, onElegir }: { ruta: Route; elegida: boolean; onElegir: () => void }) {
+  return (
+    <div className="route-card" style={elegida ? { borderColor: "var(--navy)", boxShadow: "0 0 0 2px rgba(0,42,73,.22)" } : undefined}>
+      <h3>{ruta.titulo}</h3>
+      <div className="prio">{ruta.prioridad}</div>
+
+      <div>
+        {ruta.composicionConceptual.map((f) => <span key={f.id} className="badge-fam">{f.nombre}</span>)}
+      </div>
+
+      {ruta.datosPendientes.length > 0 && (
+        <div className="callout warn" style={{ marginTop: 12 }}>
+          <strong>Datos pendientes:</strong>
+          <ul className="list-tight">{ruta.datosPendientes.map((d, i) => <li key={i}>{d}</li>)}</ul>
+        </div>
+      )}
+
+      {ruta.normasARevisar.length > 0 && (
+        <p style={{ marginTop: 12, fontSize: "0.85rem" }}>
+          <strong>Normas a revisar:</strong> {ruta.normasARevisar.join(" · ")}
+        </p>
+      )}
+
+      {ruta.recomendacionValidacion.length > 0 && (
+        <p style={{ fontSize: "0.85rem", color: "var(--muted)" }}>
+          Validación recomendada: {ruta.recomendacionValidacion.join(", ")}
+        </p>
+      )}
+
+      <button type="button" className={`btn ${elegida ? "btn-primary" : "btn-ghost"}`} style={{ marginTop: 10 }} onClick={onElegir}>
+        {elegida ? "✓ Ruta elegida" : "Elegir esta ruta"}
+      </button>
+    </div>
+  );
+}
+
+export function ResultadosStep() {
+  const { borrador, setEleccion, setRequestCommercialContact, retoActivo } = useBorrador();
+  const { usuario } = useUsuario();
+  const evalReq = useAsync<EvaluateResponse, [unknown]>(evaluateDiagnosis);
+  const guardar = useAsync(createDiagnosis);
+
+  const persona = usuario!; // garantizado: el gate exige identificarse antes del asistente
+
+  const onGuardar = async (): Promise<void> => {
+    const creado = await guardar.run(aBodyBackend(borrador, persona));
+    if (!creado) return;
+    if (retoActivo) {
+      // El reto suma puntos aparte; si falla no rompe el guardado del diagnóstico.
+      try { await completeChallenge(persona.correo, retoActivo); } catch { /* noop */ }
+    }
+  };
+
+  const { run: runEval } = evalReq;
+  useEffect(() => {
+    void runEval(aBodyBackend(borrador, persona));
+    // Solo al entrar al paso de resultados.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [runEval]);
+
+  if (evalReq.loading) return <p className="spinner">Evaluando el motor de reglas…</p>;
+  if (evalReq.error) return <div className="error-box">{evalReq.error}</div>;
+  if (!evalReq.data) return null;
+
+  const { rutas, compatibilidad, reglasActivas } = evalReq.data;
+
+  return (
+    <>
+      <h2>Diagnóstico</h2>
+      <p className="lead">
+        Dos rutas comparadas a partir de {reglasActivas.length} regla(s) técnica(s) activada(s) para tu escenario.
+      </p>
+
+      <div className="routes">
+        <RouteCard ruta={rutas.recomendada} elegida={borrador.eleccion.selectedSolution === "recomendada"} onElegir={() => setEleccion("recomendada")} />
+        <RouteCard ruta={rutas.altoDesempeno} elegida={borrador.eleccion.selectedSolution === "alto_desempeno"} onElegir={() => setEleccion("alto_desempeno")} />
+      </div>
+
+      {compatibilidad.score !== null ? (
+        <div className="card" style={{ marginTop: 18 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <span className="score-ring">{compatibilidad.score}%</span>
+            <div>
+              <strong>{compatibilidad.nivel}</strong>
+              <div style={{ fontSize: "0.85rem", color: "var(--muted)" }}>Alineación de la ruta recomendada con tus necesidades declaradas.</div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="callout" style={{ marginTop: 18 }}>{compatibilidad.mensaje}</div>
+      )}
+
+      {reglasActivas.length > 0 && (
+        <div className="card" style={{ marginTop: 18 }}>
+          <h3>Reglas técnicas activadas</h3>
+          {reglasActivas.map((r) => (
+            <div key={r.code} style={{ marginBottom: 8 }}>
+              <span className={`tag ${r.nivelRiesgo}`}>{r.nivelRiesgo}</span>{" "}
+              <strong>{r.nombre}</strong>
+              {r.advertencia && <div style={{ fontSize: "0.85rem", color: "var(--muted)" }}>{r.advertencia}</div>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="callout warn" style={{ marginTop: 18 }}>
+        Esta herramienta orienta la familia general de solución; <strong>no reemplaza el cálculo de un
+        profesional competente</strong> ni un ensayo de laboratorio. Los espesores, referencias y la
+        composición final deben validarse con un especialista y el fabricante.
+      </div>
+
+      <div className="card" style={{ marginTop: 18 }}>
+        <h3>Guardar diagnóstico</h3>
+        <CheckField
+          label="Quiero que un asesor comercial de VITELSA me contacte."
+          checked={borrador.requestCommercialContact}
+          onChange={setRequestCommercialContact}
+        />
+        {guardar.data ? (
+          <>
+            <div className="callout" style={{ marginTop: 8 }}>
+              ✓ Diagnóstico guardado con folio <strong>{guardar.data.leadId}</strong>. Sumaste puntos
+              {retoActivo ? " por completar el diagnóstico y resolver el reto" : " por completar el diagnóstico"}.
+              Revísalos en <strong>Mi progreso</strong>.
+            </div>
+            {guardar.data.delivery?.email.pending && (
+              <div className="callout warn" style={{ marginTop: 8 }}>
+                ✉️ El envío del diagnóstico por correo está <strong>pendiente de integración</strong>; tu
+                información quedó guardada y un asesor podrá contactarte.
+              </div>
+            )}
+          </>
+        ) : (
+          <button
+            type="button" className="btn btn-primary"
+            disabled={guardar.loading}
+            onClick={() => void onGuardar()}
+          >
+            {guardar.loading ? "Guardando…" : "Guardar diagnóstico"}
+          </button>
+        )}
+        {guardar.error && <div className="error-box" style={{ marginTop: 10 }}>{guardar.error}</div>}
+      </div>
+    </>
+  );
+}

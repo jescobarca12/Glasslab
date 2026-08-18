@@ -1,0 +1,401 @@
+{
+  "version": "1.0",
+  "fechaActualizacion": "2026-07-22",
+  "ciudades": [
+    {
+      "id": "cucuta",
+      "nombre": "Cúcuta",
+      "departamento": "Norte de Santander",
+      "activa": true,
+      "lat": 7.8939,
+      "lng": -72.5078,
+      "altitud_m": 320,
+      "clima": "Cálido-seco de frontera",
+      "temp_prom_c": 32,
+      "temp_max_c": 38,
+      "humedad_pct": "45-60",
+      "zona_sismica_nsr10": "intermedia",
+      "corredores_ruido": [
+        {
+          "via": "Diagonal Santander",
+          "rango_db": "68-78",
+          "horario": "hora pico"
+        },
+        {
+          "via": "Avenida Libertadores",
+          "rango_db": "70-78",
+          "horario": "hora pico"
+        }
+      ],
+      "aeropuerto": {
+        "nombre": "Camilo Daza (CUC)",
+        "lat": 7.9273,
+        "lng": -72.5117
+      },
+      "fuentes": [
+        {
+          "dato": "Clima",
+          "fuente": "IDEAM",
+          "fecha": "2025"
+        },
+        {
+          "dato": "Zona sísmica",
+          "fuente": "NSR-10 Título A / SGC",
+          "fecha": "2010 (vigente)"
+        },
+        {
+          "dato": "Ruido por corredor",
+          "fuente": "Estimación cualitativa VITELSA a partir de talleres locales",
+          "fecha": "2026"
+        }
+      ]
+    },
+    {
+      "id": "bucaramanga",
+      "nombre": "Bucaramanga",
+      "departamento": "Santander",
+      "activa": true,
+      "lat": 7.1193,
+      "lng": -73.1227,
+      "altitud_m": 959,
+      "clima": "Cálido-húmedo andino",
+      "temp_prom_c": 24,
+      "temp_max_c": 34,
+      "humedad_pct": "70-85",
+      "zona_sismica_nsr10": "alta",
+      "corredores_ruido": [
+        {
+          "via": "Avenida Quebrada Seca",
+          "rango_db": "65-75",
+          "horario": "hora pico"
+        },
+        {
+          "via": "Carrera 15",
+          "rango_db": "66-74",
+          "horario": "hora pico"
+        }
+      ],
+      "aeropuerto": {
+        "nombre": "Palonegro (BGA)",
+        "lat": 7.1265,
+        "lng": -73.1848
+      },
+      "fuentes": [
+        {
+          "dato": "Clima",
+          "fuente": "IDEAM",
+          "fecha": "2025"
+        },
+        {
+          "dato": "Zona sísmica",
+          "fuente": "NSR-10 Título A / SGC (nido sísmico de Bucaramanga)",
+          "fecha": "2010 (vigente)"
+        },
+        {
+          "dato": "Ruido por corredor",
+          "fuente": "Estimación cualitativa VITELSA a partir de talleres locales",
+          "fecha": "2026"
+        }
+      ]
+    },
+    {
+      "id": "pasto",
+      "nombre": "Pasto",
+      "departamento": "Nariño",
+      "activa": true,
+      "lat": 1.2136,
+      "lng": -77.2811,
+      "altitud_m": 2527,
+      "clima": "Frío de montaña",
+      "temp_prom_c": 13,
+      "temp_max_c": 18,
+      "humedad_pct": ">75",
+      "zona_sismica_nsr10": "alta",
+      "corredores_ruido": [
+        {
+          "via": "Avenida de Los Estudiantes",
+          "rango_db": "65-72",
+          "horario": "hora pico"
+        }
+      ],
+      "aeropuerto": {
+        "nombre": "Antonio Nariño (PSO)",
+        "lat": 1.3967,
+        "lng": -77.2914
+      },
+      "fuentes": [
+        {
+          "dato": "Clima",
+          "fuente": "IDEAM",
+          "fecha": "2025"
+        },
+        {
+          "dato": "Zona sísmica",
+          "fuente": "NSR-10 Título A / SGC (influencia volcánica y Pacífico)",
+          "fecha": "2010 (vigente)"
+        },
+        {
+          "dato": "Ruido por corredor",
+          "fuente": "Estimación cualitativa VITELSA a partir de talleres locales",
+          "fecha": "2026"
+        }
+      ]
+    },
+    {
+      "id": "pereira",
+      "nombre": "Pereira",
+      "departamento": "Risaralda",
+      "activa": true,
+      "lat": 4.8087,
+      "lng": -75.6906,
+      "altitud_m": 1411,
+      "clima": "Cálido-húmedo del Eje Cafetero",
+      "temp_prom_c": 22,
+      "temp_max_c": 32,
+      "humedad_pct": ">75",
+      "zona_sismica_nsr10": "alta",
+      "corredores_ruido": [
+        {
+          "via": "Avenida Circunvalar",
+          "rango_db": "65-75",
+          "horario": "hora pico"
+        },
+        {
+          "via": "Avenida 30 de Agosto",
+          "rango_db": "68-74",
+          "horario": "hora pico"
+        }
+      ],
+      "aeropuerto": {
+        "nombre": "Matecaña (PEI)",
+        "lat": 4.8128,
+        "lng": -75.7396
+      },
+      "fuentes": [
+        {
+          "dato": "Clima",
+          "fuente": "IDEAM",
+          "fecha": "2025"
+        },
+        {
+          "dato": "Zona sísmica",
+          "fuente": "NSR-10 Título A / SGC (Eje Cafetero)",
+          "fecha": "2010 (vigente)"
+        },
+        {
+          "dato": "Ruido por corredor",
+          "fuente": "Estimación cualitativa VITELSA a partir de talleres locales",
+          "fecha": "2026"
+        }
+      ]
+    },
+    {
+      "id": "bogota",
+      "nombre": "Bogotá",
+      "departamento": "Bogotá D.C.",
+      "activa": true,
+      "lat": 4.711,
+      "lng": -74.0721,
+      "altitud_m": 2640,
+      "clima": "Frío de alta montaña",
+      "temp_prom_c": 14,
+      "temp_max_c": 20,
+      "humedad_pct": "75-80",
+      "zona_sismica_nsr10": "intermedia",
+      "corredores_ruido": [
+        {
+          "via": "Avenida Boyacá",
+          "rango_db": "72-80",
+          "horario": "hora pico"
+        },
+        {
+          "via": "Avenida NQS",
+          "rango_db": "70-80",
+          "horario": "hora pico"
+        },
+        {
+          "via": "Autopista Norte",
+          "rango_db": "70-78",
+          "horario": "hora pico"
+        }
+      ],
+      "aeropuerto": {
+        "nombre": "El Dorado (BOG)",
+        "lat": 4.7016,
+        "lng": -74.1469
+      },
+      "fuentes": [
+        {
+          "dato": "Clima",
+          "fuente": "IDEAM / Secretaría Distrital de Ambiente",
+          "fecha": "2025"
+        },
+        {
+          "dato": "Zona sísmica",
+          "fuente": "NSR-10 Título A / SGC",
+          "fecha": "2010 (vigente)"
+        },
+        {
+          "dato": "Ruido por corredor",
+          "fuente": "Secretaría Distrital de Ambiente — Mapas Estratégicos de Ruido (Visor Geográfico Ambiental)",
+          "fecha": "2024"
+        }
+      ]
+    },
+    {
+      "id": "medellin",
+      "nombre": "Medellín",
+      "departamento": "Antioquia",
+      "activa": true,
+      "lat": 6.2442,
+      "lng": -75.5812,
+      "altitud_m": 1495,
+      "clima": "Templado de valle (eterna primavera)",
+      "temp_prom_c": 23,
+      "temp_max_c": 30,
+      "humedad_pct": "70-85",
+      "zona_sismica_nsr10": "intermedia",
+      "corredores_ruido": [
+        {
+          "via": "Avenida Oriental",
+          "rango_db": "70-80",
+          "horario": "hora pico"
+        },
+        {
+          "via": "Avenida Regional",
+          "rango_db": "70-80",
+          "horario": "hora pico"
+        },
+        {
+          "via": "Avenida 80",
+          "rango_db": "70-80",
+          "horario": "hora pico"
+        }
+      ],
+      "aeropuerto": {
+        "nombre": "José María Córdova (MDE)",
+        "lat": 6.1645,
+        "lng": -75.4231
+      },
+      "fuentes": [
+        {
+          "dato": "Clima",
+          "fuente": "IDEAM",
+          "fecha": "2025"
+        },
+        {
+          "dato": "Zona sísmica",
+          "fuente": "NSR-10 Título A / SGC",
+          "fecha": "2010 (vigente)"
+        },
+        {
+          "dato": "Ruido por corredor",
+          "fuente": "Área Metropolitana del Valle de Aburrá — Mapas de Ruido (SoundPlan, red SIATA)",
+          "fecha": "2022-2024"
+        }
+      ]
+    },
+    {
+      "id": "cali",
+      "nombre": "Cali",
+      "departamento": "Valle del Cauca",
+      "activa": true,
+      "lat": 3.4516,
+      "lng": -76.532,
+      "altitud_m": 995,
+      "clima": "Cálido-seco del valle interandino",
+      "temp_prom_c": 25,
+      "temp_max_c": 34,
+      "humedad_pct": "70-85",
+      "zona_sismica_nsr10": "alta",
+      "corredores_ruido": [
+        {
+          "via": "Avenida 5 Norte",
+          "rango_db": "70-72",
+          "horario": "día/noche"
+        },
+        {
+          "via": "Avenida Sexta",
+          "rango_db": "70-76",
+          "horario": "hora pico"
+        }
+      ],
+      "aeropuerto": {
+        "nombre": "Alfonso Bonilla Aragón (CLO)",
+        "lat": 3.5432,
+        "lng": -76.3816
+      },
+      "fuentes": [
+        {
+          "dato": "Clima",
+          "fuente": "IDEAM / CVC",
+          "fecha": "2025"
+        },
+        {
+          "dato": "Zona sísmica",
+          "fuente": "NSR-10 Título A / SGC (subducción Pacífico, sistema Romeral)",
+          "fecha": "2010 (vigente)"
+        },
+        {
+          "dato": "Ruido por corredor",
+          "fuente": "DAGMA — Mapa de ruido de Santiago de Cali",
+          "fecha": "2010-2011 (última actualización pública)"
+        }
+      ]
+    },
+    {
+      "id": "barranquilla",
+      "nombre": "Barranquilla",
+      "departamento": "Atlántico",
+      "activa": true,
+      "lat": 10.9639,
+      "lng": -74.7964,
+      "altitud_m": 18,
+      "clima": "Cálido-húmedo costero (Caribe)",
+      "temp_prom_c": 27,
+      "temp_max_c": 35,
+      "humedad_pct": "77-82",
+      "zona_sismica_nsr10": "baja",
+      "corredores_ruido": [
+        {
+          "via": "Vía 40",
+          "rango_db": "No cuantificado en fuente pública consultada",
+          "horario": "—"
+        },
+        {
+          "via": "Calle 84",
+          "rango_db": "No cuantificado en fuente pública consultada",
+          "horario": "—"
+        },
+        {
+          "via": "Calle 30 / Paseo Bolívar",
+          "rango_db": "No cuantificado en fuente pública consultada",
+          "horario": "—"
+        }
+      ],
+      "aeropuerto": {
+        "nombre": "Ernesto Cortissoz (BAQ)",
+        "lat": 10.8896,
+        "lng": -74.7808
+      },
+      "fuentes": [
+        {
+          "dato": "Clima",
+          "fuente": "IDEAM",
+          "fecha": "2025"
+        },
+        {
+          "dato": "Zona sísmica",
+          "fuente": "NSR-10 Título A / SGC (costa Caribe)",
+          "fecha": "2010 (vigente)"
+        },
+        {
+          "dato": "Ruido por corredor",
+          "fuente": "Barranquilla Verde (EPA) — diagnóstico de puntos críticos de ruido; valores en dB no publicados en fuente consultada",
+          "fecha": "2026"
+        }
+      ]
+    }
+  ],
+  "nota_capas_gis": "Las capas espaciales (polígonos oficiales de mapas de ruido, amenaza sísmica y radiación solar) no están cargadas por defecto: se muestra información puntual/por corredor a nivel de ciudad, citando fuente y fecha. Para cargar polígonos oficiales, use el Panel administrativo → 'Cargar capa GeoJSON'. Donde no exista dato de fuente oficial, la aplicación muestra 'Información no disponible' en lugar de estimar un valor."
+}
