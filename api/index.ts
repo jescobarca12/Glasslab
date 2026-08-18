@@ -1,10 +1,10 @@
 /**
  * Punto de entrada serverless de Vercel para la API.
  *
- * Vercel enruta `/api/*` a esta función; aquí se reutiliza la MISMA app Express
- * (createApp) que en local. No se llama a `listen()`: Vercel invoca la app como
- * manejador (req, res). Se normaliza la ruta para que Express siempre vea el
- * prefijo `/api`, independientemente de cómo la entregue Vercel.
+ * `vercel.json` reescribe `/api/*` a esta función; aquí se reutiliza la MISMA
+ * app Express (createApp) que en local. No se llama a `listen()`: Vercel invoca
+ * la app como manejador (req, res). Se normaliza la ruta para que Express vea
+ * el prefijo `/api`, independientemente de cómo la entregue Vercel.
  */
 import type { IncomingMessage, ServerResponse } from "http";
 import { createApp } from "../backend/src/app";
