@@ -40,5 +40,14 @@ export const env = {
     leadSyncProvider: optional("LEAD_SYNC_PROVIDER", "file"),
     vitelsaEmail: optional("VITELSA_EMAIL", "informacion@vitelsa.com.co"),
     outboxDir: optional("OUTBOX_DIR", ".outbox"),
+    smtp: {
+      host: optional("SMTP_HOST", ""),
+      port: Number(optional("SMTP_PORT", "465")),
+      secure: optional("SMTP_SECURE", "true") === "true",
+      user: optional("SMTP_USER", ""),
+      pass: optional("SMTP_PASS", ""),
+      // Remitente; por defecto el mismo usuario SMTP.
+      from: optional("SMTP_FROM", ""),
+    },
   },
 } as const;

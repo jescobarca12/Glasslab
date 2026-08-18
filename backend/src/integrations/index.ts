@@ -7,11 +7,13 @@
 import { env } from "../config/env";
 import type { EmailService, LeadSyncService } from "./types";
 import { ConsoleEmailService } from "./consoleEmailService";
+import { SmtpEmailService } from "./smtpEmailService";
 import { FileLeadSyncService } from "./fileLeadSyncService";
 
 function crearEmailService(): EmailService {
   switch (env.integrations.emailProvider) {
-    // case "resend": return new ResendEmailService(env...);  // pendiente
+    case "smtp":
+      return new SmtpEmailService();
     case "console":
     default:
       return new ConsoleEmailService();
