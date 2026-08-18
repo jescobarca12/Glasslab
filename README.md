@@ -112,3 +112,46 @@ cd backend && npm test      # tests del motor de reglas (los 8 retos de la demo)
 
 Para detalles del backend (scripts, endpoints y arquitectura en capas) ver
 [`backend/README.md`](backend/README.md).
+
+## Despliegue en Vercel + Neon (prueba)
+
+El repo está preparado para desplegarse en **Vercel** como un solo proyecto:
+frontend estático + la API Express como **función serverless** (`api/[...path].ts`),
+con **PostgreSQL en Neon** (o Vercel Postgres). Archivos clave: `vercel.json`,
+`package.json` (deps de la función) y `api/[...path].ts`.
+
+**1. Base de datos (Neon).** Crea una base gratis en https://neon.tech (o Vercel →
+Storage → Postgres). Copia la **cadena de conexión "pooled"** (incluye `-pooler`).
+
+**2. Migraciones + seeds contra Neon** (desde tu máquina, una sola vez):
+
+```bash
+cd backend
+# usa la cadena de Neon; DATABASE_URL tiene prioridad sobre las PG*
+DATABASE_URL="postgresql://...-pooler...neon.tech/db?sslmode=require" npm run db:migrate
+DATABASE_URL="postgresql://...-pooler...neon.tech/db?sslmode=require" npm run db:seed
+DATABASE_URL="postgresql://...-pooler...neon.tech/db?sslmode=require" npm run db:seed:admin
+```
+
+> En Windows PowerShell: `$env:DATABASE_URL="..."; npm run db:migrate` (y repetir).
+
+**3. Importar en Vercel.** Sube el repo a GitHub e impórtalo en https://vercel.com
+(New Project → tu repo). Vercel toma `vercel.json` automáticamente (no cambies el
+framework preset; déjalo en "Other").
+
+**4. Variables de entorno en Vercel** (Project → Settings → Environment Variables):
+
+| Variable | Valor |
+|---|---|
+| `DATABASE_URL` | cadena "pooled" de Neon |
+| `JWT_SECRET` | un secreto largo y aleatorio |
+| `ADMIN_USERNAME` / `ADMIN_PASSWORD` | credenciales del panel (reemplazar las de ejemplo) |
+| `EMAIL_PROVIDER` / `LEAD_SYNC_PROVIDER` | `console` / `file` (relleno) por ahora |
+
+**5. Deploy.** Vercel construye el frontend (`frontend/dist`) y publica la API en
+`/api/*`. El frontend llama a `/api` en el mismo dominio (sin CORS).
+
+> Nota: en serverless la bandeja `.outbox/` no persiste entre invocaciones; los
+> adaptadores de relleno siguen reportando "pendiente de integración" (correcto
+> hasta conectar el proveedor real). Para producción real, reemplazar
+> `JWT_SECRET` y la contraseña del admin, y conectar correo/SharePoint.

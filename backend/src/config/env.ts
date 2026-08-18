@@ -19,11 +19,14 @@ export const env = {
   nodeEnv: optional("NODE_ENV", "development"),
   port: Number(optional("PORT", "4000")),
   db: {
+    // En producción (Vercel/Neon) se usa una única URL de conexión.
+    // En local se arma desde las variables PG* individuales.
+    url: process.env.DATABASE_URL ?? "",
     host: optional("PGHOST", "localhost"),
     port: Number(optional("PGPORT", "5432")),
-    user: required("PGUSER"),
-    password: required("PGPASSWORD"),
-    database: required("PGDATABASE"),
+    user: optional("PGUSER", "postgres"),
+    password: optional("PGPASSWORD", ""),
+    database: optional("PGDATABASE", "vitelsa_glasslab"),
   },
   auth: {
     jwtSecret: optional("JWT_SECRET", "dev-secret-reemplazar"),
