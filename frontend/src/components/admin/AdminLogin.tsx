@@ -12,7 +12,7 @@ export function AdminLogin() {
 
   const enviar = async (): Promise<void> => {
     const res = await req.run(username, password);
-    if (res) login(res.token, res.admin.username);
+    if (res) login(res.token, res.admin.username, res.admin.role);
   };
 
   return (

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { asyncHandler } from "../middleware/asyncHandler";
-import { requireAuth } from "../middleware/requireAuth";
+import { requireAdmin, requireAuth } from "../middleware/requireAuth";
 import * as catalog from "../controllers/catalogController";
 import * as diagnosis from "../controllers/diagnosisController";
 import * as gamification from "../controllers/gamificationController";
@@ -42,16 +42,18 @@ apiRouter.get("/players/:email", asyncHandler(gamification.getPlayer));
 apiRouter.post("/players/:email/challenges", asyncHandler(gamification.completeChallengeForPlayer));
 
 // --- Panel administrativo (JWT) ---
+// Consulta de leads: la abren admin y viewer. Todo lo que modifica el motor
+// (preguntas, reglas, ciudades) exige rol admin.
 apiRouter.post("/admin/login", asyncHandler(admin.login));
 apiRouter.get("/admin/me", requireAuth, asyncHandler(admin.me));
 apiRouter.get("/admin/leads.csv", requireAuth, asyncHandler(admin.exportLeadsCsv));
 apiRouter.get("/admin/leads", requireAuth, asyncHandler(admin.listLeads));
 apiRouter.get("/admin/leads/:leadId", requireAuth, asyncHandler(admin.getLead));
-apiRouter.get("/admin/labels", requireAuth, asyncHandler(labels.listLabels));
-apiRouter.put("/admin/labels/:grupo/:campo", requireAuth, asyncHandler(labels.editLabel));
-apiRouter.get("/admin/rules", requireAuth, asyncHandler(rulesAdmin.listRules));
-apiRouter.get("/admin/rules/:code", requireAuth, asyncHandler(rulesAdmin.getRule));
-apiRouter.put("/admin/rules/:code", requireAuth, asyncHandler(rulesAdmin.editRule));
-apiRouter.get("/admin/cities", requireAuth, asyncHandler(citiesAdmin.listCities));
-apiRouter.get("/admin/cities/:code", requireAuth, asyncHandler(citiesAdmin.getCity));
-apiRouter.put("/admin/cities/:code", requireAuth, asyncHandler(citiesAdmin.editCity));
+apiRouter.get("/admin/labels", requireAuth, requireAdmin, asyncHandler(labels.listLabels));
+apiRouter.put("/admin/labels/:grupo/:campo", requireAuth, requireAdmin, asyncHandler(labels.editLabel));
+apiRouter.get("/admin/rules", requireAuth, requireAdmin, asyncHandler(rulesAdmin.listRules));
+apiRouter.get("/admin/rules/:code", requireAuth, requireAdmin, asyncHandler(rulesAdmin.getRule));
+apiRouter.put("/admin/rules/:code", requireAuth, requireAdmin, asyncHandler(rulesAdmin.editRule));
+apiRouter.get("/admin/cities", requireAuth, requireAdmin, asyncHandler(citiesAdmin.listCities));
+apiRouter.get("/admin/cities/:code", requireAuth, requireAdmin, asyncHandler(citiesAdmin.getCity));
+apiRouter.put("/admin/cities/:code", requireAuth, requireAdmin, asyncHandler(citiesAdmin.editCity));

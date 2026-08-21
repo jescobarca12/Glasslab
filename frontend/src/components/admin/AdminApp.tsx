@@ -17,12 +17,18 @@ const TABS: Array<{ id: AdminVista; label: string }> = [
 ];
 
 function AdminContenido() {
-  const { token, username, logout } = useAdmin();
+  const { token, username, soloLectura, logout } = useAdmin();
   const [vista, setVista] = useState<AdminVista>("leads");
+
+  // El usuario de consulta solo ve leads. El backend lo exige igual: esconder
+  // las pestañas es comodidad, no la protección.
+  const tabs = soloLectura ? TABS.filter((t) => t.id === "leads") : TABS;
+  const vistaActual: AdminVista = soloLectura ? "leads" : vista;
 
   const headerRight = token ? (
     <div className="user-chip">
-      <span>🛠 {username}</span>
+      <span>{soloLectura ? "👁" : "🛠"} {username}</span>
+      {soloLectura && <span className="role-chip">Solo consulta</span>}
       <button type="button" className="btn btn-ghost btn-sm" onClick={logout}>Salir</button>
     </div>
   ) : null;
@@ -34,20 +40,20 @@ function AdminContenido() {
       ) : (
         <>
           <nav className="nav-tabs">
-            {TABS.map((t) => (
+            {tabs.map((t) => (
               <button
                 key={t.id} type="button"
-                className={`nav-tab ${vista === t.id ? "active" : ""}`}
+                className={`nav-tab ${vistaActual === t.id ? "active" : ""}`}
                 onClick={() => setVista(t.id)}
               >
                 {t.label}
               </button>
             ))}
           </nav>
-          {vista === "leads" && <AdminLeads />}
-          {vista === "labels" && <AdminLabels />}
-          {vista === "rules" && <AdminRules />}
-          {vista === "cities" && <AdminCities />}
+          {vistaActual === "leads" && <AdminLeads />}
+          {vistaActual === "labels" && <AdminLabels />}
+          {vistaActual === "rules" && <AdminRules />}
+          {vistaActual === "cities" && <AdminCities />}
         </>
       )}
       <div style={{ marginTop: 18, textAlign: "center" }}>

@@ -219,3 +219,10 @@ a:hover { color: var(--red); }
 .tri-btn:hover { background: var(--navy-tint); }
 .tri-btn.on { background: var(--navy); color: #fff; font-weight: 700; }
 .tri-btn:focus-visible { outline: 2px solid var(--navy); outline-offset: -2px; }
+
+/* Distintivo del usuario de solo consulta en el panel */
+.role-chip {
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700;
+  color: var(--navy); background: var(--navy-tint); border: 1px solid var(--line);
+  padding: 2px 8px; border-radius: 999px;
+}

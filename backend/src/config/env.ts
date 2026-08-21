@@ -32,6 +32,9 @@ export const env = {
     jwtSecret: optional("JWT_SECRET", "dev-secret-reemplazar"),
     adminUsername: optional("ADMIN_USERNAME", "admin"),
     adminPassword: optional("ADMIN_PASSWORD", "vitelsa-demo-2026"),
+    // Usuario de solo consulta de leads. Sin VIEWER_PASSWORD no se crea.
+    viewerUsername: optional("VIEWER_USERNAME", "consulta"),
+    viewerPassword: optional("VIEWER_PASSWORD", ""),
   },
   integrations: {
     // Proveedores: 'console'/'file' son de relleno; 'resend'/'sharepoint' se
