@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { personaInicial, type Persona } from "../domain/borrador";
 import { useUsuario } from "../state/UsuarioContext";
 import { useAsync } from "../hooks/useAsync";
-import { requestEmailCode, verifyEmailCode } from "../api/endpoints";
+import { ApiError } from "../api/client";
+import { requestEmailCode, startEmailSession, verifyEmailCode } from "../api/endpoints";
+import type { RequestCodeResponse } from "../api/types";
 import { CheckField, SelectField, TextField } from "./ui/Fields";
 
 const PERFILES = [
@@ -16,19 +18,38 @@ const PERFILES = [
 
 const SEGUNDOS_REENVIO = 60;
 
+type Inicio =
+  | { modo: "sesion"; token: string }
+  | { modo: "codigo"; envio: RequestCodeResponse };
+
 /**
- * Identificación del usuario final del asistente en dos pasos:
- *   1. datos de contacto  →  2. código OTP enviado a ese correo.
- * Sin código verificado no hay sesión (y el backend rechaza guardar el lead).
+ * Identificación del usuario final del asistente.
+ *
+ * Si el correo ya se verificó alguna vez, entra directo (el backend emite el
+ * token de sesión). Solo cuando el correo es nuevo se pide el código OTP.
  */
+async function iniciarIdentificacion(correo: string, nombre: string): Promise<Inicio> {
+  try {
+    const { token } = await startEmailSession(correo);
+    return { modo: "sesion", token };
+  } catch (err) {
+    if (err instanceof ApiError && err.code === "EmailNotVerified") {
+      return { modo: "codigo", envio: await requestEmailCode(correo, nombre) };
+    }
+    throw err;
+  }
+}
+
 export function IdentidadGate() {
   const { login } = useUsuario();
   const [p, setP] = useState<Persona>(personaInicial);
   const [paso, setPaso] = useState<"datos" | "codigo">("datos");
+  const [envio, setEnvio] = useState<RequestCodeResponse | null>(null);
   const [codigo, setCodigo] = useState("");
   const [esperaReenvio, setEsperaReenvio] = useState(0);
 
-  const solicitud = useAsync(requestEmailCode);
+  const inicio = useAsync(iniciarIdentificacion);
+  const reenvio = useAsync(requestEmailCode);
   const verificacion = useAsync(verifyEmailCode);
 
   const set = (patch: Partial<Persona>) => setP((prev) => ({ ...prev, ...patch }));
@@ -42,12 +63,26 @@ export function IdentidadGate() {
     return () => clearTimeout(id);
   }, [esperaReenvio]);
 
-  async function pedirCodigo() {
-    const res = await solicitud.run(correo, p.nombre.trim());
-    if (!res) return;
+  function pasarAPasoCodigo(res: RequestCodeResponse) {
+    setEnvio(res);
     setPaso("codigo");
     setCodigo("");
     setEsperaReenvio(SEGUNDOS_REENVIO);
+  }
+
+  async function entrar() {
+    const res = await inicio.run(correo, p.nombre.trim());
+    if (!res) return;
+    if (res.modo === "sesion") {
+      login(p, res.token);
+      return;
+    }
+    pasarAPasoCodigo(res.envio);
+  }
+
+  async function reenviarCodigo() {
+    const res = await reenvio.run(correo, p.nombre.trim());
+    if (res) pasarAPasoCodigo(res);
   }
 
   async function confirmarCodigo() {
@@ -61,13 +96,14 @@ export function IdentidadGate() {
       <div className="card">
         <h1>Verifica tu correo</h1>
         <p className="lead">
-          Enviamos un código de 6 dígitos a <strong>{correo}</strong>. Escríbelo aquí para continuar;
-          vence en {solicitud.data?.expiraEnMinutos ?? 10} minutos.
+          Es la primera vez que usas <strong>{correo}</strong>: te enviamos un código de 6 dígitos.
+          Escríbelo aquí para continuar; vence en {envio?.expiraEnMinutos ?? 10} minutos y solo
+          te lo pediremos esta vez.
         </p>
 
-        {solicitud.data?.codigoDev && (
+        {envio?.codigoDev && (
           <p className="hint" style={{ background: "#fdf7ec", borderLeft: "3px solid #b7791f", padding: "10px 12px", borderRadius: 6 }}>
-            Modo desarrollo (sin envío real de correo): tu código es <strong>{solicitud.data.codigoDev}</strong>.
+            Modo desarrollo (sin envío real de correo): tu código es <strong>{envio.codigoDev}</strong>.
           </p>
         )}
 
@@ -82,7 +118,7 @@ export function IdentidadGate() {
         </div>
 
         {verificacion.error && <div className="error-box">{verificacion.error}</div>}
-        {solicitud.error && <div className="error-box">{solicitud.error}</div>}
+        {reenvio.error && <div className="error-box">{reenvio.error}</div>}
 
         <div className="btn-row" style={{ justifyContent: "space-between" }}>
           <div>
@@ -92,8 +128,8 @@ export function IdentidadGate() {
             <button
               type="button"
               className="btn"
-              disabled={esperaReenvio > 0 || solicitud.loading}
-              onClick={pedirCodigo}
+              disabled={esperaReenvio > 0 || reenvio.loading}
+              onClick={reenviarCodigo}
             >
               {esperaReenvio > 0 ? `Reenviar en ${esperaReenvio}s` : "Reenviar código"}
             </button>
@@ -115,9 +151,9 @@ export function IdentidadGate() {
     <div className="card">
       <h1>Bienvenido a VITELSA GlassLab</h1>
       <p className="lead">
-        Identifícate una sola vez. Verificamos tu correo con un código para poder enviarte el
-        diagnóstico; tus datos quedan guardados en este navegador para el asistente, los retos y
-        tu progreso.
+        Identifícate una sola vez. Si es tu primer ingreso confirmamos tu correo con un código;
+        después entras directo. Tus datos quedan guardados en este navegador para el asistente,
+        los retos y tu progreso.
       </p>
       <div className="grid-2">
         <TextField label="Nombre" value={p.nombre} onChange={(v) => set({ nombre: v })} />
@@ -131,15 +167,15 @@ export function IdentidadGate() {
         checked={p.autorizacion}
         onChange={(v) => set({ autorizacion: v })}
       />
-      {solicitud.error && <div className="error-box">{solicitud.error}</div>}
+      {inicio.error && <div className="error-box">{inicio.error}</div>}
       <div className="btn-row" style={{ justifyContent: "flex-end" }}>
         <button
           type="button"
           className="btn btn-primary"
-          disabled={!datosValidos || solicitud.loading}
-          onClick={pedirCodigo}
+          disabled={!datosValidos || inicio.loading}
+          onClick={entrar}
         >
-          {solicitud.loading ? "Enviando código…" : "Enviar código →"}
+          {inicio.loading ? "Comprobando…" : "Entrar →"}
         </button>
       </div>
     </div>

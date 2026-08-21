@@ -13,6 +13,11 @@ export async function verify(req: Request, res: Response): Promise<void> {
   res.status(200).json(await service.verifyCode(correo, codigo));
 }
 
+/** POST /api/auth/email/session — abre sesión si el correo ya estaba verificado (200 / 403). */
+export async function startSession(req: Request, res: Response): Promise<void> {
+  res.status(200).json(await service.startSession((req.body ?? {}).correo));
+}
+
 /** GET /api/auth/email/status?correo=… — informa si el correo ya está verificado (200). */
 export async function status(req: Request, res: Response): Promise<void> {
   res.status(200).json(await service.status(req.query["correo"]));

@@ -3,7 +3,7 @@ import type {
   AdminLoginResponse, Application, Challenge, City, CreatedDiagnosis, EvaluateResponse,
   CityAdminDetail, CityUpdatePayload, GlassFamily, GroupedLabels, LabelRow, LeadDetail,
   LeadListResult, Need, PlayerProfile, RuleDetail, RuleListItem, RuleUpdatePayload,
-  EmailStatusResponse, RequestCodeResponse, VerifyCodeResponse,
+  EmailSessionResponse, EmailStatusResponse, RequestCodeResponse, VerifyCodeResponse,
 } from "./types";
 
 export const getCities = (): Promise<City[]> => api.get("/cities");
@@ -21,6 +21,9 @@ export const requestEmailCode = (correo: string, nombre?: string): Promise<Reque
   api.post("/auth/email/request-code", { correo, nombre });
 export const verifyEmailCode = (correo: string, codigo: string): Promise<VerifyCodeResponse> =>
   api.post("/auth/email/verify", { correo, codigo });
+/** Abre sesión sin código si el correo ya se verificó antes (403 si no). */
+export const startEmailSession = (correo: string): Promise<EmailSessionResponse> =>
+  api.post("/auth/email/session", { correo });
 export const getEmailStatus = (correo: string): Promise<EmailStatusResponse> =>
   api.get(`/auth/email/status?correo=${encodeURIComponent(correo)}`);
 

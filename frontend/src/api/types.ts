@@ -244,6 +244,11 @@ export interface VerifyCodeResponse {
   token: string;
 }
 
+export interface EmailSessionResponse {
+  correo: string;
+  token: string;
+}
+
 export interface EmailStatusResponse {
   correo: string;
   verificado: boolean;

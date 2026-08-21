@@ -14,7 +14,7 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import { env } from "../config/env";
-import { TooManyRequestsError, ValidationError } from "../errors/AppError";
+import { ForbiddenError, TooManyRequestsError, ValidationError } from "../errors/AppError";
 import { emailService, type DeliveryResult } from "../integrations";
 import {
   consumePendingCodes, countCodesSince, findLastPendingCode, insertCode,
@@ -62,6 +62,12 @@ function coincide(a: string, b: string): boolean {
 /** true si el proveedor de correo no envía de verdad (desarrollo con `console`). */
 function enModoRelleno(): boolean {
   return env.integrations.emailProvider === "console" && env.nodeEnv !== "production";
+}
+
+/** Token que acredita ante el frontend que el correo está verificado. */
+function emitirToken(email: string): string {
+  const payload: EmailTokenPayload = { scope: "email", email };
+  return jwt.sign(payload, env.auth.jwtSecret, { expiresIn: TOKEN_TTL });
 }
 
 export interface RequestCodeResult {
@@ -139,10 +145,27 @@ export async function verifyCode(correo: unknown, codigo: unknown): Promise<Veri
 
   await markConsumed(pendiente.id);
   const verificadoEn = await markEmailVerified(email);
-  const payload: EmailTokenPayload = { scope: "email", email };
-  const token = jwt.sign(payload, env.auth.jwtSecret, { expiresIn: TOKEN_TTL });
 
-  return { correo: email, verificadoEn, token };
+  return { correo: email, verificadoEn, token: emitirToken(email) };
+}
+
+export interface SessionResult {
+  correo: string;
+  token: string;
+}
+
+/**
+ * Abre sesión sin código para un correo YA verificado antes (otro navegador,
+ * storage borrado, token vencido): no tiene sentido volver a pedirle el OTP a
+ * quien ya demostró que el correo es suyo. Si nunca se verificó, responde
+ * EmailNotVerified y el frontend pasa a pedir el código.
+ */
+export async function startSession(correo: unknown): Promise<SessionResult> {
+  const email = normalizarEmail(correo);
+  if (!(await isEmailVerified(email))) {
+    throw new ForbiddenError("Este correo aún no ha sido verificado.", "EmailNotVerified");
+  }
+  return { correo: email, token: emitirToken(email) };
 }
 
 /** Consulta si un correo ya está verificado (el frontend la usa al arrancar). */

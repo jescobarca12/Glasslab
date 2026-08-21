@@ -29,6 +29,7 @@ apiRouter.get("/labels", asyncHandler(labels.getPublicLabels));
 // --- Verificación de correo (OTP) ---
 apiRouter.post("/auth/email/request-code", asyncHandler(emailVerification.requestCode));
 apiRouter.post("/auth/email/verify", asyncHandler(emailVerification.verify));
+apiRouter.post("/auth/email/session", asyncHandler(emailVerification.startSession));
 apiRouter.get("/auth/email/status", asyncHandler(emailVerification.status));
 
 // --- Diagnósticos / motor de reglas ---
