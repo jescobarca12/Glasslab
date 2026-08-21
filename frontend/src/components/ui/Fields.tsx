@@ -10,7 +10,7 @@ export function TextField({
 }: BaseProps & {
   value: string;
   onChange: (v: string) => void;
-  type?: "text" | "email" | "tel";
+  type?: "text" | "email" | "tel" | "date";
   placeholder?: string;
 }) {
   return (
@@ -70,6 +70,40 @@ export function TextAreaField({
     <div className="field">
       <label>{label} {hint && <span className="hint">— {hint}</span>}</label>
       <textarea rows={rows} value={value} onChange={(e) => onChange(e.target.value)} />
+    </div>
+  );
+}
+
+/**
+ * Pregunta de tres estados: Sí / No / No sé.
+ *
+ * "No sé" (undefined) no es lo mismo que "No" (false): el motor no debe
+ * concluir que no hay riesgo cuando la persona simplemente no lo sabe.
+ */
+export function TriField({
+  label, hint, value, onChange,
+}: BaseProps & {
+  value: boolean | undefined;
+  onChange: (v: boolean | undefined) => void;
+}) {
+  const opciones: Array<{ v: boolean | undefined; t: string }> = [
+    { v: true, t: "Sí" }, { v: false, t: "No" }, { v: undefined, t: "No sé" },
+  ];
+  return (
+    <div className="field">
+      <label>{label} {hint && <span className="hint">— {hint}</span>}</label>
+      <div className="tri-group">
+        {opciones.map((o) => (
+          <button
+            key={o.t} type="button"
+            className={`tri-btn ${value === o.v ? "on" : ""}`}
+            aria-pressed={value === o.v}
+            onClick={() => onChange(o.v)}
+          >
+            {o.t}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

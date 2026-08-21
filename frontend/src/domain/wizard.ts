@@ -1,4 +1,4 @@
-import type { Borrador, Campos } from "./borrador";
+import { aplicacionDelMotor, necesidadesDelMotor, type Borrador, type Campos } from "./borrador";
 import {
   ACUSTICO_FIELDS, CONDENSACION_FIELDS, GEOMETRIA_FIELDS, SEGURIDAD_FIELDS, SOLAR_FIELDS,
 } from "./moduleFields";
@@ -30,43 +30,50 @@ export function rutearPrefill(prefill: Record<string, unknown>): Record<ModuloCo
   return out;
 }
 
-// Activación condicional de módulos (portado del demo, spec §9).
+// Activación condicional de módulos (portado del demo, spec §9). Se decide con
+// las necesidades TÉCNICAS, no con las etiquetas que eligió la persona.
 export function moduloAcusticoActivo(b: Borrador): boolean {
-  return b.necesidades.includes("confort_acustico") || b.aplicacion === "cerramiento_acustico";
+  return necesidadesDelMotor(b).includes("confort_acustico") || aplicacionDelMotor(b) === "cerramiento_acustico";
 }
 export function moduloSolarActivo(b: Borrador): boolean {
-  const n = b.necesidades;
+  const n = necesidadesDelMotor(b);
   return n.includes("control_solar") || n.includes("aislamiento_termico")
     || n.includes("baja_reflexion") || n.includes("sostenibilidad");
 }
 export function moduloCondensacionActivo(b: Borrador): boolean {
-  return b.necesidades.includes("control_condensacion");
+  return necesidadesDelMotor(b).includes("control_condensacion");
 }
 
 export type StepId =
-  | "persona" | "proyecto" | "aplicacion" | "geometria" | "necesidades"
-  | "acustico" | "solar" | "condensacion" | "seguridad" | "resultados";
+  | "proyecto" | "necesidades" | "aplicacion" | "geometria"
+  | "acustico" | "solar" | "condensacion" | "seguridad" | "resultados" | "confirmacion";
 
 export const STEP_TITULOS: Record<StepId, string> = {
-  persona: "Contacto",
   proyecto: "Proyecto",
+  necesidades: "Qué resolver",
   aplicacion: "Aplicación",
   geometria: "Geometría",
-  necesidades: "Necesidades",
   acustico: "Acústica",
   solar: "Solar / térmico",
   condensacion: "Condensación",
   seguridad: "Seguridad",
   resultados: "Diagnóstico",
+  confirmacion: "Confirmación",
 };
 
-/** Pasos activos según necesidades. Seguridad siempre está presente.
- *  La identificación del usuario (persona) es un gate previo, no un paso. */
+/**
+ * Pasos activos según lo que la persona necesita resolver.
+ *
+ * El orden replica el demo v2: primero se pregunta QUÉ quiere resolver y solo
+ * después DÓNDE va el vidrio, porque la respuesta anterior decide qué módulos
+ * técnicos se activan. Seguridad siempre está presente. La identificación del
+ * usuario es un gate previo, no un paso.
+ */
 export function pasosActivos(b: Borrador): StepId[] {
-  const arr: StepId[] = ["proyecto", "aplicacion", "geometria", "necesidades"];
+  const arr: StepId[] = ["proyecto", "necesidades", "aplicacion", "geometria"];
   if (moduloAcusticoActivo(b)) arr.push("acustico");
   if (moduloSolarActivo(b)) arr.push("solar");
   if (moduloCondensacionActivo(b)) arr.push("condensacion");
-  arr.push("seguridad", "resultados");
+  arr.push("seguridad", "resultados", "confirmacion");
   return arr;
 }

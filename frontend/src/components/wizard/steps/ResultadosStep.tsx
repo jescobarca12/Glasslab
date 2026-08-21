@@ -3,9 +3,8 @@ import { useBorrador } from "../../../state/BorradorContext";
 import { useUsuario } from "../../../state/UsuarioContext";
 import { aBodyBackend } from "../../../domain/borrador";
 import { useAsync } from "../../../hooks/useAsync";
-import { completeChallenge, createDiagnosis, evaluateDiagnosis } from "../../../api/endpoints";
+import { evaluateDiagnosis } from "../../../api/endpoints";
 import type { EvaluateResponse, Route } from "../../../api/types";
-import { CheckField } from "../../ui/Fields";
 
 function RouteCard({ ruta, elegida, onElegir }: { ruta: Route; elegida: boolean; onElegir: () => void }) {
   return (
@@ -44,21 +43,11 @@ function RouteCard({ ruta, elegida, onElegir }: { ruta: Route; elegida: boolean;
 }
 
 export function ResultadosStep() {
-  const { borrador, setEleccion, setRequestCommercialContact, retoActivo } = useBorrador();
+  const { borrador, setEleccion } = useBorrador();
   const { usuario } = useUsuario();
   const evalReq = useAsync<EvaluateResponse, [unknown]>(evaluateDiagnosis);
-  const guardar = useAsync(createDiagnosis);
 
   const persona = usuario!; // garantizado: el gate exige identificarse antes del asistente
-
-  const onGuardar = async (): Promise<void> => {
-    const creado = await guardar.run(aBodyBackend(borrador, persona));
-    if (!creado) return;
-    if (retoActivo) {
-      // El reto suma puntos aparte; si falla no rompe el guardado del diagnóstico.
-      try { await completeChallenge(persona.correo, retoActivo); } catch { /* noop */ }
-    }
-  };
 
   const { run: runEval } = evalReq;
   useEffect(() => {
@@ -118,38 +107,9 @@ export function ResultadosStep() {
         composición final deben validarse con un especialista y el fabricante.
       </div>
 
-      <div className="card" style={{ marginTop: 18 }}>
-        <h3>Guardar diagnóstico</h3>
-        <CheckField
-          label="Quiero que un asesor comercial de VITELSA me contacte."
-          checked={borrador.requestCommercialContact}
-          onChange={setRequestCommercialContact}
-        />
-        {guardar.data ? (
-          <>
-            <div className="callout" style={{ marginTop: 8 }}>
-              ✓ Diagnóstico guardado con folio <strong>{guardar.data.leadId}</strong>. Sumaste puntos
-              {retoActivo ? " por completar el diagnóstico y resolver el reto" : " por completar el diagnóstico"}.
-              Revísalos en <strong>Mi progreso</strong>.
-            </div>
-            {guardar.data.delivery?.email.pending && (
-              <div className="callout warn" style={{ marginTop: 8 }}>
-                ✉️ El envío del diagnóstico por correo está <strong>pendiente de integración</strong>; tu
-                información quedó guardada y un asesor podrá contactarte.
-              </div>
-            )}
-          </>
-        ) : (
-          <button
-            type="button" className="btn btn-primary"
-            disabled={guardar.loading}
-            onClick={() => void onGuardar()}
-          >
-            {guardar.loading ? "Guardando…" : "Guardar diagnóstico"}
-          </button>
-        )}
-        {guardar.error && <div className="error-box" style={{ marginTop: 10 }}>{guardar.error}</div>}
-      </div>
+      <p className="hint" style={{ marginTop: 18 }}>
+        Continúa para enviarlo y recibir la copia por correo.
+      </p>
     </>
   );
 }

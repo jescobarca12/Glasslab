@@ -18,7 +18,7 @@ import { normalizarEmail } from "./emailVerificationService";
 import { isEmailVerified } from "../repositories/emailVerificationRepository";
 
 export interface DiagnosisBody {
-  persona?: { nombre?: string; correo?: string; telefono?: string; ciudad?: string; empresa?: string; perfil?: string };
+  persona?: { nombre?: string; correo?: string; telefono?: string; ciudad?: string; empresa?: string; perfil?: string; cargo?: string };
   proyecto?: { nombre?: string; ciudadId?: string; tipoProyecto?: string; etapa?: string };
   aplicacion?: unknown;
   necesidades?: unknown;
@@ -29,6 +29,17 @@ export interface DiagnosisBody {
   seguridad?: Record<string, unknown>;
   eleccion?: { selectedSolution?: string; reasons?: string[] };
   requestCommercialContact?: boolean;
+  /** Etiquetas elegidas por la persona antes de traducirse al motor. */
+  aplicacionUI?: string;
+  necesidadesUI?: string[];
+  /** Datos comerciales del paso de confirmación (al final del diagnóstico). */
+  confirmacion?: {
+    empresa?: string;
+    cargo?: string;
+    fechaEstimada?: string;
+    solicitaAsesoria?: boolean;
+    autorizacionComercial?: boolean;
+  };
 }
 
 function toProyecto(body: DiagnosisBody): ProyectoInput {
@@ -113,8 +124,12 @@ export async function create(body: DiagnosisBody): Promise<CreateResult> {
   const record: DiagnosisRecord = {
     leadId: generarLeadId(),
     user: {
-      name: body.persona?.nombre, email, phone: body.persona?.telefono,
-      city: body.persona?.ciudad, company: body.persona?.empresa, role: body.persona?.perfil,
+      name: body.persona?.nombre, email, phone: body.persona?.telefono, city: body.persona?.ciudad,
+      // Empresa y cargo llegan del paso de confirmación; se acepta también en
+      // `persona` por compatibilidad con clientes anteriores.
+      company: body.confirmacion?.empresa ?? body.persona?.empresa,
+      role: body.persona?.perfil,
+      position: body.confirmacion?.cargo,
     },
     project: {
       name: body.proyecto?.nombre, city: city?.nombre ?? body.proyecto?.ciudadId,
@@ -130,6 +145,13 @@ export async function create(body: DiagnosisBody): Promise<CreateResult> {
       perforations: Boolean(proyecto.geometria?.["perforaciones"]),
     },
     needs: proyecto.necesidades ?? [],
+    applicationUI: body.aplicacionUI ?? null,
+    needsUI: Array.isArray(body.necesidadesUI) ? body.necesidadesUI : [],
+    confirmation: {
+      estimatedDate: body.confirmacion?.fechaEstimada,
+      requestsAdvisory: body.confirmacion?.solicitaAsesoria,
+      marketingConsent: body.confirmacion?.autorizacionComercial,
+    },
     answers: {
       acoustic: proyecto.acustico ?? {}, solar: proyecto.solar ?? {},
       safety: proyecto.seguridad ?? {}, condensation: proyecto.condensacion ?? {},
@@ -144,7 +166,8 @@ export async function create(body: DiagnosisBody): Promise<CreateResult> {
       compatibilityLevel: compatibilidad.nivel,
       reasons: body.eleccion?.reasons ?? [],
     },
-    requestCommercialContact: Boolean(body.requestCommercialContact),
+    // Pedir asesoría en la confirmación equivale a pedir contacto comercial.
+    requestCommercialContact: Boolean(body.requestCommercialContact) || Boolean(body.confirmacion?.solicitaAsesoria),
     appliedRules: reglas.map((r) => ({ code: r.code, nivelRiesgo: r.nivelRiesgo })),
   };
 

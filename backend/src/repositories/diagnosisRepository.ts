@@ -9,13 +9,22 @@ import { NotFoundError } from "../errors/AppError";
 
 export interface DiagnosisRecord {
   leadId: string;
-  user: { name?: string; email?: string; phone?: string; city?: string; company?: string; role?: string };
+  user: { name?: string; email?: string; phone?: string; city?: string; company?: string; role?: string; position?: string };
   project: { name?: string; city?: string; type?: string; stage?: string };
   application: {
     type: string | null; width?: number | null; height?: number | null; area?: number | null;
     quantity?: number | null; location?: string | null; perforations?: boolean | null;
   };
   needs: string[];
+  /** Etiquetas que eligió la persona, antes de traducirlas al motor. */
+  applicationUI?: string | null;
+  needsUI?: string[];
+  /** Datos comerciales capturados al final del diagnóstico. */
+  confirmation?: {
+    estimatedDate?: string | null;
+    requestsAdvisory?: boolean;
+    marketingConsent?: boolean;
+  };
   answers: {
     acoustic: Record<string, unknown>; solar: Record<string, unknown>;
     safety: Record<string, unknown>; condensation: Record<string, unknown>;
@@ -46,22 +55,24 @@ export async function insertDiagnosis(record: DiagnosisRecord): Promise<Diagnosi
 
     const { rows } = await client.query(
       `INSERT INTO diagnoses (
-         lead_id, user_name, user_email, user_phone, user_city, user_company, user_role,
+         lead_id, user_name, user_email, user_phone, user_city, user_company, user_role, user_position,
          project_name, project_city, project_type, project_stage,
-         application_type, app_width, app_height, app_area, app_quantity, app_location, app_perforations,
+         application_type, application_ui, needs_ui,
+         app_width, app_height, app_area, app_quantity, app_location, app_perforations,
          answers_acoustic, answers_solar, answers_safety, answers_condensation,
          results, selected_option, compatibility_score, compatibility_level, selection_reasons,
-         request_commercial_contact
+         request_commercial_contact, estimated_date, requests_advisory, marketing_consent
        ) VALUES (
          $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,
-         $19,$20,$21,$22,$23,$24,$25,$26,$27,$28
+         $19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34
        )
        RETURNING id, lead_id, created_at, application_type, compatibility_score, compatibility_level, results`,
       [
         record.leadId, record.user.name ?? null, record.user.email ?? null, record.user.phone ?? null,
-        record.user.city ?? null, record.user.company ?? null, record.user.role ?? null,
+        record.user.city ?? null, record.user.company ?? null, record.user.role ?? null, record.user.position ?? null,
         record.project.name ?? null, record.project.city ?? null, record.project.type ?? null, record.project.stage ?? null,
-        record.application.type, record.application.width ?? null, record.application.height ?? null,
+        record.application.type, record.applicationUI ?? null, record.needsUI ?? [],
+        record.application.width ?? null, record.application.height ?? null,
         record.application.area ?? null, record.application.quantity ?? null, record.application.location ?? null,
         record.application.perforations ?? null,
         JSON.stringify(record.answers.acoustic), JSON.stringify(record.answers.solar),
@@ -69,6 +80,9 @@ export async function insertDiagnosis(record: DiagnosisRecord): Promise<Diagnosi
         JSON.stringify(record.results), record.selection.selectedOption ?? null,
         record.selection.compatibilityScore ?? null, record.selection.compatibilityLevel ?? null,
         record.selection.reasons ?? [], record.requestCommercialContact,
+        record.confirmation?.estimatedDate ?? null,
+        Boolean(record.confirmation?.requestsAdvisory),
+        Boolean(record.confirmation?.marketingConsent),
       ],
     );
     const diag = rows[0]!;
@@ -162,9 +176,10 @@ export async function listDiagnoses(limit: number, offset: number): Promise<Lead
 /** Detalle completo de un diagnóstico para el panel administrativo. */
 export async function getDiagnosisDetail(leadId: string): Promise<Record<string, unknown>> {
   const { rows } = await pool.query(
-    `SELECT id, lead_id, created_at, user_name, user_email, user_phone, user_city, user_company, user_role,
+    `SELECT id, lead_id, created_at, user_name, user_email, user_phone, user_city, user_company, user_role, user_position,
             project_name, project_city, project_type, project_stage,
-            application_type, app_width, app_height, app_area, app_quantity, app_location, app_perforations,
+            application_type, application_ui, needs_ui, estimated_date, requests_advisory, marketing_consent,
+            app_width, app_height, app_area, app_quantity, app_location, app_perforations,
             answers_acoustic, answers_solar, answers_safety, answers_condensation,
             results, selected_option, compatibility_score, compatibility_level, selection_reasons,
             request_commercial_contact, email_copy_sent, email_sent_at
@@ -184,13 +199,22 @@ export async function getDiagnosisDetail(leadId: string): Promise<Record<string,
   return {
     leadId: d.lead_id,
     createdAt: d.created_at.toISOString(),
-    user: { name: d.user_name, email: d.user_email, phone: d.user_phone, city: d.user_city, company: d.user_company, role: d.user_role },
+    user: {
+      name: d.user_name, email: d.user_email, phone: d.user_phone, city: d.user_city,
+      company: d.user_company, role: d.user_role, position: d.user_position,
+    },
     project: { name: d.project_name, city: d.project_city, type: d.project_type, stage: d.project_stage },
     application: {
-      type: d.application_type, width: d.app_width, height: d.app_height, area: d.app_area,
-      quantity: d.app_quantity, location: d.app_location, perforations: d.app_perforations,
+      type: d.application_type, etiqueta: d.application_ui, width: d.app_width, height: d.app_height,
+      area: d.app_area, quantity: d.app_quantity, location: d.app_location, perforations: d.app_perforations,
     },
     needs: needs.map((n) => n.need_code),
+    needsUI: d.needs_ui ?? [],
+    confirmation: {
+      estimatedDate: d.estimated_date,
+      requestsAdvisory: d.requests_advisory,
+      marketingConsent: d.marketing_consent,
+    },
     answers: { acoustic: d.answers_acoustic, solar: d.answers_solar, safety: d.answers_safety, condensation: d.answers_condensation },
     results: d.results,
     selection: {
@@ -209,12 +233,14 @@ export interface LeadExportRow {
   tipo: string | null; etapa: string | null; aplicacion: string | null; necesidades: string;
   opcionElegida: string | null; compatibilidad: number | null; nivelCompatibilidad: string | null;
   solicitaContacto: boolean; correoEnviado: boolean; fecha: string;
+  cargo: string | null; fechaEstimada: string | null; solicitaAsesoria: boolean; autorizacionComercial: boolean;
 }
 
 /** Todas las filas de leads aplanadas para exportar a CSV (columnas del demo). */
 export async function getAllLeadsForExport(): Promise<LeadExportRow[]> {
   const { rows } = await pool.query(
-    `SELECT d.lead_id, d.user_name, d.user_email, d.user_phone, d.user_company, d.user_role,
+    `SELECT d.lead_id, d.user_name, d.user_email, d.user_phone, d.user_company, d.user_role, d.user_position,
+            d.estimated_date, d.requests_advisory, d.marketing_consent,
             d.project_name, d.project_city, d.project_type, d.project_stage,
             d.application_type, d.selected_option, d.compatibility_score, d.compatibility_level,
             d.request_commercial_contact, d.email_copy_sent, d.created_at,
@@ -231,6 +257,8 @@ export async function getAllLeadsForExport(): Promise<LeadExportRow[]> {
     opcionElegida: d.selected_option, compatibilidad: d.compatibility_score, nivelCompatibilidad: d.compatibility_level,
     solicitaContacto: d.request_commercial_contact, correoEnviado: d.email_copy_sent,
     fecha: d.created_at.toISOString(),
+    cargo: d.user_position, fechaEstimada: d.estimated_date,
+    solicitaAsesoria: d.requests_advisory, autorizacionComercial: d.marketing_consent,
   }));
 }
 

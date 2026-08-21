@@ -2,7 +2,7 @@ import { useBorrador } from "../../state/BorradorContext";
 import { useLabel } from "../../state/LabelsContext";
 import type { Campos } from "../../domain/borrador";
 import type { FieldDef } from "../../domain/moduleFields";
-import { CheckField, NumberField, SelectField, TextField } from "../ui/Fields";
+import { CheckField, NumberField, SelectField, TextField, TriField } from "../ui/Fields";
 
 type ModuloConCampos = "geometria" | "acustico" | "solar" | "condensacion" | "seguridad";
 
@@ -25,6 +25,16 @@ export function ModuleForm({ modulo, fields }: { modulo: ModuloConCampos; fields
               key={f.campo}
               label={etiqueta}
               checked={raw === true}
+              onChange={(v) => setCampo(modulo, f.campo, v)}
+            />
+          );
+        }
+        if (f.type === "tri") {
+          return (
+            <TriField
+              key={f.campo}
+              label={etiqueta} hint={f.hint}
+              value={typeof raw === "boolean" ? raw : undefined}
               onChange={(v) => setCampo(modulo, f.campo, v)}
             />
           );

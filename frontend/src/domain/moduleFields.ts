@@ -1,7 +1,7 @@
 // Definición declarativa de los campos de cada módulo técnico del asistente.
 // Los textos provienen de labels.* del demo.
 
-export type FieldType = "text" | "number" | "select" | "check";
+export type FieldType = "text" | "number" | "select" | "check" | "tri";
 
 export interface FieldDef {
   campo: string;
@@ -91,14 +91,14 @@ export const CONDENSACION_FIELDS: FieldDef[] = [
 ];
 
 export const SEGURIDAD_FIELDS: FieldDef[] = [
-  { campo: "riesgoImpactoHumano", label: "¿Existe riesgo de impacto humano?", type: "check" },
-  { campo: "riesgoCaida", label: "¿Existe riesgo de caída?", type: "check" },
-  { campo: "aplicacionSobreCabeza", label: "¿Queda sobre zonas de circulación (sobre cabeza)?", type: "check" },
-  { campo: "presenciaNinos", label: "¿Hay presencia habitual de niños?", type: "check" },
-  { campo: "zonaHumeda", label: "¿Es una zona húmeda (baño, piscina)?", type: "check" },
-  { campo: "presionVientoConocida", label: "¿Se conoce la presión de viento de diseño?", type: "check" },
-  { campo: "movimientoEntrePisos", label: "¿Aplica movimiento entre pisos (edificios altos)?", type: "check" },
-  { campo: "permanenciaPosrotura", label: "¿Se requiere permanencia en el vano posrotura?", type: "check" },
+  { campo: "riesgoImpactoHumano", label: "¿Existe riesgo de impacto humano?", type: "tri" },
+  { campo: "riesgoCaida", label: "¿Existe riesgo de caída?", type: "tri" },
+  { campo: "aplicacionSobreCabeza", label: "¿Queda sobre zonas de circulación (sobre cabeza)?", type: "tri" },
+  { campo: "presenciaNinos", label: "¿Hay presencia habitual de niños?", type: "tri" },
+  { campo: "zonaHumeda", label: "¿Es una zona húmeda (baño, piscina)?", type: "tri" },
+  { campo: "presionVientoConocida", label: "¿Se conoce la presión de viento de diseño?", type: "tri" },
+  { campo: "movimientoEntrePisos", label: "¿Aplica movimiento entre pisos (edificios altos)?", type: "tri" },
+  { campo: "permanenciaPosrotura", label: "¿Se requiere permanencia en el vano posrotura?", type: "tri" },
   { campo: "zonaSismica", label: "Zona sísmica (NSR-10, autocompletada por ciudad)", type: "select", options: [
     { value: "baja", label: "Baja" }, { value: "intermedia", label: "Intermedia" }, { value: "alta", label: "Alta" },
   ] },

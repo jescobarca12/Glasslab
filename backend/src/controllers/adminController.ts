@@ -30,6 +30,9 @@ const CSV_HEADERS = [
   "leadId", "nombre", "correo", "telefono", "empresa", "perfil", "proyecto", "ciudad",
   "tipo", "etapa", "aplicacion", "necesidades", "opcionElegida", "compatibilidad",
   "nivelCompatibilidad", "solicitaContacto", "correoEnviado", "fecha",
+  // Añadidas con el paso de confirmación; van al final para no alterar el
+  // orden de las columnas que ya usaba el demo.
+  "cargo", "fechaEstimada", "solicitaAsesoria", "autorizacionComercial",
 ];
 
 /** GET /api/admin/leads.csv — exporta todos los leads como CSV descargable (200). */
@@ -39,6 +42,7 @@ export async function exportLeadsCsv(_req: Request, res: Response): Promise<void
     l.leadId, l.nombre, l.correo, l.telefono, l.empresa, l.perfil, l.proyecto, l.ciudad,
     l.tipo, l.etapa, l.aplicacion, l.necesidades, l.opcionElegida, l.compatibilidad,
     l.nivelCompatibilidad, l.solicitaContacto ? "si" : "no", l.correoEnviado ? "si" : "no", l.fecha,
+    l.cargo, l.fechaEstimada, l.solicitaAsesoria ? "si" : "no", l.autorizacionComercial ? "si" : "no",
   ]);
   const csv = toCsv(CSV_HEADERS, rows);
   const fecha = new Date().toISOString().slice(0, 10);

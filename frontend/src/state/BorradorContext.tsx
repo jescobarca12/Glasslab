@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
-import { borradorInicial, type Borrador, type Campos } from "../domain/borrador";
+import { borradorInicial, type Borrador, type Campos, type Confirmacion } from "../domain/borrador";
 import { rutearPrefill } from "../domain/wizard";
 import type { Challenge } from "../api/types";
 
@@ -11,9 +11,10 @@ interface BorradorContextValue {
   setIndice: (updater: number | ((i: number) => number)) => void;
   retoActivo: string | null;
   setProyectoInfo: (patch: Partial<Borrador["proyecto"]>) => void;
-  setAplicacion: (aplicacion: string) => void;
+  setAplicacionUI: (aplicacionUI: string) => void;
   setCampo: (modulo: ModuloConCampos, campo: string, valor: unknown) => void;
-  toggleNecesidad: (code: string) => void;
+  toggleNecesidadUI: (id: string) => void;
+  setConfirmacion: (patch: Partial<Confirmacion>) => void;
   setEleccion: (selectedSolution: string) => void;
   setRequestCommercialContact: (v: boolean) => void;
   cargarReto: (challenge: Challenge) => void;
@@ -33,16 +34,18 @@ export function BorradorProvider({ children }: { children: ReactNode }) {
     setIndice,
     retoActivo,
     setProyectoInfo: (patch) => setBorrador((b) => ({ ...b, proyecto: { ...b.proyecto, ...patch } })),
-    setAplicacion: (aplicacion) => setBorrador((b) => ({ ...b, aplicacion })),
+    setAplicacionUI: (aplicacionUI) => setBorrador((b) => ({ ...b, aplicacionUI })),
     setCampo: (modulo, campo, valor) =>
       setBorrador((b) => ({ ...b, [modulo]: { ...(b[modulo] as Campos), [campo]: valor } })),
-    toggleNecesidad: (code) =>
+    toggleNecesidadUI: (id) =>
       setBorrador((b) => ({
         ...b,
-        necesidades: b.necesidades.includes(code)
-          ? b.necesidades.filter((n) => n !== code)
-          : [...b.necesidades, code],
+        necesidadesUI: b.necesidadesUI.includes(id)
+          ? b.necesidadesUI.filter((n) => n !== id)
+          : [...b.necesidadesUI, id],
       })),
+    setConfirmacion: (patch) =>
+      setBorrador((b) => ({ ...b, confirmacion: { ...b.confirmacion, ...patch } })),
     setEleccion: (selectedSolution) => setBorrador((b) => ({ ...b, eleccion: { selectedSolution } })),
     setRequestCommercialContact: (v) => setBorrador((b) => ({ ...b, requestCommercialContact: v })),
     cargarReto: (challenge) => {
@@ -50,7 +53,7 @@ export function BorradorProvider({ children }: { children: ReactNode }) {
       setBorrador(() => ({
         ...borradorInicial(),
         proyecto: { ...borradorInicial().proyecto, nombre: `Reto: ${challenge.titulo}`, ciudadId: challenge.suggestedCityCode ?? "" },
-        aplicacion: challenge.applicationCode,
+        aplicacionUI: challenge.applicationCode,
         geometria: modulos.geometria,
         acustico: modulos.acustico,
         solar: modulos.solar,

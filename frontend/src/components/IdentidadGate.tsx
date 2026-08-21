@@ -5,16 +5,10 @@ import { useAsync } from "../hooks/useAsync";
 import { ApiError } from "../api/client";
 import { requestEmailCode, startEmailSession, verifyEmailCode } from "../api/endpoints";
 import type { RequestCodeResponse } from "../api/types";
+import { PERFILES } from "../domain/catalogoUI";
 import { CheckField, SelectField, TextField } from "./ui/Fields";
 
-const PERFILES = [
-  { value: "Arquitecto", label: "Arquitecto/a" },
-  { value: "Constructor", label: "Constructor/a" },
-  { value: "Instalador", label: "Instalador/a" },
-  { value: "Propietario", label: "Propietario/a" },
-  { value: "Estudiante", label: "Estudiante" },
-  { value: "Otro", label: "Otro" },
-];
+const OPCIONES_PERFIL = PERFILES.map((p) => ({ value: p.id, label: p.label }));
 
 const SEGUNDOS_REENVIO = 60;
 
@@ -159,8 +153,10 @@ export function IdentidadGate() {
         <TextField label="Nombre" value={p.nombre} onChange={(v) => set({ nombre: v })} />
         <TextField label="Correo" type="email" value={p.correo} onChange={(v) => set({ correo: v })} />
         <TextField label="Teléfono" type="tel" hint="opcional" value={p.telefono} onChange={(v) => set({ telefono: v })} />
-        <TextField label="Empresa" hint="opcional" value={p.empresa} onChange={(v) => set({ empresa: v })} />
-        <SelectField label="Perfil" value={p.perfil} onChange={(v) => set({ perfil: v })} options={PERFILES} />
+        <SelectField label="Perfil" value={p.perfil} onChange={(v) => set({ perfil: v })} options={OPCIONES_PERFIL} />
+        {p.perfil === "otro" && (
+          <TextField label="¿Cuál es tu perfil?" value={p.perfilOtro} onChange={(v) => set({ perfilOtro: v })} />
+        )}
       </div>
       <CheckField
         label="Autorizo el tratamiento de mis datos para recibir el diagnóstico y ser contactado por VITELSA."

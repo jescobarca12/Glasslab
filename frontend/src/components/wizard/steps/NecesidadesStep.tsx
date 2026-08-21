@@ -1,27 +1,39 @@
 import { useBorrador } from "../../../state/BorradorContext";
-import type { Need } from "../../../api/types";
+import { NECESIDADES_UI, necesidadesTecnicas } from "../../../domain/catalogoUI";
 
-export function NecesidadesStep({ needs }: { needs: Need[] }) {
-  const { borrador, toggleNecesidad } = useBorrador();
+/**
+ * Primera pregunta del asistente: qué quiere resolver la persona, en sus
+ * palabras. De aquí salen las necesidades técnicas que activan los módulos,
+ * así que va antes de elegir dónde se instala el vidrio.
+ */
+export function NecesidadesStep() {
+  const { borrador, toggleNecesidadUI } = useBorrador();
+  const tecnicas = necesidadesTecnicas(borrador.necesidadesUI);
 
   return (
     <>
-      <h2>¿Qué necesitas resolver?</h2>
+      <h2>¿Qué quieres mejorar o resolver?</h2>
       <p className="lead">
-        Selecciona todas las que apliquen. Según tu elección se activarán módulos técnicos
-        adicionales (acústica, solar/térmico, condensación).
+        Elige todas las que apliquen. Según tu respuesta se activan los módulos técnicos
+        —acústica, solar y térmico, condensación— más adelante en el asistente.
       </p>
       <div className="option-grid">
-        {needs.map((n) => (
+        {NECESIDADES_UI.map((n) => (
           <button
-            key={n.code} type="button"
-            className={`option ${borrador.necesidades.includes(n.code) ? "selected" : ""}`}
-            onClick={() => toggleNecesidad(n.code)}
+            key={n.id} type="button"
+            className={`option ${borrador.necesidadesUI.includes(n.id) ? "selected" : ""}`}
+            onClick={() => toggleNecesidadUI(n.id)}
           >
-            <span className="name">{n.nombre}</span>
+            <span className="name">{n.label}</span>
           </button>
         ))}
       </div>
+      {borrador.necesidadesUI.length > 0 && tecnicas.length === 0 && (
+        <p className="hint">
+          Con lo que elegiste no se activa ningún módulo técnico adicional: el diagnóstico usará
+          la aplicación, la geometría y el filtro de seguridad.
+        </p>
+      )}
     </>
   );
 }
