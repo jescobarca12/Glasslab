@@ -21,12 +21,18 @@ export class ConsoleEmailService implements EmailService {
       registradoEn: new Date().toISOString(),
     });
     // eslint-disable-next-line no-console
-    console.log(`[EmailService:relleno] Correo del diagnóstico ${input.leadId} para ${input.to} registrado en ${file} (integración real pendiente).`);
+    console.log(
+      file
+        ? `[EmailService:relleno] Correo del diagnóstico ${input.leadId} para ${input.to} registrado en ${file} (integración real pendiente).`
+        : `[EmailService:relleno] Correo del diagnóstico ${input.leadId} para ${input.to} NO enviado (integración real pendiente).`,
+    );
     return {
       delivered: false,
       pending: true,
       adapter: "console-placeholder",
-      detail: "Envío de correo pendiente de integración con el proveedor real de VITELSA. El contenido quedó guardado localmente.",
+      detail: file
+        ? "Envío de correo pendiente de integración con el proveedor real de VITELSA. El contenido quedó guardado localmente."
+        : "Envío de correo pendiente: EMAIL_PROVIDER=console no envía nada y este entorno no tiene bandeja local.",
     };
   }
 
@@ -42,7 +48,10 @@ export class ConsoleEmailService implements EmailService {
     // El código se imprime a propósito: en desarrollo no hay envío real y esta
     // es la única forma de completar la verificación.
     // eslint-disable-next-line no-console
-    console.log(`[EmailService:relleno] Código de verificación para ${input.to}: ${input.code} (vence en ${input.expiresInMinutes} min). Registrado en ${file}.`);
+    console.log(
+      `[EmailService:relleno] Código de verificación para ${input.to}: ${input.code} (vence en ${input.expiresInMinutes} min).`
+      + (file ? ` Registrado en ${file}.` : ""),
+    );
     return {
       delivered: false,
       pending: true,
