@@ -3,7 +3,7 @@
  * backend, arma el resultado y (al crear) persiste el lead y actualiza la
  * gamificación. Los controladores solo llaman a estas funciones.
  */
-import { ValidationError } from "../errors/AppError";
+import { ForbiddenError, ValidationError } from "../errors/AppError";
 import { evaluarDiagnostico } from "../domain/rules/engine";
 import type { ProyectoInput, Route } from "../domain/rules/types";
 import { PUNTOS } from "../domain/gamification";
@@ -14,6 +14,8 @@ import { upsertPlayer, addPoints, awardBadge, registrarCiudadExplorada } from ".
 import { generarLeadId } from "../utils/leadId";
 import { emailService, leadSyncService, type DeliveryResult } from "../integrations";
 import { env } from "../config/env";
+import { normalizarEmail } from "./emailVerificationService";
+import { isEmailVerified } from "../repositories/emailVerificationRepository";
 
 export interface DiagnosisBody {
   persona?: { nombre?: string; correo?: string; telefono?: string; ciudad?: string; empresa?: string; perfil?: string };
@@ -93,8 +95,15 @@ export interface CreateResult extends DiagnosisRow {
  *  dispara las integraciones (correo + sincronización de lead). */
 export async function create(body: DiagnosisBody): Promise<CreateResult> {
   await validateBody(body);
-  const email = body.persona?.correo?.trim();
-  if (!email) throw new ValidationError("El correo del contacto es obligatorio para guardar el diagnóstico.");
+  // El correo debe estar verificado por OTP: así el lead que llega a VITELSA
+  // tiene un correo real y contactable, no uno inventado en el formulario.
+  const email = normalizarEmail(body.persona?.correo);
+  if (!(await isEmailVerified(email))) {
+    throw new ForbiddenError(
+      "El correo no está verificado. Solicita un código de verificación y confírmalo antes de guardar el diagnóstico.",
+      "EmailNotVerified",
+    );
+  }
 
   const proyecto = toProyecto(body);
   const dataset = await loadDataset();

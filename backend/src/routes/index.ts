@@ -8,6 +8,7 @@ import * as admin from "../controllers/adminController";
 import * as labels from "../controllers/labelsController";
 import * as rulesAdmin from "../controllers/rulesAdminController";
 import * as citiesAdmin from "../controllers/citiesAdminController";
+import * as emailVerification from "../controllers/emailVerificationController";
 
 export const apiRouter = Router();
 
@@ -24,6 +25,11 @@ apiRouter.get("/applications", asyncHandler(catalog.listApplications));
 apiRouter.get("/needs", asyncHandler(catalog.listNeeds));
 apiRouter.get("/challenges", asyncHandler(catalog.listChallenges));
 apiRouter.get("/labels", asyncHandler(labels.getPublicLabels));
+
+// --- Verificación de correo (OTP) ---
+apiRouter.post("/auth/email/request-code", asyncHandler(emailVerification.requestCode));
+apiRouter.post("/auth/email/verify", asyncHandler(emailVerification.verify));
+apiRouter.get("/auth/email/status", asyncHandler(emailVerification.status));
 
 // --- Diagnósticos / motor de reglas ---
 apiRouter.post("/diagnoses/evaluate", asyncHandler(diagnosis.evaluate));

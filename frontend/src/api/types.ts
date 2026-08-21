@@ -220,3 +220,31 @@ export interface CreatedDiagnosis {
   compatibilityLevel: string | null;
   delivery?: { email: DeliveryResult; leadSync: DeliveryResult };
 }
+
+// --- Verificación de correo (OTP) ---
+
+export interface DeliveryInfo {
+  delivered: boolean;
+  pending: boolean;
+  adapter: string;
+  detail: string;
+}
+
+export interface RequestCodeResponse {
+  correo: string;
+  expiraEnMinutos: number;
+  entrega: DeliveryInfo;
+  /** Solo en desarrollo con EMAIL_PROVIDER=console (no hay envío real). */
+  codigoDev?: string;
+}
+
+export interface VerifyCodeResponse {
+  correo: string;
+  verificadoEn: string;
+  token: string;
+}
+
+export interface EmailStatusResponse {
+  correo: string;
+  verificado: boolean;
+}

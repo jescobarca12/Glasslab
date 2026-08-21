@@ -1,4 +1,4 @@
-import type { DeliveryResult, DiagnosisEmailInput, EmailService } from "./types";
+import type { DeliveryResult, DiagnosisEmailInput, EmailService, VerificationEmailInput } from "./types";
 import { writeOutbox } from "./outbox";
 
 /**
@@ -27,6 +27,27 @@ export class ConsoleEmailService implements EmailService {
       pending: true,
       adapter: "console-placeholder",
       detail: "Envío de correo pendiente de integración con el proveedor real de VITELSA. El contenido quedó guardado localmente.",
+    };
+  }
+
+  async sendVerificationCode(input: VerificationEmailInput): Promise<DeliveryResult> {
+    const file = writeOutbox("emails", `otp-${Date.now()}`, {
+      tipo: "verificacion",
+      para: input.to,
+      usuario: input.userName ?? null,
+      codigo: input.code,
+      expiraEnMinutos: input.expiresInMinutes,
+      registradoEn: new Date().toISOString(),
+    });
+    // El código se imprime a propósito: en desarrollo no hay envío real y esta
+    // es la única forma de completar la verificación.
+    // eslint-disable-next-line no-console
+    console.log(`[EmailService:relleno] Código de verificación para ${input.to}: ${input.code} (vence en ${input.expiresInMinutes} min). Registrado en ${file}.`);
+    return {
+      delivered: false,
+      pending: true,
+      adapter: "console-placeholder",
+      detail: "El correo de verificación no se envió: EMAIL_PROVIDER=console. El código quedó en la consola del backend y en la bandeja local.",
     };
   }
 }

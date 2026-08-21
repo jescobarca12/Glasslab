@@ -3,6 +3,7 @@ import type {
   AdminLoginResponse, Application, Challenge, City, CreatedDiagnosis, EvaluateResponse,
   CityAdminDetail, CityUpdatePayload, GlassFamily, GroupedLabels, LabelRow, LeadDetail,
   LeadListResult, Need, PlayerProfile, RuleDetail, RuleListItem, RuleUpdatePayload,
+  EmailStatusResponse, RequestCodeResponse, VerifyCodeResponse,
 } from "./types";
 
 export const getCities = (): Promise<City[]> => api.get("/cities");
@@ -14,6 +15,14 @@ export const getGlassFamilies = (): Promise<GlassFamily[]> => api.get("/glass-fa
 
 export const getChallenges = (): Promise<Challenge[]> => api.get("/challenges");
 export const getLabels = (): Promise<GroupedLabels> => api.get("/labels");
+
+// --- Verificación de correo (OTP) ---
+export const requestEmailCode = (correo: string, nombre?: string): Promise<RequestCodeResponse> =>
+  api.post("/auth/email/request-code", { correo, nombre });
+export const verifyEmailCode = (correo: string, codigo: string): Promise<VerifyCodeResponse> =>
+  api.post("/auth/email/verify", { correo, codigo });
+export const getEmailStatus = (correo: string): Promise<EmailStatusResponse> =>
+  api.get(`/auth/email/status?correo=${encodeURIComponent(correo)}`);
 
 export const evaluateDiagnosis = (body: unknown): Promise<EvaluateResponse> =>
   api.post("/diagnoses/evaluate", body);

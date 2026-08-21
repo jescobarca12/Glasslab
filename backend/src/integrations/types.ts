@@ -24,9 +24,18 @@ export interface DiagnosisEmailInput {
   summary: unknown;
 }
 
-/** Envío del diagnóstico por correo. */
+export interface VerificationEmailInput {
+  to: string;
+  /** Código OTP en claro: solo viaja hacia el correo, nunca se persiste así. */
+  code: string;
+  userName?: string | null;
+  expiresInMinutes: number;
+}
+
+/** Envío del diagnóstico y del código de verificación por correo. */
 export interface EmailService {
   sendDiagnosis(input: DiagnosisEmailInput): Promise<DeliveryResult>;
+  sendVerificationCode(input: VerificationEmailInput): Promise<DeliveryResult>;
 }
 
 export interface LeadSyncInput {

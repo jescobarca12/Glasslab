@@ -39,3 +39,8 @@ export class ForbiddenError extends AppError {
 export class ConflictError extends AppError {
   readonly statusCode = 409;
 }
+
+/** Demasiadas solicitudes en poco tiempo (rate limit del código de verificación). */
+export class TooManyRequestsError extends AppError {
+  readonly statusCode = 429;
+}

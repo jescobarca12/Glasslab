@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import type { DeliveryResult, DiagnosisEmailInput, EmailService } from "./types";
+import type { DeliveryResult, DiagnosisEmailInput, EmailService, VerificationEmailInput } from "./types";
 import { env } from "../config/env";
 
 interface RutaResumen {
@@ -50,6 +50,26 @@ function buildHtml(input: DiagnosisEmailInput): string {
   </div>`;
 }
 
+
+function buildVerificationHtml(input: VerificationEmailInput): string {
+  return `
+  <div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:0 auto;color:#4d4d4d;">
+    <div style="border-bottom:3px solid #a40404;padding:16px 0;">
+      <span style="font-size:20px;font-weight:800;color:#002a49;letter-spacing:1px;">VITELSA <span style="color:#a40404;">GlassLab</span></span>
+      <div style="font-size:12px;color:#7c7c7c;">Verificación de correo</div>
+    </div>
+    <div style="padding:20px 0;">
+      <p>Hola${input.userName ? " " + esc(input.userName) : ""},</p>
+      <p>Usa este código para confirmar tu correo y entrar al asistente de diagnóstico:</p>
+      <div style="font-size:34px;font-weight:800;letter-spacing:10px;color:#002a49;background:#eef4f9;border-radius:10px;padding:18px;text-align:center;margin:18px 0;">
+        ${esc(input.code)}
+      </div>
+      <p style="font-size:13px;color:#7c7c7c;">El código vence en ${input.expiresInMinutes} minutos y solo puede usarse una vez.</p>
+      <p style="font-size:13px;color:#7c7c7c;">Si no solicitaste este código, ignora este mensaje.</p>
+    </div>
+  </div>`;
+}
+
 /**
  * Envío real del diagnóstico por correo vía SMTP (nodemailer). Se configura con
  * las variables SMTP_* (funciona con Gmail, Outlook o cualquier servidor SMTP).
@@ -77,6 +97,21 @@ export class SmtpEmailService implements EmailService {
       pending: false,
       adapter: "smtp",
       detail: `Diagnóstico enviado por correo a ${input.to}.`,
+    };
+  }
+
+  async sendVerificationCode(input: VerificationEmailInput): Promise<DeliveryResult> {
+    await this.transporter.sendMail({
+      from: `VITELSA GlassLab <${this.from}>`,
+      to: input.to,
+      subject: `Tu código de verificación: ${input.code}`,
+      html: buildVerificationHtml(input),
+    });
+    return {
+      delivered: true,
+      pending: false,
+      adapter: "smtp",
+      detail: `Código de verificación enviado a ${input.to}.`,
     };
   }
 }
