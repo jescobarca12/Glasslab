@@ -104,3 +104,24 @@ test("riesgoCondensacion se calcula como 'alto' en el escenario del reto5", () =
   const { flat } = evaluarDiagnostico(proyecto, city, dataset);
   assert.equal(flat["riesgoCondensacion"], "alto");
 });
+
+// Regla no negociable de la matriz maestra de VITELSA: el configurador nunca
+// puede entregar vidrio recocido/crudo monolítico como solución final, ni
+// siquiera cuando no se dispara ninguna regla y el motor cae al baseline.
+test("ninguna aplicación devuelve vidrio monolítico como solución final", () => {
+  for (const aplicacion of APPS_VISIBLES) {
+    const proyecto: ProyectoInput = {
+      aplicacion, necesidades: [],
+      geometria: {}, acustico: {}, solar: {}, condensacion: {}, seguridad: {},
+    };
+    const { reglas, rutas } = evaluarDiagnostico(proyecto, null, dataset);
+    for (const ruta of [rutas.recomendada, rutas.altoDesempeno]) {
+      const ids = ruta.composicionConceptual.map((f) => f.id);
+      assert.ok(ids.length > 0, `${aplicacion}: ruta ${ruta.nivel} quedó sin familias`);
+      assert.ok(
+        !ids.includes("monolitico"),
+        `${aplicacion} (${reglas.length} reglas activas): la ruta ${ruta.nivel} propone monolítico → ${ids.join(", ")}`,
+      );
+    }
+  }
+});

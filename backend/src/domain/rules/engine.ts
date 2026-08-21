@@ -10,12 +10,25 @@ import type {
 
 const RIESGO_PESO: Record<string, number> = { alto: 3, medio: 2, bajo: 1 };
 
+/**
+ * Punto de partida por aplicación cuando ninguna regla se dispara.
+ *
+ * Todos los valores parten de vidrio con tratamiento térmico: la matriz maestra
+ * de VITELSA lo fija como regla no negociable ("no recomendar vidrio recocido /
+ * crudo monolítico como solución final del configurador").
+ */
 const BASELINE_POR_APP: Record<string, string> = {
-  ventana: "monolitico", puerta: "monolitico", fachada: "monolitico", muro_cortina: "dvh",
-  baranda: "templado", cubierta: "templado", marquesina: "templado", division_bano: "templado",
-  division_interior: "monolitico", vitrina: "templado", ascensor: "templado_laminado", piso: "multilaminado",
-  lucernario: "laminado", sistema_curvo: "curvo", cerramiento_acustico: "laminado",
+  ventana: "templado", puerta: "templado", fachada: "templado", muro_cortina: "dvh",
+  baranda: "templado_laminado", cubierta: "templado_laminado", marquesina: "templado", division_bano: "templado",
+  division_interior: "templado", vitrina: "templado", ascensor: "templado_laminado", piso: "multilaminado",
+  lucernario: "laminado", sistema_curvo: "curvo", cerramiento_acustico: "acustico",
 };
+
+/** Familias que nunca pueden aparecer en la composición final entregada. */
+const FAMILIAS_PROHIBIDAS_FINAL = new Set(["monolitico"]);
+
+/** Familia de respaldo si el filtro anterior dejara una ruta sin familias. */
+const FAMILIA_MINIMA_SEGURA = "templado";
 
 // ---------------------------------------------------------------------------
 // Física de condensación (dewPointC / riesgoCondensacion del demo)
@@ -123,14 +136,15 @@ export function construirRutas(flat: FlatAnswers, reglas: Rule[], families: Glas
   const famsBajo = new Set(bajas.flatMap((r) => r.familiasCompatibles));
   const famsNoRec = new Set(reglas.flatMap((r) => r.familiasNoRecomendadas ?? []));
 
-  const baseline = BASELINE_POR_APP[String(flat["aplicacion"])] ?? "monolitico";
+  const baseline = BASELINE_POR_APP[String(flat["aplicacion"])] ?? FAMILIA_MINIMA_SEGURA;
 
   const pathFamilies = (nivel: "recomendada" | "alto_desempeno"): string[] => {
     let fams: Set<string>;
     if (nivel === "recomendada") fams = new Set([...famsAlto, ...famsMedio]);
     else fams = new Set([...famsAlto, ...famsMedio, ...famsBajo]);
     if (fams.size === 0) fams = new Set([baseline]);
-    return [...fams].filter((f) => findFamily(families, f));
+    const resultado = [...fams].filter((f) => !FAMILIAS_PROHIBIDAS_FINAL.has(f) && findFamily(families, f));
+    return resultado.length ? resultado : [FAMILIA_MINIMA_SEGURA];
   };
 
   const buildPath = (
