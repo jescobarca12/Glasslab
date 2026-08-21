@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
-import { borradorInicial, type Borrador, type Campos, type Confirmacion } from "../domain/borrador";
+import { borradorInicial, type Borrador, type Campos, type Confirmacion, type InteresCertificacion } from "../domain/borrador";
 import { rutearPrefill } from "../domain/wizard";
 import type { Challenge } from "../api/types";
 
@@ -15,6 +15,7 @@ interface BorradorContextValue {
   setCampo: (modulo: ModuloConCampos, campo: string, valor: unknown) => void;
   toggleNecesidadUI: (id: string) => void;
   setConfirmacion: (patch: Partial<Confirmacion>) => void;
+  setInteresCertificacion: (valor: InteresCertificacion | null) => void;
   setEleccion: (selectedSolution: string) => void;
   setRequestCommercialContact: (v: boolean) => void;
   cargarReto: (challenge: Challenge) => void;
@@ -46,6 +47,8 @@ export function BorradorProvider({ children }: { children: ReactNode }) {
       })),
     setConfirmacion: (patch) =>
       setBorrador((b) => ({ ...b, confirmacion: { ...b.confirmacion, ...patch } })),
+    setInteresCertificacion: (valor) =>
+      setBorrador((b) => ({ ...b, sostenibilidad: { interesCertificacion: valor } })),
     setEleccion: (selectedSolution) => setBorrador((b) => ({ ...b, eleccion: { selectedSolution } })),
     setRequestCommercialContact: (v) => setBorrador((b) => ({ ...b, requestCommercialContact: v })),
     cargarReto: (challenge) => {

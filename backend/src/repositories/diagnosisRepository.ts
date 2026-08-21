@@ -19,6 +19,10 @@ export interface DiagnosisRecord {
   /** Etiquetas que eligió la persona, antes de traducirlas al motor. */
   applicationUI?: string | null;
   needsUI?: string[];
+  /** Certificación que persigue el proyecto; nunca entra en el lead score. */
+  sustainabilityInterest?: string | null;
+  /** Calificación comercial calculada al crear el diagnóstico. */
+  leadScore?: { score: number; categoria: string };
   /** Datos comerciales capturados al final del diagnóstico. */
   confirmation?: {
     estimatedDate?: string | null;
@@ -61,10 +65,11 @@ export async function insertDiagnosis(record: DiagnosisRecord): Promise<Diagnosi
          app_width, app_height, app_area, app_quantity, app_location, app_perforations,
          answers_acoustic, answers_solar, answers_safety, answers_condensation,
          results, selected_option, compatibility_score, compatibility_level, selection_reasons,
-         request_commercial_contact, estimated_date, requests_advisory, marketing_consent
+         request_commercial_contact, estimated_date, requests_advisory, marketing_consent,
+         sustainability_interest, lead_score, lead_category
        ) VALUES (
          $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,
-         $19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34
+         $19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34,$35,$36,$37
        )
        RETURNING id, lead_id, created_at, application_type, compatibility_score, compatibility_level, results`,
       [
@@ -83,6 +88,9 @@ export async function insertDiagnosis(record: DiagnosisRecord): Promise<Diagnosi
         record.confirmation?.estimatedDate ?? null,
         Boolean(record.confirmation?.requestsAdvisory),
         Boolean(record.confirmation?.marketingConsent),
+        record.sustainabilityInterest ?? null,
+        record.leadScore?.score ?? null,
+        record.leadScore?.categoria ?? null,
       ],
     );
     const diag = rows[0]!;
@@ -137,6 +145,8 @@ export interface LeadListItem {
   applicationType: string | null;
   compatibilityScore: number | null;
   requestCommercialContact: boolean;
+  leadScore: number | null;
+  leadCategory: string | null;
 }
 
 export interface LeadListResult {
@@ -151,7 +161,8 @@ export async function listDiagnoses(limit: number, offset: number): Promise<Lead
 
   const { rows } = await pool.query(
     `SELECT lead_id, created_at, user_name, user_email, project_name, project_city,
-            application_type, compatibility_score, request_commercial_contact
+            application_type, compatibility_score, request_commercial_contact,
+            lead_score, lead_category
      FROM diagnoses
      ORDER BY created_at DESC
      LIMIT $1 OFFSET $2`,
@@ -168,6 +179,8 @@ export async function listDiagnoses(limit: number, offset: number): Promise<Lead
     applicationType: d.application_type,
     compatibilityScore: d.compatibility_score,
     requestCommercialContact: d.request_commercial_contact,
+    leadScore: d.lead_score,
+    leadCategory: d.lead_category,
   }));
 
   return { total, items };
@@ -179,6 +192,7 @@ export async function getDiagnosisDetail(leadId: string): Promise<Record<string,
     `SELECT id, lead_id, created_at, user_name, user_email, user_phone, user_city, user_company, user_role, user_position,
             project_name, project_city, project_type, project_stage,
             application_type, application_ui, needs_ui, estimated_date, requests_advisory, marketing_consent,
+            sustainability_interest, lead_score, lead_category,
             app_width, app_height, app_area, app_quantity, app_location, app_perforations,
             answers_acoustic, answers_solar, answers_safety, answers_condensation,
             results, selected_option, compatibility_score, compatibility_level, selection_reasons,
@@ -215,6 +229,8 @@ export async function getDiagnosisDetail(leadId: string): Promise<Record<string,
       requestsAdvisory: d.requests_advisory,
       marketingConsent: d.marketing_consent,
     },
+    sustainability: { certificationInterest: d.sustainability_interest },
+    lead: { score: d.lead_score, category: d.lead_category },
     answers: { acoustic: d.answers_acoustic, solar: d.answers_solar, safety: d.answers_safety, condensation: d.answers_condensation },
     results: d.results,
     selection: {
@@ -223,6 +239,8 @@ export async function getDiagnosisDetail(leadId: string): Promise<Record<string,
     },
     appliedRules: appliedRules.map((r) => ({ code: r.rule_code, nivelRiesgo: r.nivel_riesgo })),
     requestCommercialContact: d.request_commercial_contact,
+    leadScore: d.lead_score,
+    leadCategory: d.lead_category,
     marketing: { emailCopySent: d.email_copy_sent, emailSentAt: d.email_sent_at ? d.email_sent_at.toISOString() : null },
   };
 }
@@ -234,6 +252,7 @@ export interface LeadExportRow {
   opcionElegida: string | null; compatibilidad: number | null; nivelCompatibilidad: string | null;
   solicitaContacto: boolean; correoEnviado: boolean; fecha: string;
   cargo: string | null; fechaEstimada: string | null; solicitaAsesoria: boolean; autorizacionComercial: boolean;
+  certificacion: string | null; leadScore: number | null; leadCategoria: string | null;
 }
 
 /** Todas las filas de leads aplanadas para exportar a CSV (columnas del demo). */
@@ -241,6 +260,7 @@ export async function getAllLeadsForExport(): Promise<LeadExportRow[]> {
   const { rows } = await pool.query(
     `SELECT d.lead_id, d.user_name, d.user_email, d.user_phone, d.user_company, d.user_role, d.user_position,
             d.estimated_date, d.requests_advisory, d.marketing_consent,
+            d.sustainability_interest, d.lead_score, d.lead_category,
             d.project_name, d.project_city, d.project_type, d.project_stage,
             d.application_type, d.selected_option, d.compatibility_score, d.compatibility_level,
             d.request_commercial_contact, d.email_copy_sent, d.created_at,
@@ -259,6 +279,7 @@ export async function getAllLeadsForExport(): Promise<LeadExportRow[]> {
     fecha: d.created_at.toISOString(),
     cargo: d.user_position, fechaEstimada: d.estimated_date,
     solicitaAsesoria: d.requests_advisory, autorizacionComercial: d.marketing_consent,
+    certificacion: d.sustainability_interest, leadScore: d.lead_score, leadCategoria: d.lead_category,
   }));
 }
 
@@ -287,5 +308,7 @@ export async function getByLeadId(leadId: string): Promise<Record<string, unknow
     needs: needs.map((n) => n.need_code),
     results: d.results,
     requestCommercialContact: d.request_commercial_contact,
+    leadScore: d.lead_score,
+    leadCategory: d.lead_category,
   };
 }

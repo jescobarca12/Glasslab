@@ -166,6 +166,9 @@ export interface AdminLoginResponse {
 
 export interface LeadListItem {
   leadId: string;
+  /** Calificación comercial calculada al crear el diagnóstico. */
+  leadScore?: number | null;
+  leadCategory?: string | null;
   createdAt: string;
   userName: string | null;
   userEmail: string | null;
@@ -191,13 +194,22 @@ export interface LeadRouteSummary {
 export interface LeadDetail {
   leadId: string;
   createdAt: string;
-  user: { name: string | null; email: string | null; phone: string | null; city: string | null; company: string | null; role: string | null };
+  user: {
+    name: string | null; email: string | null; phone: string | null; city: string | null;
+    company: string | null; role: string | null; position?: string | null;
+  };
   project: { name: string | null; city: string | null; type: string | null; stage: string | null };
   application: {
-    type: string | null; width: number | null; height: number | null; area: number | null;
-    quantity: number | null; location: string | null; perforations: boolean | null;
+    type: string | null; etiqueta?: string | null; width: number | null; height: number | null;
+    area: number | null; quantity: number | null; location: string | null; perforations: boolean | null;
   };
   needs: string[];
+  needsUI?: string[];
+  confirmation?: {
+    estimatedDate: string | null; requestsAdvisory: boolean; marketingConsent: boolean;
+  };
+  sustainability?: { certificationInterest: string | null };
+  lead?: { score: number | null; category: string | null };
   results: { recommended?: LeadRouteSummary; highPerformance?: LeadRouteSummary };
   selection: { selectedOption: string | null; compatibilityScore: number | null; compatibilityLevel: string | null; reasons: string[] };
   appliedRules: Array<{ code: string; nivelRiesgo: string | null }>;

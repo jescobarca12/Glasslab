@@ -46,7 +46,8 @@ export function moduloCondensacionActivo(b: Borrador): boolean {
 
 export type StepId =
   | "proyecto" | "necesidades" | "aplicacion" | "geometria"
-  | "acustico" | "solar" | "condensacion" | "seguridad" | "resultados" | "confirmacion";
+  | "acustico" | "solar" | "condensacion" | "seguridad" | "sostenibilidad"
+  | "resultados" | "confirmacion";
 
 export const STEP_TITULOS: Record<StepId, string> = {
   proyecto: "Proyecto",
@@ -57,6 +58,7 @@ export const STEP_TITULOS: Record<StepId, string> = {
   solar: "Solar / térmico",
   condensacion: "Condensación",
   seguridad: "Seguridad",
+  sostenibilidad: "Sostenibilidad",
   resultados: "Diagnóstico",
   confirmacion: "Confirmación",
 };
@@ -74,6 +76,6 @@ export function pasosActivos(b: Borrador): StepId[] {
   if (moduloAcusticoActivo(b)) arr.push("acustico");
   if (moduloSolarActivo(b)) arr.push("solar");
   if (moduloCondensacionActivo(b)) arr.push("condensacion");
-  arr.push("seguridad", "resultados", "confirmacion");
+  arr.push("seguridad", "sostenibilidad", "resultados", "confirmacion");
   return arr;
 }

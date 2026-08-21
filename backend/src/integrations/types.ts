@@ -15,6 +15,12 @@ export interface DeliveryResult {
   detail: string;
 }
 
+export interface EmailAttachment {
+  filename: string;
+  content: Buffer;
+  contentType?: string;
+}
+
 export interface DiagnosisEmailInput {
   leadId: string;
   to: string;
@@ -22,6 +28,8 @@ export interface DiagnosisEmailInput {
   userName?: string | null;
   projectName?: string | null;
   summary: unknown;
+  /** Informe en PDF; si falta, el correo sale igual con el resumen en HTML. */
+  attachment?: EmailAttachment;
 }
 
 export interface VerificationEmailInput {

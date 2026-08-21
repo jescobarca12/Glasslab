@@ -35,6 +35,7 @@ apiRouter.get("/auth/email/status", asyncHandler(emailVerification.status));
 // --- Diagnósticos / motor de reglas ---
 apiRouter.post("/diagnoses/evaluate", asyncHandler(diagnosis.evaluate));
 apiRouter.post("/diagnoses", asyncHandler(diagnosis.create));
+apiRouter.get("/diagnoses/:leadId/report.pdf", asyncHandler(diagnosis.downloadReport));
 apiRouter.get("/diagnoses/:leadId", asyncHandler(diagnosis.getOne));
 
 // --- Gamificación ---

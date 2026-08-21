@@ -12,6 +12,7 @@ import { ProyectoStep } from "./steps/ProyectoStep";
 import { AplicacionStep } from "./steps/AplicacionStep";
 import { NecesidadesStep } from "./steps/NecesidadesStep";
 import { ResultadosStep } from "./steps/ResultadosStep";
+import { SostenibilidadStep } from "./steps/SostenibilidadStep";
 import { ConfirmacionStep } from "./steps/ConfirmacionStep";
 
 export function Wizard() {
@@ -55,6 +56,7 @@ export function Wizard() {
     switch (pasoActual) {
       case "proyecto": return <ProyectoStep cities={citiesReq.data!} />;
       case "aplicacion": return <AplicacionStep applications={appsReq.data!} />;
+      case "sostenibilidad": return <SostenibilidadStep />;
       case "confirmacion": return <ConfirmacionStep />;
       case "geometria": return <><h2>Geometría</h2><p className="lead">Dimensiones y configuración del paño.</p><ModuleForm modulo="geometria" fields={GEOMETRIA_FIELDS} /></>;
       case "necesidades": return <NecesidadesStep />;

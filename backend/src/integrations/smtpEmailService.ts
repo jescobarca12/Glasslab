@@ -91,12 +91,21 @@ export class SmtpEmailService implements EmailService {
       cc: input.copyTo,
       subject: `Diagnóstico VITELSA GlassLab — ${input.leadId}`,
       html: buildHtml(input),
+      attachments: input.attachment
+        ? [{
+            filename: input.attachment.filename,
+            content: input.attachment.content,
+            contentType: input.attachment.contentType ?? "application/pdf",
+          }]
+        : undefined,
     });
     return {
       delivered: true,
       pending: false,
       adapter: "smtp",
-      detail: `Diagnóstico enviado por correo a ${input.to}.`,
+      detail: input.attachment
+        ? `Diagnóstico enviado por correo a ${input.to} con el informe en PDF adjunto.`
+        : `Diagnóstico enviado por correo a ${input.to}.`,
     };
   }
 

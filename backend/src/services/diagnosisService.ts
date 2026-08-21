@@ -7,11 +7,13 @@ import { ForbiddenError, ValidationError } from "../errors/AppError";
 import { evaluarDiagnostico } from "../domain/rules/engine";
 import type { ProyectoInput, Route } from "../domain/rules/types";
 import { PUNTOS } from "../domain/gamification";
+import { calcularLeadScore } from "../domain/leadScore";
 import { loadDataset, getCityForEngine } from "../repositories/rulesRepository";
 import { getApplications } from "../repositories/catalogRepository";
 import { insertDiagnosis, markEmailSent, type DiagnosisRecord, type DiagnosisRow } from "../repositories/diagnosisRepository";
 import { upsertPlayer, addPoints, awardBadge, registrarCiudadExplorada } from "../repositories/gamificationRepository";
 import { generarLeadId } from "../utils/leadId";
+import { generarInformePdf } from "./reportPdf";
 import { emailService, leadSyncService, type DeliveryResult } from "../integrations";
 import { env } from "../config/env";
 import { normalizarEmail } from "./emailVerificationService";
@@ -32,6 +34,8 @@ export interface DiagnosisBody {
   /** Etiquetas elegidas por la persona antes de traducirse al motor. */
   aplicacionUI?: string;
   necesidadesUI?: string[];
+  /** Certificación que persigue el proyecto (no influye en el lead score). */
+  sostenibilidad?: { interesCertificacion?: string | null };
   /** Datos comerciales del paso de confirmación (al final del diagnóstico). */
   confirmacion?: {
     empresa?: string;
@@ -40,6 +44,18 @@ export interface DiagnosisBody {
     solicitaAsesoria?: boolean;
     autorizacionComercial?: boolean;
   };
+}
+
+/** Respuestas válidas para el interés en certificación. */
+const CERTIFICACIONES = ["LEED", "EDGE", "CASA", "no", "no_sabe"];
+
+function normalizarCertificacion(valor: unknown): string | null {
+  if (typeof valor !== "string" || valor.trim() === "") return null;
+  const v = valor.trim();
+  if (!CERTIFICACIONES.includes(v)) {
+    throw new ValidationError(`Interés en certificación desconocido: ${v}`);
+  }
+  return v;
 }
 
 function toProyecto(body: DiagnosisBody): ProyectoInput {
@@ -121,6 +137,10 @@ export async function create(body: DiagnosisBody): Promise<CreateResult> {
   const city = body.proyecto?.ciudadId ? await getCityForEngine(body.proyecto.ciudadId) : null;
   const { reglas, rutas, compatibilidad } = evaluarDiagnostico(proyecto, city, dataset);
 
+  // Pedir asesoría en la confirmación equivale a pedir contacto comercial.
+  const solicitaAsesoria = Boolean(body.confirmacion?.solicitaAsesoria);
+  const contactoComercial = Boolean(body.requestCommercialContact) || solicitaAsesoria;
+
   const record: DiagnosisRecord = {
     leadId: generarLeadId(),
     user: {
@@ -145,6 +165,17 @@ export async function create(body: DiagnosisBody): Promise<CreateResult> {
       perforations: Boolean(proyecto.geometria?.["perforaciones"]),
     },
     needs: proyecto.necesidades ?? [],
+    sustainabilityInterest: normalizarCertificacion(body.sostenibilidad?.interesCertificacion),
+    leadScore: calcularLeadScore({
+      etapa: body.proyecto?.etapa,
+      area: (proyecto.geometria?.["area"] as number) ?? null,
+      fechaEstimada: body.confirmacion?.fechaEstimada ?? null,
+      solicitaAsesoria,
+      // Se usa el valor ya derivado (pedir asesoría implica contacto comercial),
+      // igual que el demo, que lo asigna antes de calcular el puntaje.
+      requestCommercialContact: contactoComercial,
+      proyectoIdentificado: Boolean(body.proyecto?.nombre && body.proyecto?.ciudadId && body.aplicacion),
+    }),
     applicationUI: body.aplicacionUI ?? null,
     needsUI: Array.isArray(body.necesidadesUI) ? body.necesidadesUI : [],
     confirmation: {
@@ -166,8 +197,7 @@ export async function create(body: DiagnosisBody): Promise<CreateResult> {
       compatibilityLevel: compatibilidad.nivel,
       reasons: body.eleccion?.reasons ?? [],
     },
-    // Pedir asesoría en la confirmación equivale a pedir contacto comercial.
-    requestCommercialContact: Boolean(body.requestCommercialContact) || Boolean(body.confirmacion?.solicitaAsesoria),
+    requestCommercialContact: contactoComercial,
     appliedRules: reglas.map((r) => ({ code: r.code, nivelRiesgo: r.nivelRiesgo })),
   };
 
@@ -179,11 +209,16 @@ export async function create(body: DiagnosisBody): Promise<CreateResult> {
   await awardBadge(player.id, "primer_diagnostico");
   if (body.proyecto?.ciudadId) await registrarCiudadExplorada(player.id, body.proyecto.ciudadId);
 
+  // Informe en PDF para adjuntar al correo. Si la generación falla, el correo
+  // sale igual con el resumen en HTML: el informe es un extra, no un requisito.
+  const informe = await generarInformeSeguro(record, row.createdAt);
+
   // Integraciones (correo + sincronización de lead). Un fallo aquí no invalida
   // el diagnóstico ya guardado: se reporta el estado y sigue.
   const emailResult = await enviarSeguro(() => emailService.sendDiagnosis({
     leadId: record.leadId, to: email, copyTo: env.integrations.vitelsaEmail,
     userName: record.user.name, projectName: record.project.name, summary: record.results,
+    ...(informe ? { attachment: informe } : {}),
   }));
   if (emailResult.delivered) await markEmailSent(record.leadId);
 
@@ -192,6 +227,39 @@ export async function create(body: DiagnosisBody): Promise<CreateResult> {
   }));
 
   return { ...row, delivery: { email: emailResult, leadSync: leadSyncResult } };
+}
+
+/** Arma el informe PDF; devuelve null si algo falla, sin tumbar el diagnóstico. */
+async function generarInformeSeguro(
+  record: DiagnosisRecord,
+  createdAt: string,
+): Promise<{ filename: string; content: Buffer } | null> {
+  try {
+    const resultados = record.results as {
+      recommended?: Record<string, unknown>; highPerformance?: Record<string, unknown>;
+    };
+    const content = await generarInformePdf({
+      leadId: record.leadId,
+      fecha: new Date(createdAt),
+      userName: record.user.name,
+      userEmail: record.user.email,
+      projectName: record.project.name,
+      projectCity: record.project.city,
+      applicationLabel: record.applicationUI ?? record.application.type,
+      compatibility: {
+        score: record.selection.compatibilityScore,
+        level: record.selection.compatibilityLevel,
+      },
+      recommended: resultados.recommended,
+      highPerformance: resultados.highPerformance,
+      appliedRules: record.appliedRules,
+    });
+    return { filename: `diagnostico-${record.leadId}.pdf`, content };
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.warn(`[informe] No se pudo generar el PDF de ${record.leadId}: ${(err as Error).message}`);
+    return null;
+  }
 }
 
 /** Ejecuta una integración capturando errores como un resultado fallido. */

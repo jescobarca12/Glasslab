@@ -37,6 +37,13 @@ export const getPlayer = (email: string): Promise<PlayerProfile> =>
 export const completeChallenge = (email: string, challengeCode: string): Promise<PlayerProfile> =>
   api.post(`/players/${encodeURIComponent(email)}/challenges`, { challengeCode });
 
+/** Descarga el informe del diagnóstico en PDF (endpoint público por folio). */
+export async function descargarInforme(leadId: string): Promise<Blob> {
+  const res = await fetch(`/api/diagnoses/${encodeURIComponent(leadId)}/report.pdf`);
+  if (!res.ok) throw new ApiError(res.status, "ReportError", "No se pudo generar el informe en PDF.");
+  return res.blob();
+}
+
 // --- Admin ---
 export const adminLogin = (username: string, password: string): Promise<AdminLoginResponse> =>
   api.post("/admin/login", { username, password });

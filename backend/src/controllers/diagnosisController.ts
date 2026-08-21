@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import * as diagnosisService from "../services/diagnosisService";
-import { getByLeadId } from "../repositories/diagnosisRepository";
+import { getByLeadId, getDiagnosisDetail } from "../repositories/diagnosisRepository";
+import { generarInformePdf } from "../services/reportPdf";
 
 /** POST /api/diagnoses/evaluate — evalúa sin persistir (200). */
 export async function evaluate(req: Request, res: Response): Promise<void> {
@@ -16,4 +17,40 @@ export async function create(req: Request, res: Response): Promise<void> {
 /** GET /api/diagnoses/:leadId — consulta un diagnóstico (200 / 404). */
 export async function getOne(req: Request, res: Response): Promise<void> {
   res.status(200).json(await getByLeadId(req.params["leadId"]!));
+}
+
+/**
+ * GET /api/diagnoses/:leadId/report.pdf — informe en PDF (200 / 404).
+ *
+ * Con `?inline=1` se abre en el visor del navegador en vez de descargarse.
+ *
+ * Público, igual que la consulta del diagnóstico: el folio hace de clave. Si
+ * VITELSA quiere restringirlo, basta con exigir aquí el token de correo
+ * verificado del titular.
+ */
+export async function downloadReport(req: Request, res: Response): Promise<void> {
+  const leadId = req.params["leadId"]!;
+  const d = await getDiagnosisDetail(leadId) as Record<string, any>;
+
+  const pdf = await generarInformePdf({
+    leadId,
+    fecha: new Date(d["createdAt"]),
+    userName: d["user"]?.name,
+    userEmail: d["user"]?.email,
+    projectName: d["project"]?.name,
+    projectCity: d["project"]?.city,
+    applicationLabel: d["application"]?.etiqueta ?? d["application"]?.type,
+    compatibility: { score: d["selection"]?.compatibilityScore, level: d["selection"]?.compatibilityLevel },
+    recommended: d["results"]?.recommended,
+    highPerformance: d["results"]?.highPerformance,
+    appliedRules: d["appliedRules"],
+  });
+
+  const inline = req.query["inline"] === "1";
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader(
+    "Content-Disposition",
+    `${inline ? "inline" : "attachment"}; filename="diagnostico-${leadId}.pdf"`,
+  );
+  res.status(200).send(pdf);
 }

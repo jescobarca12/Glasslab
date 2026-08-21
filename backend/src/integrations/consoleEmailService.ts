@@ -18,6 +18,7 @@ export class ConsoleEmailService implements EmailService {
       usuario: input.userName ?? null,
       proyecto: input.projectName ?? null,
       resumen: input.summary,
+      informeAdjunto: input.attachment ? `${input.attachment.filename} (${input.attachment.content.length} bytes)` : null,
       registradoEn: new Date().toISOString(),
     });
     // eslint-disable-next-line no-console

@@ -67,7 +67,7 @@ export function AdminLeads() {
               <thead>
                 <tr>
                   <th>Fecha</th><th>Folio</th><th>Nombre</th><th>Correo</th>
-                  <th>Proyecto</th><th>Ciudad</th><th>Aplicación</th><th>Compat.</th><th>Contacto</th>
+                  <th>Proyecto</th><th>Ciudad</th><th>Aplicación</th><th>Compat.</th><th>Lead</th><th>Contacto</th>
                 </tr>
               </thead>
               <tbody>
@@ -81,6 +81,11 @@ export function AdminLeads() {
                     <td>{l.projectCity ?? "—"}</td>
                     <td>{l.applicationType ?? "—"}</td>
                     <td>{l.compatibilityScore !== null ? `${l.compatibilityScore}%` : "—"}</td>
+                    <td>
+                      {l.leadCategory
+                        ? <span className={`lead-cat cat-${l.leadCategory.toLowerCase()}`} title={`${l.leadScore} puntos`}>{l.leadCategory}</span>
+                        : "—"}
+                    </td>
                     <td>{l.requestCommercialContact ? "✅ Sí" : "—"}</td>
                   </tr>
                 ))}

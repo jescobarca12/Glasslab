@@ -2,7 +2,7 @@ import { useBorrador } from "../../../state/BorradorContext";
 import { useUsuario } from "../../../state/UsuarioContext";
 import { aBodyBackend } from "../../../domain/borrador";
 import { useAsync } from "../../../hooks/useAsync";
-import { completeChallenge, createDiagnosis } from "../../../api/endpoints";
+import { completeChallenge, createDiagnosis, descargarInforme } from "../../../api/endpoints";
 import { CheckField, TextField } from "../../ui/Fields";
 
 /**
@@ -14,6 +14,7 @@ export function ConfirmacionStep() {
   const { borrador, setConfirmacion, retoActivo, reset } = useBorrador();
   const { usuario } = useUsuario();
   const guardar = useAsync(createDiagnosis);
+  const informe = useAsync(descargarInforme);
 
   const persona = usuario!; // garantizado: el gate exige identificarse antes del asistente
   const c = borrador.confirmacion;
@@ -25,6 +26,19 @@ export function ConfirmacionStep() {
       // El reto suma puntos aparte; si falla no rompe el guardado del diagnóstico.
       try { await completeChallenge(persona.correo, retoActivo); } catch { /* noop */ }
     }
+  };
+
+  const bajarInforme = async (leadId: string): Promise<void> => {
+    const blob = await informe.run(leadId);
+    if (!blob) return;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `diagnostico-${leadId}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   };
 
   if (guardar.data) {
@@ -49,7 +63,16 @@ export function ConfirmacionStep() {
         {c.solicitaAsesoria && (
           <p className="hint">Un asesor técnico de VITELSA te contactará para avanzar con la especificación.</p>
         )}
-        <div className="btn-row" style={{ justifyContent: "flex-end" }}>
+        {informe.error && <div className="error-box" style={{ marginTop: 10 }}>{informe.error}</div>}
+
+        <div className="btn-row" style={{ justifyContent: "space-between" }}>
+          <button
+            type="button" className="btn btn-primary"
+            disabled={informe.loading}
+            onClick={() => void bajarInforme(guardar.data!.leadId)}
+          >
+            {informe.loading ? "Generando…" : "⬇ Descargar informe (PDF)"}
+          </button>
           <button type="button" className="btn" onClick={reset}>Nuevo diagnóstico</button>
         </div>
       </>

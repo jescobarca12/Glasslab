@@ -44,6 +44,9 @@ export function confirmacionInicial(): Confirmacion {
   return { empresa: "", cargo: "", fechaEstimada: "", solicitaAsesoria: false, autorizacionComercial: false };
 }
 
+/** Certificación que persigue el proyecto. No influye en la calificación comercial. */
+export type InteresCertificacion = "LEED" | "EDGE" | "CASA" | "no" | "no_sabe";
+
 export interface Borrador {
   proyecto: ProyectoInfo;
   /** Etiqueta elegida por la persona (puede ser un alias como "balcon"). */
@@ -55,6 +58,7 @@ export interface Borrador {
   solar: Campos;
   condensacion: Campos;
   seguridad: Campos;
+  sostenibilidad: { interesCertificacion: InteresCertificacion | null };
   confirmacion: Confirmacion;
   requestCommercialContact: boolean;
   eleccion: { selectedSolution: string | null };
@@ -70,6 +74,7 @@ export function borradorInicial(): Borrador {
     solar: {},
     condensacion: {},
     seguridad: {},
+    sostenibilidad: { interesCertificacion: null },
     confirmacion: confirmacionInicial(),
     requestCommercialContact: false,
     eleccion: { selectedSolution: null },
@@ -108,6 +113,7 @@ export function aBodyBackend(b: Borrador, persona: Persona): Record<string, unkn
     solar: b.solar,
     condensacion: b.condensacion,
     seguridad: b.seguridad,
+    sostenibilidad: b.sostenibilidad,
     confirmacion: b.confirmacion,
     eleccion: { selectedSolution: b.eleccion.selectedSolution },
     requestCommercialContact: b.requestCommercialContact,

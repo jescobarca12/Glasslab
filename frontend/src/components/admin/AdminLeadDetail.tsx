@@ -62,7 +62,15 @@ export function AdminLeadDetail({ token, leadId, onClose }: { token: string; lea
               <Dato label="Teléfono" value={d.user.phone} />
               <Dato label="Empresa" value={d.user.company} />
               <Dato label="Perfil" value={d.user.role} />
+              <Dato label="Cargo" value={d.user.position} />
               <Dato label="¿Solicita contacto comercial?" value={d.requestCommercialContact ? "✅ Sí" : "No"} />
+              <Dato label="¿Pidió asesoría técnica?" value={d.confirmation?.requestsAdvisory ? "✅ Sí" : "No"} />
+              <Dato label="Fecha estimada" value={d.confirmation?.estimatedDate} />
+              <Dato label="Autoriza información comercial" value={d.confirmation?.marketingConsent ? "Sí" : "No"} />
+              <Dato
+                label="Calificación del lead"
+                value={d.lead?.category ? `${d.lead.category} (${d.lead.score} puntos)` : null}
+              />
             </div>
             <div>
               <h3>Proyecto</h3>
@@ -70,9 +78,12 @@ export function AdminLeadDetail({ token, leadId, onClose }: { token: string; lea
               <Dato label="Ciudad" value={d.project.city} />
               <Dato label="Tipo" value={d.project.type} />
               <Dato label="Etapa" value={d.project.stage} />
+              <Dato label="Certificación que persigue" value={d.sustainability?.certificationInterest} />
               <h3 style={{ marginTop: 10 }}>Aplicación</h3>
-              <Dato label="Tipo" value={d.application.type} />
-              <Dato label="Necesidades" value={d.needs.length ? d.needs.join(", ") : "—"} />
+              <Dato label="Tipo (motor)" value={d.application.type} />
+              <Dato label="Eligió" value={d.application.etiqueta} />
+              <Dato label="Necesidades (motor)" value={d.needs.length ? d.needs.join(", ") : "—"} />
+              <Dato label="Eligió" value={d.needsUI?.length ? d.needsUI.join(", ") : "—"} />
             </div>
           </div>
 
