@@ -1,5 +1,6 @@
 import { useBorrador } from "../../../state/BorradorContext";
 import { NECESIDADES_UI, necesidadesTecnicas } from "../../../domain/catalogoUI";
+import { trackEvent } from "../../../api/endpoints";
 
 /**
  * Primera pregunta del asistente: qué quiere resolver la persona, en sus
@@ -22,7 +23,10 @@ export function NecesidadesStep() {
           <button
             key={n.id} type="button"
             className={`option ${borrador.necesidadesUI.includes(n.id) ? "selected" : ""}`}
-            onClick={() => toggleNecesidadUI(n.id)}
+            onClick={() => {
+              if (!borrador.necesidadesUI.includes(n.id)) trackEvent("need_selected", { necesidad: n.id });
+              toggleNecesidadUI(n.id);
+            }}
           >
             <span className="name">{n.label}</span>
           </button>

@@ -1,0 +1,127 @@
+{
+  "version": "1.0",
+  "nota": "Fichas educativas del Laboratorio, tomadas del demo v2 de VITELSA (LAB_CONTENIDO).",
+  "temas": [
+    {
+      "id": "templado",
+      "nombre": "Vidrio templado (FT)",
+      "evento": "tempered_glass_viewed",
+      "que_es": "Vidrio sometido a un proceso de calentamiento y enfriamiento rápido y controlado que modifica su estado de tensión interna.",
+      "para_que_sirve": "Aumenta su resistencia mecánica y térmica frente al vidrio recocido (crudo).",
+      "que_resuelve": "Resistencia a impactos y cambios térmicos superior al vidrio sin tratar.",
+      "cuando_considerarlo": "Como punto de partida en aplicaciones con riesgo de impacto humano, exposición a cargas de viento o diferencias térmicas.",
+      "limitaciones": "Al romperse se fragmenta en piezas pequeñas (no queda adherido); su patrón de fragmentación debe evaluarse según la aplicación. Tratamiento térmico no equivale automáticamente a 'vidrio de seguridad' — depende de la aplicación.",
+      "orden": 1
+    },
+    {
+      "id": "termoendurecido",
+      "nombre": "Vidrio termoendurecido (HS)",
+      "evento": "thermal_treatment_module_viewed",
+      "que_es": "Tratamiento térmico similar al templado pero con un enfriamiento menos abrupto, que produce un nivel de tensión intermedio.",
+      "para_que_sirve": "Mayor resistencia que el vidrio recocido, con un comportamiento de rotura diferente al templado (fragmentos más grandes, permanece más unido).",
+      "que_resuelve": "Es un componente frecuente de soluciones laminadas y de fachada donde se busca ese comportamiento de rotura.",
+      "cuando_considerarlo": "Cuando el proyecto se beneficia de una rotura menos fragmentada que el templado, frecuentemente combinado con laminación.",
+      "limitaciones": "No se considera vidrio de seguridad por sí solo en todas las aplicaciones; su uso debe evaluarse según el riesgo identificado.",
+      "orden": 2
+    },
+    {
+      "id": "laminado",
+      "nombre": "Vidrio laminado",
+      "evento": "laminated_glass_viewed",
+      "que_es": "Dos o más láminas de vidrio unidas por una o varias interláminas (PVB u otras).",
+      "para_que_sirve": "Retiene los fragmentos si el vidrio se rompe, en lugar de dispersarse.",
+      "que_resuelve": "Seguridad ante impacto y permanencia en el vano; según la interlámina, también puede aportar filtrado UV o desempeño acústico.",
+      "cuando_considerarlo": "Aplicaciones con riesgo de caída, sobre zonas de circulación de personas, o donde se requiere permanencia posrotura.",
+      "limitaciones": "El desempeño depende del tipo y espesor de interlámina, y del tratamiento térmico de los vidrios base.",
+      "orden": 3
+    },
+    {
+      "id": "templado_laminado",
+      "nombre": "Vidrio templado laminado",
+      "evento": "laminated_glass_viewed",
+      "que_es": "Combinación de vidrio(s) templado(s) con laminación.",
+      "para_que_sirve": "Suma la resistencia del templado con la retención de fragmentos del laminado.",
+      "que_resuelve": "Aplicaciones de seguridad estructural donde se requiere resistencia y permanencia posrotura a la vez.",
+      "cuando_considerarlo": "Barandas, fachadas de alto riesgo, aplicaciones sobre zonas de circulación.",
+      "limitaciones": "Mayor costo e inversión relativa; requiere validación de espesor y anclaje por un profesional.",
+      "orden": 4
+    },
+    {
+      "id": "termoendurecido_laminado",
+      "nombre": "Vidrio termoendurecido laminado",
+      "evento": "laminated_glass_viewed",
+      "que_es": "Combinación de vidrio(s) termoendurecido(s) con laminación.",
+      "para_que_sirve": "Combina el comportamiento de rotura del termoendurecido con la retención del laminado.",
+      "que_resuelve": "Fachadas y aplicaciones donde se prioriza un comportamiento de rotura específico junto con retención de fragmentos.",
+      "cuando_considerarlo": "Frecuente en fachadas de edificios en altura.",
+      "limitaciones": "Debe validarse igual que cualquier composición estructural, con el sistema de anclaje específico del proyecto.",
+      "orden": 5
+    },
+    {
+      "id": "multilaminado",
+      "nombre": "Vidrio multilaminado",
+      "evento": "laminated_glass_viewed",
+      "que_es": "Tres o más láminas de vidrio con interláminas sucesivas.",
+      "para_que_sirve": "Incrementa el nivel de seguridad, resistencia y protección frente a soluciones de 2 láminas.",
+      "que_resuelve": "Escenarios de alta exigencia estructural o de protección (por ejemplo, pisos vidriados o protección contra vandalismo severo).",
+      "cuando_considerarlo": "Cuando el diagnóstico identifica necesidades de seguridad o protección elevadas.",
+      "limitaciones": "Mayor peso e inversión; requiere validación estructural específica.",
+      "orden": 6
+    },
+    {
+      "id": "acustico",
+      "nombre": "Vidrio acústico",
+      "evento": "acoustic_glass_viewed",
+      "que_es": "Vidrio laminado con interlámina especializada para atenuación de ruido, o composición DVH optimizada acústicamente.",
+      "para_que_sirve": "Reduce la transmisión de ruido exterior hacia el interior.",
+      "que_resuelve": "Confort acústico en proyectos cerca de fuentes de ruido (tráfico, aeropuertos, vida nocturna, industria).",
+      "cuando_considerarlo": "Cuando el nivel de ruido exterior es alto y el uso interior requiere confort (dormitorios, oficinas, salud, educación).",
+      "limitaciones": "El aislamiento acústico real depende de todo el sistema (marco, sellos, instalación), no solo del vidrio — no se garantizan niveles de dB sin estudio acústico.",
+      "orden": 7
+    },
+    {
+      "id": "control_solar",
+      "nombre": "Vidrio de control solar",
+      "evento": "solar_control_viewed",
+      "que_es": "Vidrio con recubrimiento o composición que reduce la ganancia de calor solar.",
+      "para_que_sirve": "Disminuye el ingreso de calor manteniendo parte de la luz visible.",
+      "que_resuelve": "Sobrecalentamiento, exceso de radiación solar, mayor demanda de aire acondicionado.",
+      "cuando_considerarlo": "Fachadas con alta exposición solar, orientaciones occidente/suroccidente, climas cálidos.",
+      "limitaciones": "Reduce también algo de luz natural; el balance ideal depende del SHGC y TL objetivo del proyecto.",
+      "orden": 8
+    },
+    {
+      "id": "lowe",
+      "nombre": "Vidrio Low-E (bajo emisivo)",
+      "evento": "lowe_viewed",
+      "que_es": "Low-E = Low Emissivity = bajo emisivo: un recubrimiento microscópico que reduce la transferencia de calor radiante. No es un producto distinto al control solar o al DVH — es una tecnología que se aplica dentro de estas composiciones.",
+      "para_que_sirve": "Mejora el aislamiento térmico y puede combinarse con control solar.",
+      "que_resuelve": "Pérdida o ganancia excesiva de calor a través del vidrio.",
+      "cuando_considerarlo": "Climas fríos (retener calor) o cálidos (rechazar calor), climatización activa, eficiencia energética.",
+      "limitaciones": "Su efecto depende de la posición del recubrimiento dentro de la composición (DVH) y debe evaluarse junto con la orientación.",
+      "orden": 9
+    },
+    {
+      "id": "dvh",
+      "nombre": "Vidrio insulado / DVH",
+      "evento": "dvh_viewed",
+      "que_es": "Doble Vidriado Hermético: dos vidrios separados por una cámara de aire o gas sellada herméticamente con un espaciador.",
+      "para_que_sirve": "Aislamiento térmico y, según composición, acústico.",
+      "que_resuelve": "Pérdida de calor, condensación, ruido — combinable con Low-E y control solar.",
+      "cuando_considerarlo": "Climas fríos, necesidad de eficiencia energética, control de condensación, confort general.",
+      "limitaciones": "Mayor espesor y peso total; el desempeño depende de la cámara, el gas y los vidrios base.",
+      "orden": 10
+    },
+    {
+      "id": "serigrafiado",
+      "nombre": "Vidrio serigrafiado",
+      "evento": "serigraphy_viewed",
+      "que_es": "Vidrio con una capa de esmalte cerámico aplicada en distintos porcentajes de cobertura (ej. 25%, 50%, 75%).",
+      "para_que_sirve": "Aporta estética, privacidad y control parcial de deslumbramiento/radiación.",
+      "que_resuelve": "Privacidad visual y diferenciación estética, con cierto efecto sobre el confort térmico según la cobertura.",
+      "cuando_considerarlo": "Fachadas con intención estética, privacidad en divisiones o vitrinas.",
+      "limitaciones": "La serigrafía modifica el comportamiento térmico del vidrio (absorción) y debe considerarse al definir el tratamiento térmico — nunca se aplica sobre vidrio sin tratar en aplicaciones de riesgo.",
+      "orden": 11
+    }
+  ]
+}

@@ -6,24 +6,31 @@ import { AdminLeads } from "./AdminLeads";
 import { AdminLabels } from "./AdminLabels";
 import { AdminRules } from "./AdminRules";
 import { AdminCities } from "./AdminCities";
+import { AdminMercadeo } from "./AdminMercadeo";
+import { AdminCertificaciones } from "./AdminCertificaciones";
 
-type AdminVista = "leads" | "labels" | "rules" | "cities";
+type AdminVista = "leads" | "mercadeo" | "certificaciones" | "labels" | "rules" | "cities";
 
 const TABS: Array<{ id: AdminVista; label: string }> = [
   { id: "leads", label: "Leads" },
+  { id: "mercadeo", label: "Mercadeo" },
+  { id: "certificaciones", label: "Certificaciones" },
   { id: "labels", label: "Preguntas" },
   { id: "rules", label: "Reglas" },
   { id: "cities", label: "Ciudades" },
 ];
 
+/** Los tableros son de lectura, así que el usuario de consulta también los ve. */
+const VISTAS_SOLO_LECTURA: AdminVista[] = ["leads", "mercadeo", "certificaciones"];
+
 function AdminContenido() {
   const { token, username, soloLectura, logout } = useAdmin();
   const [vista, setVista] = useState<AdminVista>("leads");
 
-  // El usuario de consulta solo ve leads. El backend lo exige igual: esconder
-  // las pestañas es comodidad, no la protección.
-  const tabs = soloLectura ? TABS.filter((t) => t.id === "leads") : TABS;
-  const vistaActual: AdminVista = soloLectura ? "leads" : vista;
+  // El usuario de consulta solo ve lo que no modifica nada. El backend lo exige
+  // igual: esconder las pestañas es comodidad, no la protección.
+  const tabs = soloLectura ? TABS.filter((t) => VISTAS_SOLO_LECTURA.includes(t.id)) : TABS;
+  const vistaActual: AdminVista = soloLectura && !VISTAS_SOLO_LECTURA.includes(vista) ? "leads" : vista;
 
   const headerRight = token ? (
     <div className="user-chip">
@@ -51,6 +58,8 @@ function AdminContenido() {
             ))}
           </nav>
           {vistaActual === "leads" && <AdminLeads />}
+          {vistaActual === "mercadeo" && <AdminMercadeo />}
+          {vistaActual === "certificaciones" && <AdminCertificaciones />}
           {vistaActual === "labels" && <AdminLabels />}
           {vistaActual === "rules" && <AdminRules />}
           {vistaActual === "cities" && <AdminCities />}

@@ -7,12 +7,14 @@ import { IdentidadGate } from "./components/IdentidadGate";
 import { Wizard } from "./components/wizard/Wizard";
 import { RetosScreen } from "./components/retos/RetosScreen";
 import { NivelesScreen } from "./components/niveles/NivelesScreen";
+import { LaboratorioScreen } from "./components/laboratorio/LaboratorioScreen";
 
-type Vista = "asistente" | "retos" | "niveles";
+type Vista = "asistente" | "retos" | "laboratorio" | "niveles";
 
 const TABS: Array<{ id: Vista; label: string }> = [
   { id: "asistente", label: "Asistente" },
   { id: "retos", label: "Retos" },
+  { id: "laboratorio", label: "Laboratorio" },
   { id: "niveles", label: "Mi progreso" },
 ];
 
@@ -50,6 +52,7 @@ function Contenido() {
 
       {vista === "asistente" && <Wizard />}
       {vista === "retos" && <RetosScreen onResolver={() => setVista("asistente")} />}
+      {vista === "laboratorio" && <LaboratorioScreen />}
       {vista === "niveles" && <NivelesScreen />}
     </BorradorProvider>
     </LabelsProvider>

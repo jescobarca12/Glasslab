@@ -3,7 +3,7 @@ import { personaInicial, type Persona } from "../domain/borrador";
 import { useUsuario } from "../state/UsuarioContext";
 import { useAsync } from "../hooks/useAsync";
 import { ApiError } from "../api/client";
-import { requestEmailCode, startEmailSession, verifyEmailCode } from "../api/endpoints";
+import { requestEmailCode, startEmailSession, trackEvent, verifyEmailCode } from "../api/endpoints";
 import type { RequestCodeResponse } from "../api/types";
 import { PERFILES } from "../domain/catalogoUI";
 import { CheckField, SelectField, TextField } from "./ui/Fields";
@@ -68,6 +68,7 @@ export function IdentidadGate() {
     const res = await inicio.run(correo, p.nombre.trim());
     if (!res) return;
     if (res.modo === "sesion") {
+      trackEvent("user_registered", { perfil: p.perfil, verificacion: "sesion" });
       login(p, res.token);
       return;
     }
@@ -82,6 +83,8 @@ export function IdentidadGate() {
   async function confirmarCodigo() {
     const res = await verificacion.run(correo, codigo.trim());
     if (!res) return;
+    trackEvent("email_verified", {});
+    trackEvent("user_registered", { perfil: p.perfil, verificacion: "codigo" });
     login(p, res.token);
   }
 

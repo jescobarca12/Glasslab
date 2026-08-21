@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useBorrador } from "../../state/BorradorContext";
 import { pasosActivos, type StepId } from "../../domain/wizard";
-import { getApplications, getCities } from "../../api/endpoints";
+import { getApplications, getCities, trackEvent } from "../../api/endpoints";
 import { useFetch } from "../../hooks/useFetch";
 import {
   ACUSTICO_FIELDS, CONDENSACION_FIELDS, GEOMETRIA_FIELDS, SEGURIDAD_FIELDS, SOLAR_FIELDS,
@@ -22,6 +22,11 @@ export function Wizard() {
 
   const pasos = pasosActivos(borrador);
   const pasoActual: StepId = pasos[Math.min(indice, pasos.length - 1)] ?? "proyecto";
+
+  // Un diagnóstico "empieza" cuando se abre el asistente, una sola vez por montaje.
+  useEffect(() => {
+    trackEvent("diagnostic_started", {});
+  }, []);
 
   // Autocompletar la zona sísmica desde la ciudad al entrar a Seguridad.
   const zonaCiudad = citiesReq.data?.find((c) => c.code === borrador.proyecto.ciudadId)?.zonaSismicaNsr10;

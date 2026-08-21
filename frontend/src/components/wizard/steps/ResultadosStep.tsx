@@ -3,7 +3,7 @@ import { useBorrador } from "../../../state/BorradorContext";
 import { useUsuario } from "../../../state/UsuarioContext";
 import { aBodyBackend } from "../../../domain/borrador";
 import { useAsync } from "../../../hooks/useAsync";
-import { evaluateDiagnosis } from "../../../api/endpoints";
+import { evaluateDiagnosis, trackEvent } from "../../../api/endpoints";
 import type { EvaluateResponse, Route } from "../../../api/types";
 
 function RouteCard({ ruta, elegida, onElegir }: { ruta: Route; elegida: boolean; onElegir: () => void }) {
@@ -51,7 +51,16 @@ export function ResultadosStep() {
 
   const { run: runEval } = evalReq;
   useEffect(() => {
-    void runEval(aBodyBackend(borrador, persona));
+    void runEval(aBodyBackend(borrador, persona)).then((res) => {
+      if (!res) return;
+      trackEvent("diagnostic_completed", { reglas: res.reglasActivas.length });
+      trackEvent("standard_recommendation_viewed", { familias: res.rutas.recomendada.composicionConceptual.length });
+      trackEvent("high_performance_recommendation_viewed", { familias: res.rutas.altoDesempeno.composicionConceptual.length });
+      // El impacto humano es el filtro que gobierna la seguridad (NSR-10 K.4.3.9):
+      // interesa saber cuántos diagnósticos lo activan.
+      const seguridad = res.reglasActivas.filter((r) => r.code.startsWith("R-SEG"));
+      if (seguridad.length > 0) trackEvent("human_impact_detected", { reglas: seguridad.map((r) => r.code) });
+    });
     // Solo al entrar al paso de resultados.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [runEval]);

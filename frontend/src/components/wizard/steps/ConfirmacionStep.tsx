@@ -2,7 +2,7 @@ import { useBorrador } from "../../../state/BorradorContext";
 import { useUsuario } from "../../../state/UsuarioContext";
 import { aBodyBackend } from "../../../domain/borrador";
 import { useAsync } from "../../../hooks/useAsync";
-import { completeChallenge, createDiagnosis, descargarInforme } from "../../../api/endpoints";
+import { completeChallenge, createDiagnosis, descargarInforme, trackEvent } from "../../../api/endpoints";
 import { CheckField, TextField } from "../../ui/Fields";
 
 /**
@@ -22,6 +22,11 @@ export function ConfirmacionStep() {
   const enviar = async (): Promise<void> => {
     const creado = await guardar.run(aBodyBackend(borrador, persona));
     if (!creado) return;
+
+    trackEvent("lead_created", { categoria: borrador.aplicacionUI }, creado.leadId);
+    if (c.solicitaAsesoria) trackEvent("technical_assistance_requested", {}, creado.leadId);
+    if (c.autorizacionComercial) trackEvent("marketing_consent_granted", {}, creado.leadId);
+
     if (retoActivo) {
       // El reto suma puntos aparte; si falla no rompe el guardado del diagnóstico.
       try { await completeChallenge(persona.correo, retoActivo); } catch { /* noop */ }
@@ -29,8 +34,10 @@ export function ConfirmacionStep() {
   };
 
   const bajarInforme = async (leadId: string): Promise<void> => {
+    trackEvent("report_generated", {}, leadId);
     const blob = await informe.run(leadId);
     if (!blob) return;
+    trackEvent("report_downloaded", {}, leadId);
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;

@@ -1,5 +1,6 @@
 import { useBorrador } from "../../../state/BorradorContext";
 import { APLICACIONES_UI } from "../../../domain/catalogoUI";
+import { trackEvent } from "../../../api/endpoints";
 import type { Application } from "../../../api/types";
 
 /**
@@ -19,7 +20,7 @@ export function AplicacionStep({ applications }: { applications: Application[] }
           <button
             key={a.id} type="button"
             className={`option ${borrador.aplicacionUI === a.id ? "selected" : ""}`}
-            onClick={() => setAplicacionUI(a.id)}
+            onClick={() => { setAplicacionUI(a.id); trackEvent("application_selected", { etiqueta: a.id, motor: a.motor }); }}
           >
             <span className="icon">{a.icono}</span>
             <span className="name">{a.label}</span>

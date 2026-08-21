@@ -265,3 +265,29 @@ export interface EmailStatusResponse {
   correo: string;
   verificado: boolean;
 }
+
+// --- Analítica y laboratorio ---
+
+export interface LabTopic {
+  code: string;
+  nombre: string;
+  evento: string;
+  queEs: string | null;
+  paraQueSirve: string | null;
+  queResuelve: string | null;
+  cuandoConsiderarlo: string | null;
+  limitaciones: string | null;
+}
+
+export interface MarketingSummary {
+  embudo: Array<{ etapa: string; evento: string; total: number }>;
+  totales: { leads: number; solicitanAsesoria: number; autorizanMarketing: number; conCorreoEnviado: number };
+  porCategoria: Array<{ categoria: string; total: number }>;
+  aplicaciones: Array<{ etiqueta: string; total: number }>;
+  educacion: Array<{ tema: string; total: number }>;
+}
+
+export interface CertificationSummary {
+  total: number;
+  porCertificacion: Array<{ certificacion: string; total: number }>;
+}

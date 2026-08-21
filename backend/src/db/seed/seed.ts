@@ -204,6 +204,25 @@ async function seedChallenges(client: PoolClient): Promise<void> {
   console.log(`✓ challenges: ${retos.length}`);
 }
 
+async function seedLabTopics(client: PoolClient): Promise<void> {
+  const { temas } = readJson<{ temas: any[] }>("lab.json");
+  for (const t of temas) {
+    await client.query(
+      `INSERT INTO lab_topics (code, nombre, evento, que_es, para_que_sirve, que_resuelve,
+                               cuando_considerarlo, limitaciones, orden)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+       ON CONFLICT (code) DO UPDATE SET
+         nombre=EXCLUDED.nombre, evento=EXCLUDED.evento, que_es=EXCLUDED.que_es,
+         para_que_sirve=EXCLUDED.para_que_sirve, que_resuelve=EXCLUDED.que_resuelve,
+         cuando_considerarlo=EXCLUDED.cuando_considerarlo, limitaciones=EXCLUDED.limitaciones,
+         orden=EXCLUDED.orden`,
+      [t.id, t.nombre, t.evento, t.que_es ?? null, t.para_que_sirve ?? null, t.que_resuelve ?? null,
+        t.cuando_considerarlo ?? null, t.limitaciones ?? null, t.orden ?? 0],
+    );
+  }
+  console.log(`✓ lab_topics: ${temas.length}`);
+}
+
 async function seedBadges(client: PoolClient): Promise<void> {
   for (const b of BADGES) {
     await client.query(
@@ -244,6 +263,7 @@ async function run(): Promise<void> {
     await seedRules(client);       // depende de nada FK duro
     await seedChallenges(client);  // depende de applications + cities
     await seedBadges(client);
+    await seedLabTopics(client);
     await seedQuestionLabels(client);
     await client.query("COMMIT");
     console.log("\nSeed completo.");
