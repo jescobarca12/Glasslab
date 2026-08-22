@@ -7,6 +7,7 @@ import type {
   City, Compatibilidad, FlatAnswers, GlassFamily, ProyectoInput,
   Route, Routes, Rule, RuleCondition, RulesDataset,
 } from "./types";
+import { ADVERTENCIA_ESPESOR, espesorOrientativo, type EspesorInput } from "./espesores";
 
 const RIESGO_PESO: Record<string, number> = { alto: 3, medio: 2, bajo: 1 };
 
@@ -127,6 +128,13 @@ function findFamily(families: GlassFamily[], code: string): GlassFamily | undefi
 }
 
 export function construirRutas(flat: FlatAnswers, reglas: Rule[], families: GlassFamily[]): Routes {
+  // Datos con los que se estima el espesor de referencia de cada familia.
+  const medidas: EspesorInput = {
+    area: (flat["area"] as number) ?? null,
+    aplicacion: (flat["aplicacion"] as string) ?? null,
+    ubicacion: (flat["ubicacion"] as string) ?? null,
+  };
+
   const altas = reglas.filter((r) => r.nivelRiesgo === "alto");
   const medias = reglas.filter((r) => r.nivelRiesgo === "medio");
   const bajas = reglas.filter((r) => r.nivelRiesgo === "bajo");
@@ -177,14 +185,22 @@ export function construirRutas(flat: FlatAnswers, reglas: Rule[], families: Glas
     return {
       nivel, titulo, prioridad,
       composicionConceptual: familias.length
-        ? familias.map((f) => ({ id: f.code, nombre: f.nombre, categoria: f.categoria, descripcion: f.descripcion }))
-        : [{ id: baseline, nombre: baselineFam?.nombre ?? baseline, categoria: "Base", descripcion: "Punto de partida general para esta aplicación." }],
+        ? familias.map((f) => ({
+            id: f.code, nombre: f.nombre, categoria: f.categoria, descripcion: f.descripcion,
+            espesorOrientativo: espesorOrientativo(f, medidas),
+          }))
+        : [{
+            id: baseline, nombre: baselineFam?.nombre ?? baseline, categoria: "Base",
+            descripcion: "Punto de partida general para esta aplicación.",
+            espesorOrientativo: baselineFam ? espesorOrientativo(baselineFam, medidas) : null,
+          }],
       problemasQueResuelve: problemas.length ? problemas : ["No se identificaron condiciones críticas adicionales con la información suministrada."],
       limitaciones: limitaciones.length ? limitaciones : ["Sin limitaciones específicas detectadas; validar igualmente con el equipo técnico."],
       nivelDesempenoEsperado: prioridad,
       datosPendientes,
       normasARevisar: [...normasSet],
       compatibilidadSistema: "La compatibilidad final con el sistema de perfilería, anclaje y sellos debe confirmarse con el fabricante del sistema y el integrador.",
+      advertenciaEspesor: Number(medidas.area) > 0 ? ADVERTENCIA_ESPESOR : null,
       riesgosSeleccionIncorrecta: riesgos.length ? riesgos : ["No se detectaron familias explícitamente desaconsejadas para esta combinación."],
       recomendacionValidacion: profesionales.length ? profesionales : ["Asesor técnico VITELSA"],
       reglasIncluidas,

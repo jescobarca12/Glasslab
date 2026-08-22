@@ -5,6 +5,7 @@ import type {
   LeadListResult, Need, PlayerProfile, RuleDetail, RuleListItem, RuleUpdatePayload,
   EmailSessionResponse, EmailStatusResponse, RequestCodeResponse, VerifyCodeResponse,
   CertificationSummary, LabTopic, MarketingSummary,
+  AdvisoryListResult, AdvisoryRequestBody, AdvisoryRow, Quiz, QuizResult,
 } from "./types";
 
 export const getCities = (): Promise<City[]> => api.get("/cities");
@@ -16,6 +17,13 @@ export const getGlassFamilies = (): Promise<GlassFamily[]> => api.get("/glass-fa
 
 export const getChallenges = (): Promise<Challenge[]> => api.get("/challenges");
 export const getLabels = (): Promise<GroupedLabels> => api.get("/labels");
+
+/** El reto como examen: caso, especificaciones y opciones (sin la respuesta). */
+export const getChallengeQuiz = (code: string): Promise<Quiz> =>
+  api.get(`/challenges/${encodeURIComponent(code)}/quiz`);
+/** Corrige la opción elegida; la comparación ocurre en el servidor. */
+export const responderReto = (code: string, opcion: string): Promise<QuizResult> =>
+  api.post(`/challenges/${encodeURIComponent(code)}/answer`, { opcion });
 export const getLabTopics = (): Promise<LabTopic[]> => api.get("/lab");
 
 /**
@@ -47,6 +55,10 @@ export const getPlayer = (email: string): Promise<PlayerProfile> =>
 export const completeChallenge = (email: string, challengeCode: string): Promise<PlayerProfile> =>
   api.post(`/players/${encodeURIComponent(email)}/challenges`, { challengeCode });
 
+/** Solicitud de asesoría para quien no sabe qué vidrio necesita. */
+export const solicitarAsesoria = (body: AdvisoryRequestBody): Promise<AdvisoryRow> =>
+  api.post("/advisory-requests", body);
+
 /** Descarga el informe del diagnóstico en PDF (endpoint público por folio). */
 export async function descargarInforme(leadId: string): Promise<Blob> {
   const res = await fetch(`/api/diagnoses/${encodeURIComponent(leadId)}/report.pdf`);
@@ -61,6 +73,9 @@ export const adminListLeads = (token: string, limit = 25, offset = 0): Promise<L
   api.authGet(`/admin/leads?limit=${limit}&offset=${offset}`, token);
 export const adminGetLead = (token: string, leadId: string): Promise<LeadDetail> =>
   api.authGet(`/admin/leads/${encodeURIComponent(leadId)}`, token);
+
+export const adminListAdvisory = (token: string, limit = 25, offset = 0): Promise<AdvisoryListResult> =>
+  api.authGet(`/admin/advisory-requests?limit=${limit}&offset=${offset}`, token);
 
 export const adminGetMarketing = (token: string): Promise<MarketingSummary> =>
   api.authGet("/admin/analytics/marketing", token);

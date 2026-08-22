@@ -25,6 +25,7 @@ interface RutaResumen {
   composicion?: string[];
   normasARevisar?: string[];
   datosPendientes?: string[];
+  advertenciaEspesor?: string | null;
 }
 
 export interface ReportInput {
@@ -131,6 +132,10 @@ function bloqueRuta(l: Lienzo, ruta: RutaResumen | undefined, etiqueta: string):
   if (ruta.composicion?.length) {
     l.texto("Composicion conceptual:", { size: 10, color: GRIS });
     for (const familia of ruta.composicion) l.texto(`- ${familia}`, { sangria: 12 });
+  }
+  if (ruta.advertenciaEspesor) {
+    l.saltar(4);
+    l.texto(ruta.advertenciaEspesor, { size: 9, color: AMBAR, sangria: 12 });
   }
   if (ruta.normasARevisar?.length) {
     l.saltar(4);

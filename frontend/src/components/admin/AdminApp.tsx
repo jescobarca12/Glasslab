@@ -8,11 +8,13 @@ import { AdminRules } from "./AdminRules";
 import { AdminCities } from "./AdminCities";
 import { AdminMercadeo } from "./AdminMercadeo";
 import { AdminCertificaciones } from "./AdminCertificaciones";
+import { AdminAsesorias } from "./AdminAsesorias";
 
-type AdminVista = "leads" | "mercadeo" | "certificaciones" | "labels" | "rules" | "cities";
+type AdminVista = "leads" | "asesorias" | "mercadeo" | "certificaciones" | "labels" | "rules" | "cities";
 
 const TABS: Array<{ id: AdminVista; label: string }> = [
   { id: "leads", label: "Leads" },
+  { id: "asesorias", label: "Asesorías" },
   { id: "mercadeo", label: "Mercadeo" },
   { id: "certificaciones", label: "Certificaciones" },
   { id: "labels", label: "Preguntas" },
@@ -21,7 +23,7 @@ const TABS: Array<{ id: AdminVista; label: string }> = [
 ];
 
 /** Los tableros son de lectura, así que el usuario de consulta también los ve. */
-const VISTAS_SOLO_LECTURA: AdminVista[] = ["leads", "mercadeo", "certificaciones"];
+const VISTAS_SOLO_LECTURA: AdminVista[] = ["leads", "asesorias", "mercadeo", "certificaciones"];
 
 function AdminContenido() {
   const { token, username, soloLectura, logout } = useAdmin();
@@ -58,6 +60,7 @@ function AdminContenido() {
             ))}
           </nav>
           {vistaActual === "leads" && <AdminLeads />}
+          {vistaActual === "asesorias" && <AdminAsesorias />}
           {vistaActual === "mercadeo" && <AdminMercadeo />}
           {vistaActual === "certificaciones" && <AdminCertificaciones />}
           {vistaActual === "labels" && <AdminLabels />}

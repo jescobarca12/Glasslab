@@ -1,4 +1,5 @@
 import { aplicacionDelMotor, necesidadesDelMotor, type Borrador, type Campos } from "./borrador";
+import { NECESIDAD_ASESORIA } from "./catalogoUI";
 import {
   ACUSTICO_FIELDS, CONDENSACION_FIELDS, GEOMETRIA_FIELDS, SEGURIDAD_FIELDS, SOLAR_FIELDS,
 } from "./moduleFields";
@@ -47,21 +48,27 @@ export function moduloCondensacionActivo(b: Borrador): boolean {
 export type StepId =
   | "proyecto" | "necesidades" | "aplicacion" | "geometria"
   | "acustico" | "solar" | "condensacion" | "seguridad" | "sostenibilidad"
-  | "resultados" | "confirmacion";
+  | "resultados" | "confirmacion" | "asesoria";
 
 export const STEP_TITULOS: Record<StepId, string> = {
   proyecto: "Proyecto",
   necesidades: "Qué resolver",
   aplicacion: "Aplicación",
+  seguridad: "Seguridad",
   geometria: "Geometría",
   acustico: "Acústica",
   solar: "Solar / térmico",
   condensacion: "Condensación",
-  seguridad: "Seguridad",
   sostenibilidad: "Sostenibilidad",
   resultados: "Diagnóstico",
   confirmacion: "Confirmación",
+  asesoria: "Asesoría",
 };
+
+/** true si la persona dijo que no sabe qué vidrio necesita. */
+export function pideAsesoria(b: Borrador): boolean {
+  return b.necesidadesUI.includes(NECESIDAD_ASESORIA);
+}
 
 /**
  * Pasos activos según lo que la persona necesita resolver.
@@ -72,10 +79,15 @@ export const STEP_TITULOS: Record<StepId, string> = {
  * usuario es un gate previo, no un paso.
  */
 export function pasosActivos(b: Borrador): StepId[] {
-  const arr: StepId[] = ["proyecto", "necesidades", "aplicacion", "geometria"];
+  // Quien no sabe qué necesita no recorre el diagnóstico técnico: pasa directo
+  // a dejar sus datos para que un asesor lo llame.
+  if (pideAsesoria(b)) return ["proyecto", "necesidades", "asesoria"];
+
+  // Seguridad va antes de geometría: primero el riesgo, después las medidas.
+  const arr: StepId[] = ["proyecto", "necesidades", "aplicacion", "seguridad", "geometria"];
   if (moduloAcusticoActivo(b)) arr.push("acustico");
   if (moduloSolarActivo(b)) arr.push("solar");
   if (moduloCondensacionActivo(b)) arr.push("condensacion");
-  arr.push("seguridad", "sostenibilidad", "resultados", "confirmacion");
+  arr.push("sostenibilidad", "resultados", "confirmacion");
   return arr;
 }

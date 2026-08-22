@@ -54,8 +54,13 @@ export function ModuleForm({ modulo, fields }: { modulo: ModuloConCampos; fields
             <SelectField
               key={f.campo}
               label={etiqueta} hint={f.hint} options={f.options ?? []}
-              value={typeof raw === "string" ? raw : ""}
-              onChange={(v) => setCampo(modulo, f.campo, v === "" ? undefined : v)}
+              value={raw === undefined || raw === null ? "" : String(raw)}
+              onChange={(v) => {
+                // Algunos selects guardan número porque el motor los compara
+                // con umbrales (p. ej. el nivel de ruido exterior).
+                if (v === "") return setCampo(modulo, f.campo, undefined);
+                setCampo(modulo, f.campo, f.numeric ? Number(v) : v);
+              }}
             />
           );
         }

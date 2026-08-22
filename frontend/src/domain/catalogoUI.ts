@@ -23,13 +23,11 @@ export const APLICACIONES_UI: AplicacionUI[] = [
   { id: "fachada", label: "Fachada", icono: "🏢", motor: "fachada" },
   { id: "muro_cortina", label: "Muro cortina", icono: "🏙️", motor: "muro_cortina" },
   { id: "baranda", label: "Baranda", icono: "🛡️", motor: "baranda" },
-  { id: "balcon", label: "Balcón", icono: "🏗️", motor: "baranda" },
-  { id: "cubierta", label: "Cubierta", icono: "🏛️", motor: "cubierta" },
-  { id: "pergola", label: "Pérgola", icono: "⛱️", motor: "cubierta" },
-  { id: "lucernario", label: "Lucernario", icono: "🔆", motor: "lucernario" },
-  { id: "division_interior", label: "División interior", icono: "🚧", motor: "division_interior" },
+  // Cubierta, pérgola y lucernario comparten el mismo diagnóstico: vidrio
+  // sobre personas. Se unificaron en una sola opción a pedido de VITELSA.
+  { id: "cubierta", label: "Cubierta, pérgola o lucernario", icono: "🏛️", motor: "cubierta" },
+  { id: "division_interior", label: "División interior", icono: "⬜", motor: "division_interior" },
   { id: "division_bano", label: "División de baño", icono: "🚿", motor: "division_bano" },
-  { id: "vitrina", label: "Vitrina", icono: "🛍️", motor: "vitrina" },
   { id: "local_comercial", label: "Local comercial", icono: "🏪", motor: "vitrina" },
   { id: "cerramiento_acustico", label: "Cerramiento acústico", icono: "🔇", motor: "cerramiento_acustico" },
   { id: "otro", label: "Otro", icono: "❔", motor: "ventana" },
@@ -52,18 +50,18 @@ export const NECESIDADES_UI: NecesidadUI[] = [
   { id: "seguridad", label: "Seguridad", motor: ["seguridad"] },
   { id: "calor", label: "Mucho calor", motor: ["aislamiento_termico", "control_solar"] },
   { id: "radiacion", label: "Exceso de radiación solar", motor: ["control_solar"] },
-  { id: "deslumbramiento", label: "Deslumbramiento", motor: ["control_solar"] },
-  { id: "ruido", label: "Ruido", motor: ["confort_acustico"] },
+  { id: "deslumbramiento", label: "Exceso de luz natural", motor: ["control_solar"] },
+  { id: "ruido", label: "Afectación de ruido", motor: ["confort_acustico"] },
   { id: "frio", label: "Frío", motor: ["aislamiento_termico"] },
-  { id: "condensacion", label: "Condensación", motor: ["control_condensacion"] },
-  { id: "riesgo_caida", label: "Riesgo de caída", motor: ["seguridad"] },
-  { id: "privacidad", label: "Privacidad", motor: ["privacidad"] },
+  { id: "condensacion", label: "Humedad interna", motor: ["control_condensacion"] },
   { id: "eficiencia", label: "Eficiencia energética", motor: ["aislamiento_termico", "control_solar", "sostenibilidad"] },
-  { id: "confort", label: "Confort", motor: [] },
-  { id: "estetica", label: "Estética", motor: ["baja_reflexion"] },
   { id: "sostenibilidad", label: "Sostenibilidad", motor: ["sostenibilidad"] },
+  // No activa reglas: quien no sabe qué necesita pasa directo a asesoría.
   { id: "no_se", label: "No sé qué vidrio necesito", motor: [] },
 ];
+
+/** Elegir esta opción lleva a asesoría en vez de al diagnóstico técnico. */
+export const NECESIDAD_ASESORIA = "no_se";
 
 /** Une las necesidades técnicas de todas las etiquetas elegidas, sin repetir. */
 export function necesidadesTecnicas(idsUI: string[]): string[] {

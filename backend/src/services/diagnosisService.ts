@@ -58,15 +58,36 @@ function normalizarCertificacion(valor: unknown): string | null {
   return v;
 }
 
+/**
+ * Riesgos que se deducen de la aplicación en vez de preguntarse.
+ *
+ * VITELSA pidió quitar del formulario "¿existe riesgo de caída?" y "¿aplica
+ * movimiento entre pisos?", pero esas dos respuestas son la única entrada de
+ * R-SEG-01 (caída al vacío → laminado) y R-SEG-05 (edificios altos). Se
+ * derivan de la aplicación para no perder el diagnóstico: una baranda protege
+ * una caída por definición, y un muro cortina se mueve con el edificio.
+ * Si el usuario responde explícitamente, su respuesta manda.
+ */
+const RIESGOS_POR_APLICACION: Record<string, Record<string, boolean>> = {
+  baranda: { riesgoCaida: true },
+  cubierta: { aplicacionSobreCabeza: true },
+  lucernario: { aplicacionSobreCabeza: true },
+  muro_cortina: { movimientoEntrePisos: true },
+};
+
 function toProyecto(body: DiagnosisBody): ProyectoInput {
+  const aplicacion = body.aplicacion as string;
+  const derivados = RIESGOS_POR_APLICACION[aplicacion] ?? {};
+  const seguridad = { ...derivados, ...(body.seguridad ?? {}) };
+
   return {
-    aplicacion: body.aplicacion as string,
+    aplicacion,
     necesidades: (body.necesidades as string[]) ?? [],
     geometria: body.geometria ?? {},
     acustico: body.acustico ?? {},
     solar: body.solar ?? {},
     condensacion: body.condensacion ?? {},
-    seguridad: body.seguridad ?? {},
+    seguridad,
   };
 }
 
@@ -86,9 +107,14 @@ async function validateBody(body: DiagnosisBody): Promise<void> {
 function resumenRuta(ruta: Route): Record<string, unknown> {
   return {
     titulo: ruta.titulo,
-    composicion: ruta.composicionConceptual.map((f) => f.nombre),
+    // El espesor va dentro del texto de cada familia para que aparezca igual
+    // en el correo, en el informe PDF y en el panel, sin cambiar el formato.
+    composicion: ruta.composicionConceptual.map(
+      (f) => (f.espesorOrientativo ? `${f.nombre} — ${f.espesorOrientativo}` : f.nombre),
+    ),
     normasARevisar: ruta.normasARevisar,
     datosPendientes: ruta.datosPendientes,
+    advertenciaEspesor: ruta.advertenciaEspesor,
   };
 }
 

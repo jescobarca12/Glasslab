@@ -42,6 +42,8 @@ export interface CompositionItem {
   nombre: string;
   categoria: string | null;
   descripcion: string | null;
+  /** Espesor de referencia según el tamaño del paño; null si no hay medidas. */
+  espesorOrientativo?: string | null;
 }
 
 export interface Route {
@@ -55,6 +57,8 @@ export interface Route {
   normasARevisar: string[];
   riesgosSeleccionIncorrecta: string[];
   recomendacionValidacion: string[];
+  /** Aclaración obligatoria cuando se muestran espesores. */
+  advertenciaEspesor?: string | null;
 }
 
 export interface ActiveRule {
@@ -264,6 +268,61 @@ export interface EmailSessionResponse {
 export interface EmailStatusResponse {
   correo: string;
   verificado: boolean;
+}
+
+// --- Retos en modo examen ---
+
+export interface QuizOption {
+  id: string;
+  texto: string;
+}
+
+export interface Quiz {
+  code: string;
+  titulo: string;
+  narrativa: string | null;
+  aplicacion: string | null;
+  ciudad: string | null;
+  especificaciones: Array<{ campo: string; valor: string }>;
+  opciones: QuizOption[];
+}
+
+export interface QuizResult {
+  correcto: boolean;
+  respuestaCorrecta: string;
+  explicacion: string[];
+  reglas: string[];
+  normasARevisar: string[];
+}
+
+// --- Asesoría ---
+
+export interface AdvisoryRequestBody {
+  nombre: string;
+  correo: string;
+  telefono: string;
+  ciudad?: string;
+  proyecto?: string;
+  horarioContacto?: string;
+  notas?: string;
+}
+
+export interface AdvisoryRow {
+  id: number;
+  createdAt: string;
+  name: string | null;
+  email: string;
+  phone: string | null;
+  city: string | null;
+  projectName: string | null;
+  contactSlot: string | null;
+  notes: string | null;
+  attended: boolean;
+}
+
+export interface AdvisoryListResult {
+  items: AdvisoryRow[];
+  total: number;
 }
 
 // --- Analítica y laboratorio ---

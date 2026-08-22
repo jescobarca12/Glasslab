@@ -90,15 +90,15 @@ export function ConfirmacionStep() {
     <>
       <h2>Tu diagnóstico está listo</h2>
       <p className="lead">
-        Solo falta enviarlo. Estos datos son opcionales y ayudan a que el asesor llegue preparado
-        a la conversación.
+        Solo falta enviarlo. Con la fecha estimada el asesor sabe con qué urgencia acompañarte;
+        empresa y cargo son opcionales.
       </p>
 
       <div className="grid-2">
         <TextField label="Empresa" hint="opcional" value={c.empresa} onChange={(v) => setConfirmacion({ empresa: v })} />
         <TextField label="Cargo" hint="opcional" value={c.cargo} onChange={(v) => setConfirmacion({ cargo: v })} />
         <TextField
-          label="Fecha estimada de compra o instalación" hint="opcional" type="date"
+          label="Fecha estimada de compra o instalación" hint="obligatoria" type="date"
           value={c.fechaEstimada} onChange={(v) => setConfirmacion({ fechaEstimada: v })}
         />
       </div>
@@ -114,10 +114,17 @@ export function ConfirmacionStep() {
         onChange={(v) => setConfirmacion({ autorizacionComercial: v })}
       />
 
+      {c.fechaEstimada === "" && (
+        <p className="hint">Indica la fecha estimada para poder enviar el diagnóstico.</p>
+      )}
       {guardar.error && <div className="error-box" style={{ marginTop: 10 }}>{guardar.error}</div>}
 
       <div className="btn-row" style={{ justifyContent: "flex-end" }}>
-        <button type="button" className="btn btn-primary" disabled={guardar.loading} onClick={() => void enviar()}>
+        <button
+          type="button" className="btn btn-primary"
+          disabled={guardar.loading || c.fechaEstimada === ""}
+          onClick={() => void enviar()}
+        >
           {guardar.loading ? "Enviando…" : "Enviar mi diagnóstico →"}
         </button>
       </div>

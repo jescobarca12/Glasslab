@@ -1,5 +1,6 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 import { borradorInicial, type Borrador, type Campos, type Confirmacion, type InteresCertificacion } from "../domain/borrador";
+import { NECESIDAD_ASESORIA } from "../domain/catalogoUI";
 import { rutearPrefill } from "../domain/wizard";
 import type { Challenge } from "../api/types";
 
@@ -39,12 +40,17 @@ export function BorradorProvider({ children }: { children: ReactNode }) {
     setCampo: (modulo, campo, valor) =>
       setBorrador((b) => ({ ...b, [modulo]: { ...(b[modulo] as Campos), [campo]: valor } })),
     toggleNecesidadUI: (id) =>
-      setBorrador((b) => ({
-        ...b,
-        necesidadesUI: b.necesidadesUI.includes(id)
-          ? b.necesidadesUI.filter((n) => n !== id)
-          : [...b.necesidadesUI, id],
-      })),
+      setBorrador((b) => {
+        const yaEstaba = b.necesidadesUI.includes(id);
+        if (yaEstaba) return { ...b, necesidadesUI: b.necesidadesUI.filter((n) => n !== id) };
+        // "No sé qué vidrio necesito" es excluyente: lleva a asesoría, no a
+        // un diagnóstico, así que no se combina con las demás necesidades.
+        if (id === NECESIDAD_ASESORIA) return { ...b, necesidadesUI: [NECESIDAD_ASESORIA] };
+        return {
+          ...b,
+          necesidadesUI: [...b.necesidadesUI.filter((n) => n !== NECESIDAD_ASESORIA), id],
+        };
+      }),
     setConfirmacion: (patch) =>
       setBorrador((b) => ({ ...b, confirmacion: { ...b.confirmacion, ...patch } })),
     setInteresCertificacion: (valor) =>

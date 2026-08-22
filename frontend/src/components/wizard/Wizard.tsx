@@ -4,7 +4,7 @@ import { pasosActivos, type StepId } from "../../domain/wizard";
 import { getApplications, getCities, trackEvent } from "../../api/endpoints";
 import { useFetch } from "../../hooks/useFetch";
 import {
-  ACUSTICO_FIELDS, CONDENSACION_FIELDS, GEOMETRIA_FIELDS, SEGURIDAD_FIELDS, SOLAR_FIELDS,
+  ACUSTICO_FIELDS, CONDENSACION_FIELDS, SEGURIDAD_FIELDS, SOLAR_FIELDS,
 } from "../../domain/moduleFields";
 import { Stepper } from "./Stepper";
 import { ModuleForm } from "./ModuleForm";
@@ -12,8 +12,10 @@ import { ProyectoStep } from "./steps/ProyectoStep";
 import { AplicacionStep } from "./steps/AplicacionStep";
 import { NecesidadesStep } from "./steps/NecesidadesStep";
 import { ResultadosStep } from "./steps/ResultadosStep";
+import { GeometriaStep } from "./steps/GeometriaStep";
 import { SostenibilidadStep } from "./steps/SostenibilidadStep";
 import { ConfirmacionStep } from "./steps/ConfirmacionStep";
+import { AsesoriaStep } from "./steps/AsesoriaStep";
 
 export function Wizard() {
   const { borrador, indice, setIndice, setCampo } = useBorrador();
@@ -50,6 +52,12 @@ export function Wizard() {
         return borrador.proyecto.nombre.trim() !== "" && borrador.proyecto.ciudadId !== "";
       case "necesidades":
         return borrador.necesidadesUI.length > 0;
+      case "geometria": {
+        // VITELSA pidió que la magnitud y las unidades sean obligatorias.
+        const area = Number(borrador.geometria["area"]) || 0;
+        const unidades = Number(borrador.geometria["modulos"]) || 0;
+        return area > 0 && unidades > 0;
+      }
       case "aplicacion":
         return borrador.aplicacionUI !== null;
       default:
@@ -63,7 +71,8 @@ export function Wizard() {
       case "aplicacion": return <AplicacionStep applications={appsReq.data!} />;
       case "sostenibilidad": return <SostenibilidadStep />;
       case "confirmacion": return <ConfirmacionStep />;
-      case "geometria": return <><h2>Geometría</h2><p className="lead">Dimensiones y configuración del paño.</p><ModuleForm modulo="geometria" fields={GEOMETRIA_FIELDS} /></>;
+      case "asesoria": return <AsesoriaStep />;
+      case "geometria": return <GeometriaStep />;
       case "necesidades": return <NecesidadesStep />;
       case "acustico": return <><h2>Módulo acústico</h2><p className="lead">Se activó por la necesidad de confort acústico o por un cerramiento acústico.</p><ModuleForm modulo="acustico" fields={ACUSTICO_FIELDS} /></>;
       case "solar": return <><h2>Módulo solar / térmico</h2><p className="lead">Se activó por control solar, aislamiento térmico, baja reflexión o sostenibilidad.</p><ModuleForm modulo="solar" fields={SOLAR_FIELDS} /></>;
@@ -76,7 +85,7 @@ export function Wizard() {
 
   // En la confirmación el propio paso maneja sus acciones (enviar y, una vez
   // enviado, empezar de nuevo): el wizard solo deja volver atrás.
-  const esUltimo = pasoActual === "confirmacion";
+  const esUltimo = pasoActual === "confirmacion" || pasoActual === "asesoria";
 
   return (
     <div className="card">

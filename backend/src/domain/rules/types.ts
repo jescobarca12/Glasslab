@@ -82,6 +82,8 @@ export interface CompositionItem {
   nombre: string;
   categoria: string | null;
   descripcion: string | null;
+  /** Espesor de referencia según el tamaño del paño; null si no hay medidas. */
+  espesorOrientativo?: string | null;
 }
 
 export interface Route {
@@ -95,6 +97,8 @@ export interface Route {
   datosPendientes: string[];
   normasARevisar: string[];
   compatibilidadSistema: string;
+  /** Advertencia que acompaña a los espesores; null si no se estimaron. */
+  advertenciaEspesor: string | null;
   riesgosSeleccionIncorrecta: string[];
   recomendacionValidacion: string[];
   reglasIncluidas: Rule[];

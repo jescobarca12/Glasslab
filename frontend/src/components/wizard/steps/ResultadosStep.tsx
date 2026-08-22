@@ -13,8 +13,17 @@ function RouteCard({ ruta, elegida, onElegir }: { ruta: Route; elegida: boolean;
       <div className="prio">{ruta.prioridad}</div>
 
       <div>
-        {ruta.composicionConceptual.map((f) => <span key={f.id} className="badge-fam">{f.nombre}</span>)}
+        {ruta.composicionConceptual.map((f) => (
+          <span key={f.id} className="badge-fam">
+            {f.nombre}
+            {f.espesorOrientativo && <em className="espesor"> · {f.espesorOrientativo}</em>}
+          </span>
+        ))}
       </div>
+
+      {ruta.advertenciaEspesor && (
+        <p className="hint" style={{ marginTop: 8 }}>{ruta.advertenciaEspesor}</p>
+      )}
 
       {ruta.datosPendientes.length > 0 && (
         <div className="callout warn" style={{ marginTop: 12 }}>

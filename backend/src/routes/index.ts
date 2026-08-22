@@ -10,6 +10,8 @@ import * as rulesAdmin from "../controllers/rulesAdminController";
 import * as citiesAdmin from "../controllers/citiesAdminController";
 import * as emailVerification from "../controllers/emailVerificationController";
 import * as analytics from "../controllers/analyticsController";
+import * as advisory from "../controllers/advisoryController";
+import * as challengeQuiz from "../controllers/challengeQuizController";
 
 export const apiRouter = Router();
 
@@ -25,6 +27,8 @@ apiRouter.get("/glass-families", asyncHandler(catalog.listGlassFamilies));
 apiRouter.get("/applications", asyncHandler(catalog.listApplications));
 apiRouter.get("/needs", asyncHandler(catalog.listNeeds));
 apiRouter.get("/challenges", asyncHandler(catalog.listChallenges));
+apiRouter.get("/challenges/:code/quiz", asyncHandler(challengeQuiz.getQuiz));
+apiRouter.post("/challenges/:code/answer", asyncHandler(challengeQuiz.answer));
 apiRouter.get("/labels", asyncHandler(labels.getPublicLabels));
 apiRouter.get("/lab", asyncHandler(analytics.listLabTopics));
 
@@ -43,6 +47,9 @@ apiRouter.get("/diagnoses/:leadId", asyncHandler(diagnosis.getOne));
 // --- Analítica de producto (la emite el asistente) ---
 apiRouter.post("/events", asyncHandler(analytics.track));
 
+// --- Asesoría (quien no sabe qué vidrio necesita) ---
+apiRouter.post("/advisory-requests", asyncHandler(advisory.create));
+
 // --- Gamificación ---
 apiRouter.get("/players/:email", asyncHandler(gamification.getPlayer));
 apiRouter.post("/players/:email/challenges", asyncHandler(gamification.completeChallengeForPlayer));
@@ -55,6 +62,8 @@ apiRouter.get("/admin/me", requireAuth, asyncHandler(admin.me));
 apiRouter.get("/admin/leads.csv", requireAuth, asyncHandler(admin.exportLeadsCsv));
 apiRouter.get("/admin/leads", requireAuth, asyncHandler(admin.listLeads));
 apiRouter.get("/admin/leads/:leadId", requireAuth, asyncHandler(admin.getLead));
+apiRouter.get("/admin/advisory-requests", requireAuth, asyncHandler(advisory.list));
+
 // Tableros de lectura: los abren admin y viewer, como los leads.
 apiRouter.get("/admin/analytics/marketing", requireAuth, asyncHandler(analytics.marketing));
 apiRouter.get("/admin/analytics/certifications", requireAuth, asyncHandler(analytics.certifications));

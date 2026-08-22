@@ -51,7 +51,7 @@ function Contenido() {
       </nav>
 
       {vista === "asistente" && <Wizard />}
-      {vista === "retos" && <RetosScreen onResolver={() => setVista("asistente")} />}
+      {vista === "retos" && <RetosScreen />}
       {vista === "laboratorio" && <LaboratorioScreen />}
       {vista === "niveles" && <NivelesScreen />}
     </BorradorProvider>
