@@ -47,6 +47,7 @@
     }
   },
   "acustico": {
+    "aplica": "¿El ruido exterior es un problema en este proyecto?",
     "fuenteSonora": "Tipo de fuente sonora",
     "nivelExteriorDb": "Nivel exterior conocido o estimado (dB)",
     "horario": "Horario predominante de la fuente",
@@ -56,6 +57,7 @@
     "estudioAcustico": "¿Existe un estudio acústico del proyecto?"
   },
   "solar": {
+    "aplica": "¿El sol o el calor son un problema en este proyecto?",
     "orientacion": "Orientación predominante",
     "pctFachadaAcristalada": "Porcentaje de fachada acristalada (%)",
     "aireAcondicionado": "¿Se usará aire acondicionado?",

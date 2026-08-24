@@ -301,6 +301,26 @@ a:hover { color: var(--red); }
 .tri-btn.on { background: var(--navy); color: #fff; font-weight: 700; }
 .tri-btn:focus-visible { outline: 2px solid var(--navy); outline-offset: -2px; }
 
+/* ---------------------------------------------------------------------
+ * Bloque "¿aplica?": la decisión que abre o cierra un módulo técnico.
+ * Va antes del formulario y no compite con él: pesa por posición, no por
+ * color, así que solo lleva el fondo suave que ya usan los estados activos.
+ * ------------------------------------------------------------------- */
+.aplica {
+  background: var(--navy-tint); border: 1px solid var(--line);
+  border-radius: var(--radius-sm); padding: var(--space-3);
+  margin: var(--space-3) 0 var(--space-4);
+  display: flex; flex-direction: column; gap: var(--space-2);
+  align-items: flex-start;
+}
+.aplica-pregunta {
+  margin: 0; font-weight: 700; color: var(--heading); font-size: var(--t-h3);
+  text-wrap: balance;
+}
+.aplica .tri-group { background: var(--surface); }
+.aplica .hint { margin: 0; }
+.aplica .callout { align-self: stretch; margin: 0; }
+
 /* Distintivo del usuario de solo consulta en el panel */
 .role-chip {
   font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700;

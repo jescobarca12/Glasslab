@@ -3,9 +3,7 @@ import { useBorrador } from "../../state/BorradorContext";
 import { pasosActivos, type StepId } from "../../domain/wizard";
 import { getApplications, getCities, trackEvent } from "../../api/endpoints";
 import { useFetch } from "../../hooks/useFetch";
-import {
-  ACUSTICO_FIELDS, CONDENSACION_FIELDS, SEGURIDAD_FIELDS, SOLAR_FIELDS,
-} from "../../domain/moduleFields";
+import { CONDENSACION_FIELDS, SEGURIDAD_FIELDS } from "../../domain/moduleFields";
 import { Stepper } from "./Stepper";
 import { ModuleForm } from "./ModuleForm";
 import { ProyectoStep } from "./steps/ProyectoStep";
@@ -16,6 +14,8 @@ import { GeometriaStep } from "./steps/GeometriaStep";
 import { SostenibilidadStep } from "./steps/SostenibilidadStep";
 import { ConfirmacionStep } from "./steps/ConfirmacionStep";
 import { AsesoriaStep } from "./steps/AsesoriaStep";
+import { AcusticoStep } from "./steps/AcusticoStep";
+import { SolarStep } from "./steps/SolarStep";
 
 export function Wizard() {
   const { borrador, indice, setIndice, setCampo } = useBorrador();
@@ -58,6 +58,11 @@ export function Wizard() {
         return (Number(borrador.geometria["areaTotal"]) || 0) > 0;
       case "aplicacion":
         return borrador.aplicacionUI !== null;
+      case "acustico":
+      case "solar":
+        // Decir "no aplica" es una respuesta válida; dejarlo en blanco, no:
+        // el módulo existe para que nadie lo omita sin haberlo considerado.
+        return typeof borrador[pasoActual]["aplica"] === "boolean";
       default:
         return true;
     }
@@ -72,8 +77,8 @@ export function Wizard() {
       case "asesoria": return <AsesoriaStep />;
       case "geometria": return <GeometriaStep />;
       case "necesidades": return <NecesidadesStep />;
-      case "acustico": return <><h2>Módulo acústico</h2><p className="lead">Se activó por la necesidad de confort acústico o por un cerramiento acústico.</p><ModuleForm modulo="acustico" fields={ACUSTICO_FIELDS} /></>;
-      case "solar": return <><h2>Módulo solar / térmico</h2><p className="lead">Se activó por control solar, aislamiento térmico, baja reflexión o sostenibilidad.</p><ModuleForm modulo="solar" fields={SOLAR_FIELDS} /></>;
+      case "acustico": return <AcusticoStep />;
+      case "solar": return <SolarStep />;
       case "condensacion": return <><h2>Módulo de condensación</h2><p className="lead">Se estima el riesgo comparando la temperatura superficial del vidrio con el punto de rocío interior.</p><ModuleForm modulo="condensacion" fields={CONDENSACION_FIELDS} /></>;
       case "seguridad": return <><h2>Seguridad y estructura</h2><p className="lead">Siempre presente: contiene variables sísmicas y estructurales indispensables (NSR-10).</p><ModuleForm modulo="seguridad" fields={SEGURIDAD_FIELDS} /></>;
       case "resultados": return <ResultadosStep />;

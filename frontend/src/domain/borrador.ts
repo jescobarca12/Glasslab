@@ -91,6 +91,17 @@ export function necesidadesDelMotor(b: Borrador): string[] {
   return necesidadesTecnicas(b.necesidadesUI);
 }
 
+/**
+ * Campos de un módulo que la persona pudo declarar no aplicable.
+ *
+ * Si dijo que no aplica, no se manda lo que hubiera alcanzado a escribir antes
+ * de cambiar de opinión: el motor dispararía reglas por datos que la persona ya
+ * descartó. En el borrador sí se conservan, para no perderlos si vuelve a "Sí".
+ */
+function moduloOpcional(campos: Campos): Campos {
+  return campos["aplica"] === false ? { aplica: false } : campos;
+}
+
 /** Cuerpo para enviar al backend (evaluate/create). La persona viene de la sesión. */
 export function aBodyBackend(b: Borrador, persona: Persona): Record<string, unknown> {
   return {
@@ -109,8 +120,8 @@ export function aBodyBackend(b: Borrador, persona: Persona): Record<string, unkn
     necesidades: necesidadesDelMotor(b),
     necesidadesUI: b.necesidadesUI,
     geometria: b.geometria,
-    acustico: b.acustico,
-    solar: b.solar,
+    acustico: moduloOpcional(b.acustico),
+    solar: moduloOpcional(b.solar),
     condensacion: b.condensacion,
     seguridad: b.seguridad,
     sostenibilidad: b.sostenibilidad,

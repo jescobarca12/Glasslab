@@ -17,8 +17,9 @@ export function NecesidadesStep() {
     <>
       <h2>¿Qué quieres mejorar o resolver?</h2>
       <p className="lead">
-        Elige hasta {MAX_NECESIDADES} criterios. Según tu respuesta se activan los módulos técnicos
-        —acústica, solar y térmico, condensación— más adelante en el asistente.
+        Elige hasta {MAX_NECESIDADES} criterios. Lo que marques aquí llega propuesto en los módulos
+        técnicos que vienen después —acústica, control solar, condensación—, donde puedes confirmarlo
+        o descartarlo.
       </p>
       <p className="hint">
         {topeAlcanzado

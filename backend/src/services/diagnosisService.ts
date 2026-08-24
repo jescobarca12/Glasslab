@@ -76,6 +76,17 @@ const RIESGOS_POR_APLICACION: Record<string, Record<string, boolean>> = {
   muro_cortina: { movimientoEntrePisos: true },
 };
 
+/**
+ * Un módulo marcado como no aplicable no aporta datos al motor.
+ *
+ * La interfaz ya no los manda, pero la API es pública: sin esto, un cuerpo con
+ * `aplica: false` y campos llenos dispararía reglas que la persona descartó.
+ */
+function moduloOpcional(campos: Record<string, unknown> | undefined): Record<string, unknown> {
+  if (!campos) return {};
+  return campos.aplica === false ? {} : campos;
+}
+
 function toProyecto(body: DiagnosisBody): ProyectoInput {
   const aplicacion = body.aplicacion as string;
   const derivados = RIESGOS_POR_APLICACION[aplicacion] ?? {};
@@ -85,8 +96,8 @@ function toProyecto(body: DiagnosisBody): ProyectoInput {
     aplicacion,
     necesidades: (body.necesidades as string[]) ?? [],
     geometria: body.geometria ?? {},
-    acustico: body.acustico ?? {},
-    solar: body.solar ?? {},
+    acustico: moduloOpcional(body.acustico),
+    solar: moduloOpcional(body.solar),
     condensacion: body.condensacion ?? {},
     seguridad,
   };

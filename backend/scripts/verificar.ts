@@ -118,6 +118,25 @@ async function run(): Promise<void> {
     afirmar(est !== alto, `ambas rutas devolvieron ${est}`);
   });
 
+  await check("decir que el ruido no aplica apaga las reglas acústicas", async () => {
+    const ventana = (acustico: Record<string, unknown>) =>
+      post("/diagnoses/evaluate", { aplicacion: "ventana", necesidades: [], acustico });
+    const datos = { nivelExteriorDb: 100, fuenteSonora: "trafico_vehicular" };
+
+    const { body: aplicando } = await ventana({ aplica: true, ...datos });
+    afirmar(
+      aplicando.reglasActivas.some((r: any) => r.code === "R-AC-01"),
+      "R-AC-01 no se disparó con 100 dB declarados",
+    );
+
+    // Los mismos datos, pero la persona dijo que el ruido no es su problema.
+    const { body: descartado } = await ventana({ aplica: false, ...datos });
+    afirmar(
+      !descartado.reglasActivas.some((r: any) => String(r.code).startsWith("R-AC-")),
+      "una regla acústica sobrevivió al «no aplica»",
+    );
+  });
+
   await check("una baranda exige laminado sin preguntar por el riesgo de caída", async () => {
     const { body } = await post("/diagnoses/evaluate", { aplicacion: "baranda", necesidades: ["seguridad"] });
     const codigos = body.reglasActivas.map((r: any) => r.code);
