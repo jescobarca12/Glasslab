@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "nota": "Portafolio comercial VITELSA por criterio, del modelo de diagnóstico (MODELO, agosto 2026). El propio documento advierte que estos nombres deben validarse contra el catálogo comercial vigente antes de publicarse, así que la app los muestra como referencia comercial, no como especificación.",
+  "nota": "Portafolio comercial VITELSA por criterio, tomado de la matriz de portafolio (imagen del 22/08/2026) y del MODELO de diagnóstico. La matriz define 7 criterios; 'eficiencia energética' se marca como derivado porque combina calor, frío y luz natural y no es una fila propia. Los nombres deben validarse contra el catálogo comercial vigente antes de publicarse.",
   "criterios": [
     {
       "id": "seguridad",
@@ -11,7 +11,10 @@
       "indicador": "Mapa eólico (región) / Zona de riesgo sísmico",
       "solucionEstandar": "Dual Arquitectura",
       "solucionAltoDesempeno": "Temper Dual HS / Temper Dual FT / Multidual",
-      "orden": 1
+      "orden": 1,
+      "certificaciones": null,
+      "incentivos": null,
+      "derivado": false
     },
     {
       "id": "calor",
@@ -22,7 +25,10 @@
       "indicador": "Reflexión de luz / Reflexión de calor / Coeficiente de sombra / SHGC < 0.50",
       "solucionEstandar": "Dual Control Solar",
       "solucionAltoDesempeno": "Dual PVB Control Solar / Dual Control Solar Low-E / DVH-Temper",
-      "orden": 2
+      "orden": 2,
+      "certificaciones": null,
+      "incentivos": null,
+      "derivado": false
     },
     {
       "id": "frio",
@@ -33,7 +39,10 @@
       "indicador": "Vidrio de aislamiento térmico / Valor U < 5.5 W/m²·K",
       "solucionEstandar": "DVH Insulado Incoloro",
       "solucionAltoDesempeno": "DVH-Temper",
-      "orden": 3
+      "orden": 3,
+      "certificaciones": null,
+      "incentivos": null,
+      "derivado": false
     },
     {
       "id": "ruido",
@@ -44,7 +53,10 @@
       "indicador": "STC / OITC",
       "solucionEstandar": "Temper Dual 5+5 / Dual 5+5",
       "solucionAltoDesempeno": "Dual PVB Acústico / Temper Dual 6+8",
-      "orden": 4
+      "orden": 4,
+      "certificaciones": null,
+      "incentivos": null,
+      "derivado": false
     },
     {
       "id": "deslumbramiento",
@@ -55,7 +67,10 @@
       "indicador": "Vidrio de valor agregado / TLV % < 60%",
       "solucionEstandar": "Tintado Gris-Verde",
       "solucionAltoDesempeno": "Dual Earth Tone / PVB Color Ventanería / Dual Control Solar / Dual Low-E",
-      "orden": 5
+      "orden": 5,
+      "certificaciones": null,
+      "incentivos": null,
+      "derivado": false
     },
     {
       "id": "condensacion",
@@ -66,7 +81,10 @@
       "indicador": "Vidrio de aislamiento térmico / Valor U < 5.5 W/m²·K",
       "solucionEstandar": "DVH Incoloro",
       "solucionAltoDesempeno": "DVH-Temper Tintado / DVH Control Solar – Bajo Emisivo / DVH-Control Solar",
-      "orden": 6
+      "orden": 6,
+      "certificaciones": null,
+      "incentivos": null,
+      "derivado": false
     },
     {
       "id": "sostenibilidad",
@@ -77,7 +95,10 @@
       "indicador": "SHGC / TLV % / Valor U < 5.5 W/m²·K",
       "solucionEstandar": "DVH Incoloro / Tintado Gris-Verde",
       "solucionAltoDesempeno": "Control Solar / Control Solar – Low-E",
-      "orden": 7
+      "orden": 7,
+      "certificaciones": "EDGE / LEED / CASA Colombia",
+      "incentivos": "UPME (incentivos tributarios y financieros)",
+      "derivado": false
     },
     {
       "id": "eficiencia",
@@ -88,7 +109,10 @@
       "indicador": "SHGC / TLV % / Valor U < 5.5 W/m²·K",
       "solucionEstandar": "DVH Insulado Incoloro",
       "solucionAltoDesempeno": "DVH alto desempeño: control solar + Low-E + acústica + seguridad",
-      "orden": 8
+      "orden": 8,
+      "certificaciones": null,
+      "incentivos": null,
+      "derivado": true
     }
   ]
 }

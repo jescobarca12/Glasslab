@@ -86,6 +86,10 @@ export interface CriterioPortafolio {
   indicador: string | null;
   solucionEstandar: string | null;
   solucionAltoDesempeno: string | null;
+  certificaciones: string | null;
+  incentivos: string | null;
+  /** true si el criterio combina otros y no es fila propia de la matriz. */
+  derivado: boolean;
 }
 
 export interface EvaluateResponse {

@@ -134,11 +134,18 @@ export function ResultadosStep() {
               <tbody>
                 {portafolio.map((p) => (
                   <tr key={p.criterio}>
-                    <td><strong>{p.label}</strong></td>
+                    <td>
+                      <strong>{p.label}</strong>
+                      {p.derivado && <div className="hint">combina calor, frío y luz natural</div>}
+                    </td>
                     <td>{p.familiaVitelsa ?? "—"}</td>
                     <td>{p.solucionEstandar ?? "—"}</td>
                     <td>{p.solucionAltoDesempeno ?? "—"}</td>
-                    <td>{p.indicador ?? "—"}</td>
+                    <td>
+                      {p.indicador ?? "—"}
+                      {p.certificaciones && <div className="hint">Aporta a: {p.certificaciones}</div>}
+                      {p.incentivos && <div className="hint">Incentivos: {p.incentivos}</div>}
+                    </td>
                   </tr>
                 ))}
               </tbody>
