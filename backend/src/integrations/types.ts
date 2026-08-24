@@ -21,6 +21,17 @@ export interface EmailAttachment {
   contentType?: string;
 }
 
+/** Contexto del diagnóstico que se muestra en el correo. */
+export interface DiagnosisEmailContext {
+  ciudad?: string | null;
+  aplicacion?: string | null;
+  criterios?: string[];
+  compatibilidad?: { score?: number | null; level?: string | null };
+  /** Línea comercial VITELSA por criterio. */
+  portafolio?: Array<{ label: string; solucionEstandar?: string | null; solucionAltoDesempeno?: string | null }>;
+  reglas?: Array<{ code: string; nombre?: string | null; nivelRiesgo?: string | null }>;
+}
+
 export interface DiagnosisEmailInput {
   leadId: string;
   to: string;
@@ -28,6 +39,7 @@ export interface DiagnosisEmailInput {
   userName?: string | null;
   projectName?: string | null;
   summary: unknown;
+  contexto?: DiagnosisEmailContext;
   /** Informe en PDF; si falta, el correo sale igual con el resumen en HTML. */
   attachment?: EmailAttachment;
 }

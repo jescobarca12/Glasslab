@@ -143,9 +143,13 @@ export async function evaluate(body: DiagnosisBody): Promise<Record<string, unkn
   // Referencia comercial VITELSA de los criterios elegidos. Es orientación de
   // portafolio, no especificación: el propio modelo pide validarla contra el
   // catálogo vigente.
-  const portafolio = await getPortafolioPara(
-    Array.isArray(body.necesidadesUI) ? body.necesidadesUI : [],
-  );
+  //
+  // Seguridad va siempre: el modelo la trata como input activo en toda
+  // consulta, se haya elegido o no, así que la línea comercial nunca queda
+  // vacía aunque la persona solo pida confort.
+  const criterios = Array.isArray(body.necesidadesUI) ? [...body.necesidadesUI] : [];
+  if (!criterios.includes("seguridad")) criterios.push("seguridad");
+  const portafolio = await getPortafolioPara(criterios);
 
   return {
     portafolio,
@@ -256,15 +260,40 @@ export async function create(body: DiagnosisBody): Promise<CreateResult> {
   await awardBadge(player.id, "primer_diagnostico");
   if (body.proyecto?.ciudadId) await registrarCiudadExplorada(player.id, body.proyecto.ciudadId);
 
+  // Línea comercial VITELSA de los criterios elegidos, para el correo y el PDF.
+  // Seguridad va siempre, como en evaluate.
+  const criteriosLead = [...(record.needsUI ?? [])];
+  if (!criteriosLead.includes("seguridad")) criteriosLead.push("seguridad");
+  const portafolio = await getPortafolioPara(criteriosLead);
+
   // Informe en PDF para adjuntar al correo. Si la generación falla, el correo
   // sale igual con el resumen en HTML: el informe es un extra, no un requisito.
-  const informe = await generarInformeSeguro(record, row.createdAt);
+  const informe = await generarInformeSeguro(record, row.createdAt, {
+    reglas: reglas.map((r) => ({
+      code: r.code, nombre: r.nombre, nivelRiesgo: r.nivelRiesgo, advertencia: r.advertencia,
+    })),
+    portafolio,
+    geometria: proyecto.geometria ?? {},
+  });
 
   // Integraciones (correo + sincronización de lead). Un fallo aquí no invalida
   // el diagnóstico ya guardado: se reporta el estado y sigue.
   const emailResult = await enviarSeguro(() => emailService.sendDiagnosis({
     leadId: record.leadId, to: email, copyTo: env.integrations.vitelsaEmail,
     userName: record.user.name, projectName: record.project.name, summary: record.results,
+    contexto: {
+      ciudad: record.project.city,
+      aplicacion: record.applicationUI ?? record.application.type,
+      criterios: (record.needsUI ?? []).length ? record.needsUI : proyecto.necesidades,
+      compatibilidad: {
+        score: record.selection.compatibilityScore,
+        level: record.selection.compatibilityLevel,
+      },
+      portafolio: portafolio.map((p) => ({
+        label: p.label, solucionEstandar: p.solucionEstandar, solucionAltoDesempeno: p.solucionAltoDesempeno,
+      })),
+      reglas: reglas.map((r) => ({ code: r.code, nombre: r.nombre, nivelRiesgo: r.nivelRiesgo })),
+    },
     ...(informe ? { attachment: informe } : {}),
   }));
   if (emailResult.delivered) await markEmailSent(record.leadId);
@@ -280,26 +309,49 @@ export async function create(body: DiagnosisBody): Promise<CreateResult> {
 async function generarInformeSeguro(
   record: DiagnosisRecord,
   createdAt: string,
+  contexto: {
+    reglas: Array<{ code: string; nombre?: string | null; nivelRiesgo?: string | null; advertencia?: string | null }>;
+    portafolio: Awaited<ReturnType<typeof getPortafolioPara>>;
+    geometria: Record<string, unknown>;
+  },
 ): Promise<{ filename: string; content: Buffer } | null> {
   try {
     const resultados = record.results as {
       recommended?: Record<string, unknown>; highPerformance?: Record<string, unknown>;
     };
+    const g = contexto.geometria;
     const content = await generarInformePdf({
       leadId: record.leadId,
       fecha: new Date(createdAt),
       userName: record.user.name,
       userEmail: record.user.email,
+      userPhone: record.user.phone,
+      userCompany: record.user.company,
+      userPosition: record.user.position,
       projectName: record.project.name,
       projectCity: record.project.city,
+      projectType: record.project.type,
+      projectStage: record.project.stage,
       applicationLabel: record.applicationUI ?? record.application.type,
+      applicationEngine: record.application.type,
+      geometria: {
+        ancho: (g["ancho"] as number) ?? null,
+        alto: (g["alto"] as number) ?? null,
+        area: (g["area"] as number) ?? null,
+        unidades: (g["modulos"] as number) ?? null,
+        ubicacion: (g["ubicacion"] as string) ?? null,
+        perforaciones: (g["perforaciones"] as boolean) ?? null,
+      },
+      criterios: (record.needsUI ?? []).length ? record.needsUI : record.needs,
       compatibility: {
         score: record.selection.compatibilityScore,
         level: record.selection.compatibilityLevel,
       },
       recommended: resultados.recommended,
       highPerformance: resultados.highPerformance,
-      appliedRules: record.appliedRules,
+      appliedRules: contexto.reglas,
+      portafolio: contexto.portafolio,
+      sostenibilidad: record.sustainabilityInterest,
     });
     return { filename: `diagnostico-${record.leadId}.pdf`, content };
   } catch (err) {

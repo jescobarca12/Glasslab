@@ -477,3 +477,11 @@ a:hover { color: var(--red); }
   font-size: var(--t-label); color: var(--muted);
   letter-spacing: var(--tracking-label); text-transform: uppercase;
 }
+
+/* Nombre comercial VITELSA dentro de cada ruta: es lo que el asesor cotiza. */
+.linea-vitelsa {
+  margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px dashed var(--line);
+}
+.linea-vitelsa ul { margin: var(--space-1) 0 0; padding-left: 0; list-style: none; }
+.linea-vitelsa li { margin-bottom: 4px; font-size: var(--t-small); }
+.linea-vitelsa strong { color: var(--navy); text-transform: uppercase; letter-spacing: 0.02em; }

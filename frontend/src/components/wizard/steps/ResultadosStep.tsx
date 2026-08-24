@@ -7,7 +7,13 @@ import { evaluateDiagnosis, trackEvent } from "../../../api/endpoints";
 import type { EvaluateResponse, Route } from "../../../api/types";
 import { CantoVidrio } from "../CantoVidrio";
 
-function RouteCard({ ruta, elegida, onElegir }: { ruta: Route; elegida: boolean; onElegir: () => void }) {
+function RouteCard({ ruta, elegida, onElegir, lineas }: {
+  ruta: Route;
+  elegida: boolean;
+  onElegir: () => void;
+  /** Nombres del portafolio VITELSA para este nivel de solución. */
+  lineas: Array<{ criterio: string; label: string; solucion: string }>;
+}) {
   return (
     <div className="route-card" style={elegida ? { borderColor: "var(--navy)", boxShadow: "0 0 0 2px rgba(0,42,73,.22)" } : undefined}>
       <h3>{ruta.titulo}</h3>
@@ -19,6 +25,20 @@ function RouteCard({ ruta, elegida, onElegir }: { ruta: Route; elegida: boolean;
           <span key={f.id} className="badge-fam">{f.nombre}</span>
         ))}
       </div>
+
+      {lineas.length > 0 && (
+        <div className="linea-vitelsa">
+          <span className="etiqueta">En portafolio VITELSA</span>
+          <ul>
+            {lineas.map((l) => (
+              <li key={l.criterio}>
+                <strong>{l.solucion}</strong>
+                <span className="hint"> · por {l.label.toLowerCase()}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* La primera familia de la ruta se dibuja de canto: es el vidrio que
           define la solución y el espesor se entiende mejor viéndolo. */}
@@ -100,8 +120,22 @@ export function ResultadosStep() {
       </p>
 
       <div className="routes">
-        <RouteCard ruta={rutas.recomendada} elegida={borrador.eleccion.selectedSolution === "recomendada"} onElegir={() => setEleccion("recomendada")} />
-        <RouteCard ruta={rutas.altoDesempeno} elegida={borrador.eleccion.selectedSolution === "alto_desempeno"} onElegir={() => setEleccion("alto_desempeno")} />
+        <RouteCard
+          ruta={rutas.recomendada}
+          elegida={borrador.eleccion.selectedSolution === "recomendada"}
+          onElegir={() => setEleccion("recomendada")}
+          lineas={(portafolio ?? [])
+            .filter((p) => p.solucionEstandar)
+            .map((p) => ({ criterio: p.criterio, label: p.label, solucion: p.solucionEstandar! }))}
+        />
+        <RouteCard
+          ruta={rutas.altoDesempeno}
+          elegida={borrador.eleccion.selectedSolution === "alto_desempeno"}
+          onElegir={() => setEleccion("alto_desempeno")}
+          lineas={(portafolio ?? [])
+            .filter((p) => p.solucionAltoDesempeno)
+            .map((p) => ({ criterio: p.criterio, label: p.label, solucion: p.solucionAltoDesempeno! }))}
+        />
       </div>
 
       {compatibilidad.score !== null ? (
@@ -133,15 +167,15 @@ export function ResultadosStep() {
 
       {portafolio && portafolio.length > 0 && (
         <div className="card" style={{ marginTop: 18 }}>
-          <h3>Línea VITELSA de referencia</h3>
+          <h3>Cómo se fabrica</h3>
           <p className="hint">
-            Portafolio comercial que corresponde a lo que elegiste. Es orientación de línea, no
+            Familia, proceso e indicador de cada criterio. Es orientación de portafolio, no
             especificación: debe confirmarse contra el catálogo vigente y la ficha técnica del producto.
           </p>
           <div className="tablewrap">
             <table className="data-table">
               <thead>
-                <tr><th>Criterio</th><th>Familia VITELSA</th><th>Estándar</th><th>Alto desempeño</th><th>Indicador</th></tr>
+                <tr><th>Criterio</th><th>Familia VITELSA</th><th>Proceso</th><th>Indicador</th></tr>
               </thead>
               <tbody>
                 {portafolio.map((p) => (
@@ -151,8 +185,7 @@ export function ResultadosStep() {
                       {p.derivado && <div className="hint">combina calor, frío y luz natural</div>}
                     </td>
                     <td>{p.familiaVitelsa ?? "—"}</td>
-                    <td>{p.solucionEstandar ?? "—"}</td>
-                    <td>{p.solucionAltoDesempeno ?? "—"}</td>
+                    <td>{p.proceso ?? "—"}</td>
                     <td>
                       {p.indicador ?? "—"}
                       {p.certificaciones && <div className="hint">Aporta a: {p.certificaciones}</div>}
