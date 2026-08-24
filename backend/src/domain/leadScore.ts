@@ -13,7 +13,12 @@ export const ETAPAS_MEDIAS = ["diseno", "diseño", "anteproyecto", "idea"];
 
 export interface LeadScoreInput {
   etapa?: string | null;
-  area?: number | null;
+  /**
+   * Total del proyecto en m², no el área de un paño: los umbrales de 50 y 200
+   * hablan de la magnitud de la obra. Con el área de una unidad —tres o cuatro
+   * metros— ningún lead sumaba nunca por tamaño.
+   */
+  areaTotal?: number | null;
   fechaEstimada?: string | null;
   solicitaAsesoria?: boolean;
   requestCommercialContact?: boolean;
@@ -33,7 +38,7 @@ export function calcularLeadScore(input: LeadScoreInput): LeadScore {
   if (ETAPAS_ALTAS.includes(etapa)) puntos += 3;
   else if (ETAPAS_MEDIAS.includes(etapa)) puntos += 1;
 
-  const area = Number(input.area) || 0;
+  const area = Number(input.areaTotal) || 0;
   if (area >= 200) puntos += 2;
   else if (area >= 50) puntos += 1;
 

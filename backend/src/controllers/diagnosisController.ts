@@ -58,7 +58,7 @@ export async function downloadReport(req: Request, res: Response): Promise<void>
     applicationLabel: app.etiqueta ?? app.type,
     applicationEngine: app.type,
     geometria: {
-      ancho: app.width, alto: app.height, area: app.area,
+      ancho: app.width, alto: app.height, area: app.area, areaTotal: app.areaTotal,
       unidades: app.quantity, ubicacion: app.location, perforaciones: app.perforations,
     },
     criterios: (d["needsUI"] ?? []).length ? d["needsUI"] : d["needs"],

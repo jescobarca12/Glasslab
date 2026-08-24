@@ -19,18 +19,23 @@ export interface FieldDef {
 const SI_NO_HINT = "";
 
 /**
- * Geometría, simplificada a pedido de VITELSA: la magnitud del proyecto y las
- * unidades son obligatorias, y el total se calcula solo (ver GeometriaStep).
+ * Geometría del proyecto.
  *
- * `alturaDesdePiso` se movió al módulo de seguridad, que es donde el motor la
- * usa (R-SEG-06, viento no conocido en altura).
+ * Lo único obligatorio es el total en metros cuadrados: es el dato que todo el
+ * mundo conoce de su obra. El detalle por unidad es opcional, pero si se llena
+ * afina el diagnóstico, porque el espesor depende del tamaño del paño y no de
+ * cuántos paños haya.
+ *
+ * `alturaDesdePiso` vive en el módulo de seguridad, que es donde el motor la usa.
  */
 export const GEOMETRIA_FIELDS: FieldDef[] = [
-  { campo: "ancho", label: "Ancho de cada unidad (m)", type: "number", min: 0 },
-  { campo: "alto", label: "Alto de cada unidad (m)", type: "number", min: 0 },
-  { campo: "area", label: "Magnitud del proyecto (m² por unidad)", type: "number", min: 0,
-    hint: "obligatorio · se calcula solo con ancho y alto" },
-  { campo: "modulos", label: "Cantidad de unidades", type: "number", min: 0, hint: "obligatorio" },
+  { campo: "areaTotal", label: "Total del proyecto (m²)", type: "number", min: 0,
+    hint: "obligatorio" },
+  { campo: "ancho", label: "Ancho de cada unidad (m)", type: "number", min: 0, hint: "opcional" },
+  { campo: "alto", label: "Alto de cada unidad (m)", type: "number", min: 0, hint: "opcional" },
+  { campo: "area", label: "Área de cada unidad (m²)", type: "number", min: 0,
+    hint: "opcional · se calcula con ancho y alto · define el espesor" },
+  { campo: "modulos", label: "Cantidad de unidades", type: "number", min: 0, hint: "opcional" },
   { campo: "ubicacion", label: "Interior o exterior", type: "select", options: [
     { value: "interior", label: "Interior" }, { value: "exterior", label: "Exterior" },
   ] },

@@ -223,6 +223,13 @@ async function run(): Promise<void> {
   });
 
   // El tope se valida antes de mirar el correo, así que se comprueba en ambos entornos.
+  await check("el total en m2 es lo que pesa en la calificación, no el paño", async () => {
+    // Un paño de 3 m² no es un proyecto grande; 240 m² sí. El umbral mira el total.
+    const { calcularLeadScore } = await import("../src/domain/leadScore");
+    igual(calcularLeadScore({ etapa: "construccion", areaTotal: 3 }).score, 3, "solo por etapa");
+    igual(calcularLeadScore({ etapa: "construccion", areaTotal: 240 }).score, 5, "etapa + proyecto grande");
+  });
+
   await check("no se aceptan más de 3 criterios por consulta", async () => {
     const { status } = await post("/diagnoses", {
       persona: { correo: CORREO }, aplicacion: "ventana",
@@ -242,7 +249,7 @@ async function run(): Promise<void> {
         proyecto: { nombre: "Caso de prueba", ciudadId: "barranquilla", etapa: "construccion" },
         aplicacion: "baranda", aplicacionUI: "baranda",
         necesidades: ["seguridad"], necesidadesUI: ["seguridad"],
-        geometria: { ancho: 1.5, alto: 1.1, area: 1.65, modulos: 12, ubicacion: "exterior" },
+        geometria: { ancho: 1.5, alto: 1.1, area: 1.65, areaTotal: 240, ubicacion: "exterior" },
         sostenibilidad: { interesCertificacion: "LEED" },
         confirmacion: { empresa: "ACME", cargo: "Jefe", fechaEstimada: "2027-01-10", solicitaAsesoria: true },
       });
@@ -252,7 +259,8 @@ async function run(): Promise<void> {
 
       const { rows } = await pool.query(
         `SELECT application_ui, needs_ui, sustainability_interest, lead_score, lead_category,
-                user_position, estimated_date, requests_advisory, request_commercial_contact
+                user_position, estimated_date, requests_advisory, request_commercial_contact,
+                app_area, app_area_total
            FROM diagnoses WHERE lead_id = $1`, [leadId],
       );
       const d = rows[0];
@@ -262,8 +270,10 @@ async function run(): Promise<void> {
       igual(d.user_position, "Jefe", "cargo");
       igual(d.requests_advisory, true, "solicita asesoría");
       igual(d.request_commercial_contact, true, "pedir asesoría implica contacto comercial");
-      // construcción 3 + área <50 → 0 + fecha 1 + asesoría 3 + contacto 2 + identificado 1 = 10
-      igual(d.lead_score, 10, "puntaje del lead");
+      igual(Number(d.app_area), 1.65, "área por unidad (define el espesor)");
+      igual(Number(d.app_area_total), 240, "total del proyecto");
+      // construcción 3 + total 240 m² (2) + fecha 1 + asesoría 3 + contacto 2 + identificado 1 = 12
+      igual(d.lead_score, 12, "puntaje del lead");
       igual(d.lead_category, "A", "categoría del lead");
     });
 

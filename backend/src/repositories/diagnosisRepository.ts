@@ -13,6 +13,8 @@ export interface DiagnosisRecord {
   project: { name?: string; city?: string; type?: string; stage?: string };
   application: {
     type: string | null; width?: number | null; height?: number | null; area?: number | null;
+    /** Total del proyecto en m²; es el dato obligatorio de la geometría. */
+    areaTotal?: number | null;
     quantity?: number | null; location?: string | null; perforations?: boolean | null;
   };
   needs: string[];
@@ -62,14 +64,14 @@ export async function insertDiagnosis(record: DiagnosisRecord): Promise<Diagnosi
          lead_id, user_name, user_email, user_phone, user_city, user_company, user_role, user_position,
          project_name, project_city, project_type, project_stage,
          application_type, application_ui, needs_ui,
-         app_width, app_height, app_area, app_quantity, app_location, app_perforations,
+         app_width, app_height, app_area, app_area_total, app_quantity, app_location, app_perforations,
          answers_acoustic, answers_solar, answers_safety, answers_condensation,
          results, selected_option, compatibility_score, compatibility_level, selection_reasons,
          request_commercial_contact, estimated_date, requests_advisory, marketing_consent,
          sustainability_interest, lead_score, lead_category
        ) VALUES (
          $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,
-         $19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34,$35,$36,$37
+         $19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32,$33,$34,$35,$36,$37,$38
        )
        RETURNING id, lead_id, created_at, application_type, compatibility_score, compatibility_level, results`,
       [
@@ -78,7 +80,8 @@ export async function insertDiagnosis(record: DiagnosisRecord): Promise<Diagnosi
         record.project.name ?? null, record.project.city ?? null, record.project.type ?? null, record.project.stage ?? null,
         record.application.type, record.applicationUI ?? null, record.needsUI ?? [],
         record.application.width ?? null, record.application.height ?? null,
-        record.application.area ?? null, record.application.quantity ?? null, record.application.location ?? null,
+        record.application.area ?? null, record.application.areaTotal ?? null,
+        record.application.quantity ?? null, record.application.location ?? null,
         record.application.perforations ?? null,
         JSON.stringify(record.answers.acoustic), JSON.stringify(record.answers.solar),
         JSON.stringify(record.answers.safety), JSON.stringify(record.answers.condensation),
@@ -193,7 +196,7 @@ export async function getDiagnosisDetail(leadId: string): Promise<Record<string,
             project_name, project_city, project_type, project_stage,
             application_type, application_ui, needs_ui, estimated_date, requests_advisory, marketing_consent,
             sustainability_interest, lead_score, lead_category,
-            app_width, app_height, app_area, app_quantity, app_location, app_perforations,
+            app_width, app_height, app_area, app_area_total, app_quantity, app_location, app_perforations,
             answers_acoustic, answers_solar, answers_safety, answers_condensation,
             results, selected_option, compatibility_score, compatibility_level, selection_reasons,
             request_commercial_contact, email_copy_sent, email_sent_at
@@ -220,7 +223,8 @@ export async function getDiagnosisDetail(leadId: string): Promise<Record<string,
     project: { name: d.project_name, city: d.project_city, type: d.project_type, stage: d.project_stage },
     application: {
       type: d.application_type, etiqueta: d.application_ui, width: d.app_width, height: d.app_height,
-      area: d.app_area, quantity: d.app_quantity, location: d.app_location, perforations: d.app_perforations,
+      area: d.app_area, areaTotal: d.app_area_total, quantity: d.app_quantity,
+      location: d.app_location, perforations: d.app_perforations,
     },
     needs: needs.map((n) => n.need_code),
     needsUI: d.needs_ui ?? [],

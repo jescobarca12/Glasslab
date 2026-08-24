@@ -13,10 +13,10 @@
     "usoEspacio": "Uso del espacio"
   },
   "geometria": {
-    "ancho": "Ancho (m)",
-    "alto": "Alto (m)",
-    "area": "Área (m²)",
-    "modulos": "Cantidad de módulos",
+    "ancho": "Ancho de cada unidad (m)",
+    "alto": "Alto de cada unidad (m)",
+    "area": "Área de cada unidad (m²)",
+    "modulos": "Cantidad de unidades",
     "forma": "Forma",
     "radio": "Radio de curvatura (m)",
     "perforaciones": "¿Tiene perforaciones?",
@@ -24,7 +24,8 @@
     "sistemaApoyo": "Sistema de apoyo",
     "numLadosApoyados": "Número de lados apoyados",
     "tipoFijacion": "Tipo de fijación",
-    "ubicacion": "Interior o exterior"
+    "ubicacion": "Interior o exterior",
+    "areaTotal": "Total del proyecto (m²)"
   },
   "necesidades": {
     "titulo": "Necesidades del proyecto (selección múltiple)",

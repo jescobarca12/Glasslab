@@ -52,12 +52,10 @@ export function Wizard() {
         return borrador.proyecto.nombre.trim() !== "" && borrador.proyecto.ciudadId !== "";
       case "necesidades":
         return borrador.necesidadesUI.length > 0;
-      case "geometria": {
-        // VITELSA pidió que la magnitud y las unidades sean obligatorias.
-        const area = Number(borrador.geometria["area"]) || 0;
-        const unidades = Number(borrador.geometria["modulos"]) || 0;
-        return area > 0 && unidades > 0;
-      }
+      case "geometria":
+        // Lo único obligatorio es el total del proyecto; el detalle por unidad
+        // afina el espesor, pero no detiene el diagnóstico.
+        return (Number(borrador.geometria["areaTotal"]) || 0) > 0;
       case "aplicacion":
         return borrador.aplicacionUI !== null;
       default:

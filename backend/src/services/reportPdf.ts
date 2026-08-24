@@ -55,7 +55,7 @@ export interface ReportInput {
   applicationEngine?: string | null;
   /** Geometría tal como la declaró el usuario. */
   geometria?: {
-    ancho?: number | null; alto?: number | null; area?: number | null;
+    ancho?: number | null; alto?: number | null; area?: number | null; areaTotal?: number | null;
     unidades?: number | null; ubicacion?: string | null; perforaciones?: boolean | null;
   };
   criterios?: string[];
@@ -322,10 +322,12 @@ export async function generarInformePdf(input: ReportInput): Promise<Buffer> {
     l.dato("Se evalua como", input.applicationEngine);
   }
   const g = input.geometria ?? {};
+  // El total manda: es el dato que el usuario declara. El detalle por unidad
+  // se muestra solo si lo dio.
+  if (g.areaTotal) l.dato("Total del proyecto", `${g.areaTotal} m2`);
   if (g.ancho && g.alto) l.dato("Dimension por unidad", `${g.ancho} x ${g.alto} m`);
   if (g.area) l.dato("Area por unidad", `${g.area} m2`);
   if (g.unidades) l.dato("Unidades", g.unidades);
-  if (g.area && g.unidades) l.dato("Total del proyecto", `${Math.round(g.area * g.unidades * 100) / 100} m2`);
   if (g.ubicacion) l.dato("Ubicacion", g.ubicacion);
   if (g.perforaciones !== undefined && g.perforaciones !== null) {
     l.dato("Perforaciones", g.perforaciones ? "Si" : "No");
