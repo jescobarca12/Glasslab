@@ -368,3 +368,7 @@ a:hover { color: var(--red); }
 .rec-box.alto { border-left-color: var(--red); }
 .rec-box h4 { margin: 0 0 6px; color: var(--navy); font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.05em; }
 .rec-box p { margin: 0; font-size: 0.92rem; }
+
+/* Tabla de referencia del portafolio comercial */
+.tablewrap { overflow-x: auto; margin-top: 12px; }
+.tablewrap .data-table td { white-space: normal; font-size: 0.84rem; vertical-align: top; }

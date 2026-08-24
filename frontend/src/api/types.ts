@@ -77,7 +77,20 @@ export interface Compatibilidad {
   mensaje?: string;
 }
 
+export interface CriterioPortafolio {
+  criterio: string;
+  label: string;
+  requisito: string | null;
+  familiaVitelsa: string | null;
+  proceso: string | null;
+  indicador: string | null;
+  solucionEstandar: string | null;
+  solucionAltoDesempeno: string | null;
+}
+
 export interface EvaluateResponse {
+  /** Referencia comercial VITELSA de los criterios elegidos. */
+  portafolio?: CriterioPortafolio[];
   reglasActivas: ActiveRule[];
   rutas: { recomendada: Route; altoDesempeno: Route };
   compatibilidad: Compatibilidad;

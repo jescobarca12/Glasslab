@@ -14,7 +14,7 @@
       "temp_prom_c": 32,
       "temp_max_c": 38,
       "humedad_pct": "45-60",
-      "zona_sismica_nsr10": "intermedia",
+      "zona_sismica_nsr10": "alta",
       "corredores_ruido": [
         {
           "via": "Diagonal Santander",
@@ -40,8 +40,8 @@
         },
         {
           "dato": "Zona sísmica",
-          "fuente": "NSR-10 Título A / SGC",
-          "fecha": "2010 (vigente)"
+          "fuente": "NSR-10 Título A / SGC · Matriz maestra y retos VITELSA (Aa 0,35 · Av 0,30)",
+          "fecha": "2026 (confirmado por VITELSA)"
         },
         {
           "dato": "Ruido por corredor",

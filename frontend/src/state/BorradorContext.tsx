@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 import { borradorInicial, type Borrador, type Campos, type Confirmacion, type InteresCertificacion } from "../domain/borrador";
-import { NECESIDAD_ASESORIA } from "../domain/catalogoUI";
+import { MAX_NECESIDADES, NECESIDAD_ASESORIA } from "../domain/catalogoUI";
 import { rutearPrefill } from "../domain/wizard";
 import type { Challenge } from "../api/types";
 
@@ -46,10 +46,11 @@ export function BorradorProvider({ children }: { children: ReactNode }) {
         // "No sé qué vidrio necesito" es excluyente: lleva a asesoría, no a
         // un diagnóstico, así que no se combina con las demás necesidades.
         if (id === NECESIDAD_ASESORIA) return { ...b, necesidadesUI: [NECESIDAD_ASESORIA] };
-        return {
-          ...b,
-          necesidadesUI: [...b.necesidadesUI.filter((n) => n !== NECESIDAD_ASESORIA), id],
-        };
+
+        const actuales = b.necesidadesUI.filter((n) => n !== NECESIDAD_ASESORIA);
+        // Tope del modelo de VITELSA: máximo 3 criterios por consulta.
+        if (actuales.length >= MAX_NECESIDADES) return b;
+        return { ...b, necesidadesUI: [...actuales, id] };
       }),
     setConfirmacion: (patch) =>
       setBorrador((b) => ({ ...b, confirmacion: { ...b.confirmacion, ...patch } })),

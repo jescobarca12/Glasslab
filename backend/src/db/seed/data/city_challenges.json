@@ -2184,6 +2184,569 @@
       ]
     },
     {
+      "cityCode": "cucuta",
+      "contexto": "Clima cálido-seco de frontera | Amenaza sísmica ALTA | Región 1 | 22 m/s (referencia territorial, no presión final)",
+      "retos": [
+        {
+          "id": "CUC_R01",
+          "cityCode": "cucuta",
+          "orden": 1,
+          "titulo": "Vivienda estrato medio-alto - Av. Libertadores / Quinta Oriental",
+          "situacion": "Fachadas con temperaturas superficiales de hasta 55°C en verano; orientación occidente con sobrecalentamiento severo, humedad relativa de 45-60% y A/C operando más de 10 horas diarias.",
+          "foco": [
+            "Confort térmico",
+            "Eficiencia energética",
+            "Materiales/durabilidad"
+          ],
+          "rutaEsperada": [
+            "Seguridad/impacto",
+            "Orientación y radiación",
+            "SHGC/TL",
+            "Control solar",
+            "Choque térmico/sombras",
+            "Sistema de marco/sellos"
+          ],
+          "recomendacionEstandar": "HS/FT según riesgo + DUAL Control Solar; laminación cuando exista impacto, retención o caída",
+          "recomendacionAltoDesempeno": "TEMPER DUAL HS/FT con control solar selectivo; evaluar DVH/Low-E si la modelación energética lo justifica",
+          "indicadores": [
+            "SHGC",
+            "TL",
+            "seguridad/postrotura",
+            "temperatura superficial/interior de borde",
+            "riesgo de choque térmico"
+          ],
+          "validaciones": [
+            "orientación",
+            "porcentaje vidriado",
+            "dimensiones",
+            "cargas de viento",
+            "sombras parciales/estrés térmico",
+            "procesabilidad de coating",
+            "marcos/sellos",
+            "deriva/anclajes y holguras por amenaza sísmica alta"
+          ],
+          "mustHitConcepts": [
+            "Confort térmico",
+            "Eficiencia energética",
+            "Materiales/durabilidad",
+            "SHGC",
+            "TL",
+            "choque térmico"
+          ],
+          "validationConcepts": [
+            "orientación",
+            "porcentaje vidriado",
+            "dimensiones",
+            "cargas de viento",
+            "sombras parciales/estrés térmico",
+            "anclajes/holguras"
+          ],
+          "blockingRule": "Si propone vidrio recocido/crudo monolítico como solución final; omite seguridad en aplicación crítica; garantiza espesor/ahorro/dB/certificación sin validación: no cerrar recomendación y solicitar corrección/validación.",
+          "niveles": {
+            "explorer": {
+              "referencia": "Identifica el problema dominante (Confort térmico) y propone una familia de vidrio coherente. Ejemplo de respuesta: 'Usaría vidrio con control solar y tratamiento térmico para reducir el calor de la fachada.'. La respuesta es válida como aproximación inicial, pero aún no integra de forma suficiente seguridad, territorio, indicadores y validaciones.",
+              "criterio": "Reconoce la necesidad dominante y una familia plausible, pero la respuesta es parcial y no integra toda la ruta."
+            },
+            "senior": {
+              "referencia": "Integra seguridad y al menos dos variables de desempeño. Ruta esperada: Seguridad/impacto -> Orientación y radiación -> SHGC/TL -> Control solar -> Choque térmico/sombras. Diferencia una solución base (HS/FT según riesgo + DUAL Control Solar; laminación cuando exista impacto, retención o caída) de una mejora (TEMPER DUAL HS/FT con control solar selectivo; evaluar DVH/Low-E si la modelación energética lo justifica) y menciona al menos una validación pendiente.",
+              "criterio": "Integra seguridad + 2 variables de desempeño, diferencia estándar/alto desempeño y menciona validaciones."
+            },
+            "master": {
+              "referencia": "Construye la ruta completa: Seguridad/impacto -> Orientación y radiación -> SHGC/TL -> Control solar -> Choque térmico/sombras -> Sistema de marco/sellos. Recomienda como camino estándar: HS/FT según riesgo + DUAL Control Solar; laminación cuando exista impacto, retención o caída. Como alto desempeño: TEMPER DUAL HS/FT con control solar selectivo; evaluar DVH/Low-E si la modelación energética lo justifica. Justifica con indicadores SHGC, TL, seguridad/postrotura, temperatura superficial/interior de borde, riesgo de choque térmico y deja expresamente pendientes orientación, porcentaje vidriado, dimensiones, cargas de viento. No garantiza espesor, ahorro, dB interior ni certificación del edificio.",
+              "criterio": "Integra seguridad, territorio, desempeño, indicadores, dos caminos y validaciones; evita afirmaciones no demostrables."
+            }
+          }
+        },
+        {
+          "id": "CUC_R02",
+          "cityCode": "cucuta",
+          "orden": 2,
+          "titulo": "Edificio de oficinas - Diagonal Santander",
+          "situacion": "Corredor corporativo con calor solar directo extremo, ruido de tráfico denso y metas de sostenibilidad que deben verificarse según el proyecto.",
+          "foco": [
+            "Confort térmico",
+            "Eficiencia energética",
+            "Sostenibilidad"
+          ],
+          "rutaEsperada": [
+            "Seguridad",
+            "Orientación/radiación",
+            "SHGC",
+            "TL/deslumbramiento",
+            "U-value",
+            "Low-E/DVH",
+            "Acústica",
+            "Modelación energética"
+          ],
+          "recomendacionEstandar": "HS/FT según riesgo + DUAL Control Solar, ajustando SHGC y TL a la fachada",
+          "recomendacionAltoDesempeno": "DVH de seguridad de alto desempeño con control solar selectivo + Low-E; acústica integrada si el corredor lo exige",
+          "indicadores": [
+            "SHGC",
+            "TL",
+            "U-value",
+            "seguridad",
+            "LAeq/STC-OITC si aplica"
+          ],
+          "validaciones": [
+            "orientación",
+            "porcentaje vidriado",
+            "cargas de viento",
+            "procesabilidad de coating",
+            "medición/modelación acústica",
+            "modelación energética",
+            "deriva/anclajes por amenaza sísmica alta",
+            "sombras parciales/choque térmico"
+          ],
+          "mustHitConcepts": [
+            "Confort térmico",
+            "Eficiencia energética",
+            "Sostenibilidad",
+            "SHGC",
+            "TL",
+            "U-value"
+          ],
+          "validationConcepts": [
+            "orientación",
+            "porcentaje vidriado",
+            "cargas de viento",
+            "procesabilidad de coating",
+            "modelación energética/acústica",
+            "anclajes/deriva"
+          ],
+          "blockingRule": "Si propone vidrio recocido/crudo monolítico como solución final; omite seguridad en aplicación crítica; garantiza espesor/ahorro/dB/certificación sin validación: no cerrar recomendación y solicitar corrección/validación.",
+          "niveles": {
+            "explorer": {
+              "referencia": "Identifica el problema dominante (Confort térmico) y propone una familia de vidrio coherente. Ejemplo de respuesta: 'Usaría control solar para reducir la carga térmica de la fachada y mejorar el confort de las oficinas.'. La respuesta es válida como aproximación inicial, pero aún no integra de forma suficiente seguridad, territorio, indicadores y validaciones.",
+              "criterio": "Reconoce la necesidad dominante y una familia plausible, pero la respuesta es parcial y no integra toda la ruta."
+            },
+            "senior": {
+              "referencia": "Integra seguridad y al menos dos variables de desempeño. Ruta esperada: Seguridad -> Orientación/radiación -> SHGC -> TL/deslumbramiento -> U-value/Low-E. Diferencia una solución base (HS/FT según riesgo + DUAL Control Solar, ajustando SHGC y TL a la fachada) de una mejora (DVH de seguridad de alto desempeño con control solar selectivo + Low-E; acústica integrada si el corredor lo exige) y menciona al menos una validación pendiente.",
+              "criterio": "Integra seguridad + 2 variables de desempeño, diferencia estándar/alto desempeño y menciona validaciones."
+            },
+            "master": {
+              "referencia": "Construye la ruta completa: Seguridad -> Orientación/radiación -> SHGC -> TL/deslumbramiento -> U-value -> Low-E/DVH -> Acústica -> Modelación energética. Recomienda como camino estándar: HS/FT según riesgo + DUAL Control Solar, ajustando SHGC y TL a la fachada. Como alto desempeño: DVH de seguridad de alto desempeño con control solar selectivo + Low-E; acústica integrada si el corredor lo exige. Justifica con indicadores SHGC, TL, U-value, seguridad, LAeq/STC-OITC si aplica y deja expresamente pendientes orientación, porcentaje vidriado, cargas de viento, procesabilidad de coating. No garantiza espesor, ahorro, dB interior ni certificación del edificio.",
+              "criterio": "Integra seguridad, territorio, desempeño, indicadores, dos caminos y validaciones; evita afirmaciones no demostrables."
+            }
+          }
+        },
+        {
+          "id": "CUC_R03",
+          "cityCode": "cucuta",
+          "orden": 3,
+          "titulo": "Institución educativa - Avenida Libertadores",
+          "situacion": "Aulas frente a una vía con niveles de ruido de 70-78 dB en hora pico; el calor extremo también afecta la concentración y el rendimiento académico.",
+          "foco": [
+            "Acústica",
+            "Confort térmico",
+            "Seguridad"
+          ],
+          "rutaEsperada": [
+            "Seguridad/impacto",
+            "LAeq + fuente + horario",
+            "Objetivo acústico",
+            "SHGC/TL",
+            "Control solar",
+            "DVH/acústica"
+          ],
+          "recomendacionEstandar": "Laminado acústico de seguridad + control solar acorde con orientación",
+          "recomendacionAltoDesempeno": "DVH acústico asimétrico de seguridad con PVB acústico + control solar selectivo",
+          "indicadores": [
+            "LAeq exterior",
+            "STC/OITC objetivo",
+            "SHGC",
+            "TL",
+            "seguridad"
+          ],
+          "validaciones": [
+            "medición acústica",
+            "objetivo interior",
+            "orientación",
+            "dimensiones/apoyos",
+            "ventilación y sellos",
+            "deriva/anclajes por amenaza sísmica alta",
+            "sombras parciales/choque térmico"
+          ],
+          "mustHitConcepts": [
+            "Acústica",
+            "Confort térmico",
+            "Seguridad",
+            "LAeq exterior",
+            "STC/OITC objetivo",
+            "SHGC"
+          ],
+          "validationConcepts": [
+            "medición acústica",
+            "objetivo interior",
+            "orientación",
+            "dimensiones/apoyos",
+            "ventilación y sellos",
+            "anclajes/deriva"
+          ],
+          "blockingRule": "Si propone vidrio recocido/crudo monolítico como solución final; omite seguridad en aplicación crítica; garantiza espesor/ahorro/dB/certificación sin validación: no cerrar recomendación y solicitar corrección/validación.",
+          "niveles": {
+            "explorer": {
+              "referencia": "Identifica el problema dominante (Acústica) y propone una familia de vidrio coherente. Ejemplo de respuesta: 'Usaría un laminado acústico de seguridad y control solar para mejorar ruido y calor en las aulas.'. La respuesta es válida como aproximación inicial, pero aún no integra de forma suficiente seguridad, territorio, indicadores y validaciones.",
+              "criterio": "Reconoce la necesidad dominante y una familia plausible, pero la respuesta es parcial y no integra toda la ruta."
+            },
+            "senior": {
+              "referencia": "Integra seguridad y al menos dos variables de desempeño. Ruta esperada: Seguridad/impacto -> LAeq + fuente + horario -> Objetivo acústico -> SHGC/TL. Diferencia una solución base (Laminado acústico de seguridad + control solar acorde con orientación) de una mejora (DVH acústico asimétrico de seguridad con PVB acústico + control solar selectivo) y menciona al menos una validación pendiente.",
+              "criterio": "Integra seguridad + 2 variables de desempeño, diferencia estándar/alto desempeño y menciona validaciones."
+            },
+            "master": {
+              "referencia": "Construye la ruta completa: Seguridad/impacto -> LAeq + fuente + horario -> Objetivo acústico -> SHGC/TL -> Control solar -> DVH/acústica. Recomienda como camino estándar: Laminado acústico de seguridad + control solar acorde con orientación. Como alto desempeño: DVH acústico asimétrico de seguridad con PVB acústico + control solar selectivo. Justifica con indicadores LAeq exterior, STC/OITC objetivo, SHGC, TL, seguridad y deja expresamente pendientes medición acústica, objetivo interior, orientación, dimensiones/apoyos. No garantiza espesor, ahorro, dB interior ni certificación del edificio.",
+              "criterio": "Integra seguridad, territorio, desempeño, indicadores, dos caminos y validaciones; evita afirmaciones no demostrables."
+            }
+          }
+        },
+        {
+          "id": "CUC_R04",
+          "cityCode": "cucuta",
+          "orden": 4,
+          "titulo": "Restaurante zona Rosa - Cúcuta Norte",
+          "situacion": "Fachada vidriada premium expuesta a calor extremo, ruido de la calle y alta exigencia de transparencia y estética.",
+          "foco": [
+            "Acústica",
+            "Transparencia/estética",
+            "Seguridad de uso público"
+          ],
+          "rutaEsperada": [
+            "Impacto humano",
+            "Transparencia/TL",
+            "SHGC",
+            "Ruido",
+            "DVH/acústica",
+            "Choque térmico"
+          ],
+          "recomendacionEstandar": "Laminado de seguridad con control solar, preservando transmisión luminosa; desempeño acústico acorde al entorno",
+          "recomendacionAltoDesempeno": "DVH acústico asimétrico de seguridad + control solar selectivo; Low-E si el balance térmico lo justifica",
+          "indicadores": [
+            "TL",
+            "SHGC",
+            "STC/OITC",
+            "seguridad"
+          ],
+          "validaciones": [
+            "LAeq y horario crítico",
+            "orientación",
+            "dimensiones",
+            "sistema de marco/sellos",
+            "patrimonio si aplica",
+            "deriva/anclajes por amenaza sísmica alta",
+            "sombras parciales/choque térmico"
+          ],
+          "mustHitConcepts": [
+            "Acústica",
+            "Transparencia/estética",
+            "Seguridad de uso público",
+            "TL",
+            "SHGC",
+            "STC/OITC"
+          ],
+          "validationConcepts": [
+            "LAeq y horario crítico",
+            "orientación",
+            "dimensiones",
+            "sistema de marco/sellos",
+            "patrimonio si aplica",
+            "anclajes/deriva"
+          ],
+          "blockingRule": "Si propone vidrio recocido/crudo monolítico como solución final; omite seguridad en aplicación crítica; garantiza espesor/ahorro/dB/certificación sin validación: no cerrar recomendación y solicitar corrección/validación.",
+          "niveles": {
+            "explorer": {
+              "referencia": "Identifica el problema dominante (Acústica) y propone una familia de vidrio coherente. Ejemplo de respuesta: 'Usaría vidrio de seguridad con control solar sin sacrificar la transparencia del restaurante.'. La respuesta es válida como aproximación inicial, pero aún no integra de forma suficiente seguridad, territorio, indicadores y validaciones.",
+              "criterio": "Reconoce la necesidad dominante y una familia plausible, pero la respuesta es parcial y no integra toda la ruta."
+            },
+            "senior": {
+              "referencia": "Integra seguridad y al menos dos variables de desempeño. Ruta esperada: Impacto humano -> Transparencia/TL -> SHGC -> Ruido. Diferencia una solución base (Laminado de seguridad con control solar, preservando transmisión luminosa; desempeño acústico acorde al entorno) de una mejora (DVH acústico asimétrico de seguridad + control solar selectivo; Low-E si el balance térmico lo justifica) y menciona al menos una validación pendiente.",
+              "criterio": "Integra seguridad + 2 variables de desempeño, diferencia estándar/alto desempeño y menciona validaciones."
+            },
+            "master": {
+              "referencia": "Construye la ruta completa: Impacto humano -> Transparencia/TL -> SHGC -> Ruido -> DVH/acústica -> Choque térmico. Recomienda como camino estándar: Laminado de seguridad con control solar, preservando transmisión luminosa; desempeño acústico acorde al entorno. Como alto desempeño: DVH acústico asimétrico de seguridad + control solar selectivo; Low-E si el balance térmico lo justifica. Justifica con indicadores TL, SHGC, STC/OITC, seguridad y deja expresamente pendientes LAeq y horario crítico, orientación, dimensiones, sistema de marco/sellos. No garantiza espesor, ahorro, dB interior ni certificación del edificio.",
+              "criterio": "Integra seguridad, territorio, desempeño, indicadores, dos caminos y validaciones; evita afirmaciones no demostrables."
+            }
+          }
+        },
+        {
+          "id": "CUC_R05",
+          "cityCode": "cucuta",
+          "orden": 5,
+          "titulo": "Clínica - área de hospitalización y cirugía",
+          "situacion": "El cerramiento debe aportar confort térmico y acústico, facilidad de limpieza y desempeño de envolvente, sin atribuir al vidrio control de infecciones, temperatura o humedad.",
+          "foco": [
+            "Acústica",
+            "Confort térmico",
+            "Seguridad/limpieza"
+          ],
+          "rutaEsperada": [
+            "Seguridad",
+            "SHGC/TL",
+            "Ruido",
+            "Facilidad de limpieza",
+            "DVH/acústica",
+            "Sistemas HVAC",
+            "Sismo"
+          ],
+          "recomendacionEstandar": "Vidrio de seguridad laminado/tratado con control solar y desempeño acústico según la habitación",
+          "recomendacionAltoDesempeno": "DVH de seguridad + control solar selectivo + configuración acústica asimétrica; Low-E si aplica al balance energético",
+          "indicadores": [
+            "SHGC",
+            "TL",
+            "STC/OITC",
+            "seguridad",
+            "U-value si aplica"
+          ],
+          "validaciones": [
+            "HVAC/temperatura/humedad",
+            "objetivo acústico",
+            "dimensiones/cargas",
+            "marcos y sellos",
+            "limpieza/mantenimiento",
+            "requisitos del servicio de salud",
+            "deriva/anclajes por amenaza sísmica alta",
+            "choque térmico"
+          ],
+          "mustHitConcepts": [
+            "Acústica",
+            "Confort térmico",
+            "Seguridad/limpieza",
+            "SHGC",
+            "TL",
+            "STC/OITC"
+          ],
+          "validationConcepts": [
+            "HVAC/temperatura/humedad",
+            "objetivo acústico",
+            "dimensiones/cargas",
+            "marcos y sellos",
+            "limpieza/mantenimiento",
+            "anclajes/deriva"
+          ],
+          "blockingRule": "Si propone vidrio recocido/crudo monolítico como solución final; omite seguridad en aplicación crítica; garantiza espesor/ahorro/dB/certificación sin validación: no cerrar recomendación y solicitar corrección/validación.",
+          "niveles": {
+            "explorer": {
+              "referencia": "Identifica el problema dominante (Acústica) y propone una familia de vidrio coherente. Ejemplo de respuesta: 'Usaría vidrio de seguridad con control solar y mejor desempeño acústico en las habitaciones.'. La respuesta es válida como aproximación inicial, pero aún no integra de forma suficiente seguridad, territorio, indicadores y validaciones.",
+              "criterio": "Reconoce la necesidad dominante y una familia plausible, pero la respuesta es parcial y no integra toda la ruta."
+            },
+            "senior": {
+              "referencia": "Integra seguridad y al menos dos variables de desempeño. Ruta esperada: Seguridad -> SHGC/TL -> Ruido -> Facilidad de limpieza. Diferencia una solución base (Vidrio de seguridad laminado/tratado con control solar y desempeño acústico según la habitación) de una mejora (DVH de seguridad + control solar selectivo + configuración acústica asimétrica; Low-E si aplica al balance energético) y menciona al menos una validación pendiente.",
+              "criterio": "Integra seguridad + 2 variables de desempeño, diferencia estándar/alto desempeño y menciona validaciones."
+            },
+            "master": {
+              "referencia": "Construye la ruta completa: Seguridad -> SHGC/TL -> Ruido -> Facilidad de limpieza -> DVH/acústica -> Sistemas HVAC -> Sismo. Recomienda como camino estándar: Vidrio de seguridad laminado/tratado con control solar y desempeño acústico según la habitación. Como alto desempeño: DVH de seguridad + control solar selectivo + configuración acústica asimétrica; Low-E si aplica al balance energético. Justifica con indicadores SHGC, TL, STC/OITC, seguridad, U-value si aplica y deja expresamente pendientes HVAC/temperatura/humedad, objetivo acústico, dimensiones/cargas, marcos y sellos. No garantiza espesor, ahorro, dB interior ni certificación del edificio.",
+              "criterio": "Integra seguridad, territorio, desempeño, indicadores, dos caminos y validaciones; evita afirmaciones no demostrables."
+            }
+          }
+        },
+        {
+          "id": "CUC_R06",
+          "cityCode": "cucuta",
+          "orden": 6,
+          "titulo": "Bodega logística - zona industrial norte de Cúcuta",
+          "situacion": "Bodega con temperatura bajo cubierta de hasta 45°C, alta radiación UV y necesidad de luz natural; el proyecto se encuentra en zona de amenaza sísmica alta.",
+          "foco": [
+            "Luz natural",
+            "Seguridad sobre personas",
+            "Eficiencia energética/UV"
+          ],
+          "rutaEsperada": [
+            "Vidrio sobre personas",
+            "Iluminación difusa/TL",
+            "SHGC",
+            "Control UV",
+            "Choque térmico",
+            "Viento/sismo",
+            "Sistema de cubierta"
+          ],
+          "recomendacionEstandar": "Sistema traslúcido laminado de seguridad con hojas tratadas + control solar/difusor",
+          "recomendacionAltoDesempeno": "Sistema laminado de alto desempeño con mayor control solar/UV; evaluar DVH/Low-E si la cubierta y la modelación lo justifican",
+          "indicadores": [
+            "TL difusa",
+            "SHGC",
+            "transmisión UV",
+            "seguridad/postrotura",
+            "riesgo de choque térmico"
+          ],
+          "validaciones": [
+            "cargas de cubierta",
+            "viento/sismo",
+            "apoyos/anclajes",
+            "sellos/drenajes",
+            "sombras parciales/estrés térmico",
+            "modelación lumínica/energética"
+          ],
+          "mustHitConcepts": [
+            "Luz natural",
+            "Seguridad sobre personas",
+            "Eficiencia energética/UV",
+            "TL difusa",
+            "SHGC",
+            "seguridad/postrotura"
+          ],
+          "validationConcepts": [
+            "cargas de cubierta",
+            "viento/sismo",
+            "apoyos/anclajes",
+            "sellos/drenajes",
+            "sombras parciales/estrés térmico",
+            "modelación lumínica/energética"
+          ],
+          "blockingRule": "Si propone vidrio recocido/crudo monolítico como solución final; omite seguridad en aplicación crítica; garantiza espesor/ahorro/dB/certificación sin validación: no cerrar recomendación y solicitar corrección/validación.",
+          "niveles": {
+            "explorer": {
+              "referencia": "Identifica el problema dominante (Luz natural) y propone una familia de vidrio coherente. Ejemplo de respuesta: 'Usaría vidrio laminado de seguridad con control solar para aportar luz natural sin aumentar excesivamente el calor.'. La respuesta es válida como aproximación inicial, pero aún no integra de forma suficiente seguridad, territorio, indicadores y validaciones.",
+              "criterio": "Reconoce la necesidad dominante y una familia plausible, pero la respuesta es parcial y no integra toda la ruta."
+            },
+            "senior": {
+              "referencia": "Integra seguridad y al menos dos variables de desempeño. Ruta esperada: Vidrio sobre personas -> Iluminación difusa/TL -> SHGC -> Control UV -> Choque térmico. Diferencia una solución base (Sistema traslúcido laminado de seguridad con hojas tratadas + control solar/difusor) de una mejora (Sistema laminado de alto desempeño con mayor control solar/UV; evaluar DVH/Low-E si la cubierta y la modelación lo justifican) y menciona al menos una validación pendiente.",
+              "criterio": "Integra seguridad + 2 variables de desempeño, diferencia estándar/alto desempeño y menciona validaciones."
+            },
+            "master": {
+              "referencia": "Construye la ruta completa: Vidrio sobre personas -> Iluminación difusa/TL -> SHGC -> Control UV -> Choque térmico -> Viento/sismo -> Sistema de cubierta. Recomienda como camino estándar: Sistema traslúcido laminado de seguridad con hojas tratadas + control solar/difusor. Como alto desempeño: Sistema laminado de alto desempeño con mayor control solar/UV; evaluar DVH/Low-E si la cubierta y la modelación lo justifican. Justifica con indicadores TL difusa, SHGC, transmisión UV, seguridad/postrotura, riesgo de choque térmico y deja expresamente pendientes cargas de cubierta, viento/sismo, apoyos/anclajes, sellos/drenajes. No garantiza espesor, ahorro, dB interior ni certificación del edificio.",
+              "criterio": "Integra seguridad, territorio, desempeño, indicadores, dos caminos y validaciones; evita afirmaciones no demostrables."
+            }
+          }
+        },
+        {
+          "id": "CUC_R07",
+          "cityCode": "cucuta",
+          "orden": 7,
+          "titulo": "VIS - Atalaya / Villa del Rosario",
+          "situacion": "Presupuesto por ventana de $180.000-$320.000 COP; el calor extremo deteriora sellados y perfiles de baja calidad en menos de 2 años y las metas de la Resolución 0194 deben verificarse para el proyecto.",
+          "foco": [
+            "Costo/disponibilidad",
+            "Desempeño climático",
+            "Durabilidad/seguridad"
+          ],
+          "rutaEsperada": [
+            "Seguridad",
+            "SHGC/TL",
+            "Durabilidad/sellos",
+            "Choque térmico",
+            "Costo/disponibilidad",
+            "Metas aplicables"
+          ],
+          "recomendacionEstandar": "HS/FT según riesgo + control solar básico y sistema de marco/sellos durable",
+          "recomendacionAltoDesempeno": "Laminado/control solar selectivo o DVH cuando el costo total, clima y metas del proyecto lo justifiquen",
+          "indicadores": [
+            "SHGC",
+            "TL",
+            "seguridad",
+            "durabilidad/costo"
+          ],
+          "validaciones": [
+            "presupuesto",
+            "disponibilidad",
+            "marcos/sellos",
+            "orientación",
+            "metas aplicables de Resolución 0194",
+            "deriva/anclajes por amenaza sísmica alta",
+            "sombras parciales/choque térmico"
+          ],
+          "mustHitConcepts": [
+            "Costo/disponibilidad",
+            "Desempeño climático",
+            "Durabilidad/seguridad",
+            "SHGC",
+            "TL",
+            "seguridad"
+          ],
+          "validationConcepts": [
+            "presupuesto",
+            "disponibilidad",
+            "marcos/sellos",
+            "orientación",
+            "metas aplicables Res. 0194",
+            "anclajes/deriva"
+          ],
+          "blockingRule": "Si propone vidrio recocido/crudo monolítico como solución final; omite seguridad en aplicación crítica; garantiza espesor/ahorro/dB/certificación sin validación: no cerrar recomendación y solicitar corrección/validación.",
+          "niveles": {
+            "explorer": {
+              "referencia": "Identifica el problema dominante (Costo/disponibilidad) y propone una familia de vidrio coherente. Ejemplo de respuesta: 'Para VIS usaría vidrio de seguridad donde aplique y control solar básico, cuidando sellos, durabilidad y costo.'. La respuesta es válida como aproximación inicial, pero aún no integra de forma suficiente seguridad, territorio, indicadores y validaciones.",
+              "criterio": "Reconoce la necesidad dominante y una familia plausible, pero la respuesta es parcial y no integra toda la ruta."
+            },
+            "senior": {
+              "referencia": "Integra seguridad y al menos dos variables de desempeño. Ruta esperada: Seguridad -> SHGC/TL -> Durabilidad/sellos -> Choque térmico. Diferencia una solución base (HS/FT según riesgo + control solar básico y sistema de marco/sellos durable) de una mejora (Laminado/control solar selectivo o DVH cuando el costo total, clima y metas del proyecto lo justifiquen) y menciona al menos una validación pendiente.",
+              "criterio": "Integra seguridad + 2 variables de desempeño, diferencia estándar/alto desempeño y menciona validaciones."
+            },
+            "master": {
+              "referencia": "Construye la ruta completa: Seguridad -> SHGC/TL -> Durabilidad/sellos -> Choque térmico -> Costo/disponibilidad -> Metas aplicables. Recomienda como camino estándar: HS/FT según riesgo + control solar básico y sistema de marco/sellos durable. Como alto desempeño: Laminado/control solar selectivo o DVH cuando el costo total, clima y metas del proyecto lo justifiquen. Justifica con indicadores SHGC, TL, seguridad, durabilidad/costo y deja expresamente pendientes presupuesto, disponibilidad, marcos/sellos, orientación. No garantiza espesor, ahorro, dB interior ni certificación del edificio.",
+              "criterio": "Integra seguridad, territorio, desempeño, indicadores, dos caminos y validaciones; evita afirmaciones no demostrables."
+            }
+          }
+        },
+        {
+          "id": "CUC_R08",
+          "cityCode": "cucuta",
+          "orden": 8,
+          "titulo": "Centro comercial - fachada principal sector comercial fronterizo",
+          "situacion": "Fachada de alto tráfico peatonal expuesta a radiación UV extrema (índice 12-14), calor directo, polvo/aridez y necesidad de bajo mantenimiento.",
+          "foco": [
+            "Impacto humano",
+            "Control solar/UV",
+            "Mantenimiento/gran formato"
+          ],
+          "rutaEsperada": [
+            "Impacto humano",
+            "Gran formato/estructura",
+            "SHGC/TL/deslumbramiento",
+            "UV",
+            "Mantenimiento",
+            "Acústica",
+            "Viento/sismo"
+          ],
+          "recomendacionEstandar": "Vidrio de seguridad tratado/laminado + control solar/UV, dimensionado por sistema y riesgo",
+          "recomendacionAltoDesempeno": "DVH de seguridad de alto desempeño con control solar selectivo + estrategia UV; acústica/Low-E según necesidad y sistema",
+          "indicadores": [
+            "SHGC",
+            "TL",
+            "transmisión UV",
+            "seguridad/postrotura",
+            "STC/OITC si aplica"
+          ],
+          "validaciones": [
+            "cargas y gran formato",
+            "anclajes/deriva",
+            "viento/sismo",
+            "orientación",
+            "compatibilidad de sistema/coating",
+            "limpieza/mantenimiento por polvo y aridez",
+            "sombras parciales/choque térmico"
+          ],
+          "mustHitConcepts": [
+            "Impacto humano",
+            "Control solar/UV",
+            "Mantenimiento/gran formato",
+            "SHGC",
+            "TL",
+            "seguridad/postrotura"
+          ],
+          "validationConcepts": [
+            "cargas y gran formato",
+            "anclajes/deriva",
+            "viento/sismo",
+            "orientación",
+            "compatibilidad de sistema/coating",
+            "mantenimiento"
+          ],
+          "blockingRule": "Si propone vidrio recocido/crudo monolítico como solución final; omite seguridad en aplicación crítica; garantiza espesor/ahorro/dB/certificación sin validación: no cerrar recomendación y solicitar corrección/validación.",
+          "niveles": {
+            "explorer": {
+              "referencia": "Identifica el problema dominante (Impacto humano) y propone una familia de vidrio coherente. Ejemplo de respuesta: 'Usaría vidrio de seguridad con control solar y UV para reducir calor y proteger una fachada de alto tráfico.'. La respuesta es válida como aproximación inicial, pero aún no integra de forma suficiente seguridad, territorio, indicadores y validaciones.",
+              "criterio": "Reconoce la necesidad dominante y una familia plausible, pero la respuesta es parcial y no integra toda la ruta."
+            },
+            "senior": {
+              "referencia": "Integra seguridad y al menos dos variables de desempeño. Ruta esperada: Impacto humano -> Gran formato/estructura -> SHGC/TL/deslumbramiento -> UV. Diferencia una solución base (Vidrio de seguridad tratado/laminado + control solar/UV, dimensionado por sistema y riesgo) de una mejora (DVH de seguridad de alto desempeño con control solar selectivo + estrategia UV; acústica/Low-E según necesidad y sistema) y menciona al menos una validación pendiente.",
+              "criterio": "Integra seguridad + 2 variables de desempeño, diferencia estándar/alto desempeño y menciona validaciones."
+            },
+            "master": {
+              "referencia": "Construye la ruta completa: Impacto humano -> Gran formato/estructura -> SHGC/TL/deslumbramiento -> UV -> Mantenimiento -> Acústica -> Viento/sismo. Recomienda como camino estándar: Vidrio de seguridad tratado/laminado + control solar/UV, dimensionado por sistema y riesgo. Como alto desempeño: DVH de seguridad de alto desempeño con control solar selectivo + estrategia UV; acústica/Low-E según necesidad y sistema. Justifica con indicadores SHGC, TL, transmisión UV, seguridad/postrotura, STC/OITC si aplica y deja expresamente pendientes cargas y gran formato, anclajes/deriva, viento/sismo, orientación. No garantiza espesor, ahorro, dB interior ni certificación del edificio.",
+              "criterio": "Integra seguridad, territorio, desempeño, indicadores, dos caminos y validaciones; evita afirmaciones no demostrables."
+            }
+          }
+        }
+      ]
+    },
+    {
       "cityCode": "medellin",
       "contexto": "Clima templado de valle | Amenaza sísmica INTERMEDIA | Región 4 | 42 m/s (referencia territorial, no presión final)",
       "retos": [

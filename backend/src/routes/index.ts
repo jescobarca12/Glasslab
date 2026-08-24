@@ -32,6 +32,7 @@ apiRouter.get("/challenges/:code/quiz", asyncHandler(challengeQuiz.getQuiz));
 apiRouter.post("/challenges/:code/answer", asyncHandler(challengeQuiz.answer));
 apiRouter.get("/labels", asyncHandler(labels.getPublicLabels));
 apiRouter.get("/lab", asyncHandler(analytics.listLabTopics));
+apiRouter.get("/portfolio", asyncHandler(catalog.listPortafolio));
 
 // --- Verificación de correo (OTP) ---
 apiRouter.post("/auth/email/request-code", asyncHandler(emailVerification.requestCode));

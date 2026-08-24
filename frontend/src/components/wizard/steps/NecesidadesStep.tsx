@@ -1,5 +1,5 @@
 import { useBorrador } from "../../../state/BorradorContext";
-import { NECESIDADES_UI, necesidadesTecnicas } from "../../../domain/catalogoUI";
+import { MAX_NECESIDADES, NECESIDAD_ASESORIA, NECESIDADES_UI, necesidadesTecnicas } from "../../../domain/catalogoUI";
 import { trackEvent } from "../../../api/endpoints";
 
 /**
@@ -10,19 +10,27 @@ import { trackEvent } from "../../../api/endpoints";
 export function NecesidadesStep() {
   const { borrador, toggleNecesidadUI } = useBorrador();
   const tecnicas = necesidadesTecnicas(borrador.necesidadesUI);
+  const elegidas = borrador.necesidadesUI.filter((n) => n !== NECESIDAD_ASESORIA);
+  const topeAlcanzado = elegidas.length >= MAX_NECESIDADES;
 
   return (
     <>
       <h2>¿Qué quieres mejorar o resolver?</h2>
       <p className="lead">
-        Elige todas las que apliquen. Según tu respuesta se activan los módulos técnicos
+        Elige hasta {MAX_NECESIDADES} criterios. Según tu respuesta se activan los módulos técnicos
         —acústica, solar y térmico, condensación— más adelante en el asistente.
+      </p>
+      <p className="hint">
+        {topeAlcanzado
+          ? `Llegaste a los ${MAX_NECESIDADES} criterios. Quita uno si quieres cambiarlo: con más, la ruta se diluye en vez de priorizar.`
+          : `Llevas ${elegidas.length} de ${MAX_NECESIDADES}.`}
       </p>
       <div className="option-grid">
         {NECESIDADES_UI.map((n) => (
           <button
             key={n.id} type="button"
             className={`option ${borrador.necesidadesUI.includes(n.id) ? "selected" : ""}`}
+            disabled={topeAlcanzado && !borrador.necesidadesUI.includes(n.id) && n.id !== NECESIDAD_ASESORIA}
             onClick={() => {
               if (!borrador.necesidadesUI.includes(n.id)) trackEvent("need_selected", { necesidad: n.id });
               toggleNecesidadUI(n.id);

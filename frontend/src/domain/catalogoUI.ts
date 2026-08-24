@@ -63,6 +63,15 @@ export const NECESIDADES_UI: NecesidadUI[] = [
 /** Elegir esta opción lleva a asesoría en vez de al diagnóstico técnico. */
 export const NECESIDAD_ASESORIA = "no_se";
 
+/**
+ * Tope de criterios por consulta.
+ *
+ * El modelo de diagnóstico de VITELSA limita la consulta a 3 criterios: con más
+ * la ruta se diluye y el motor termina promediando necesidades en conflicto en
+ * vez de priorizar.
+ */
+export const MAX_NECESIDADES = 3;
+
 /** Une las necesidades técnicas de todas las etiquetas elegidas, sin repetir. */
 export function necesidadesTecnicas(idsUI: string[]): string[] {
   const set = new Set<string>();

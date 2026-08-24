@@ -10,6 +10,7 @@ import { PUNTOS } from "../domain/gamification";
 import { calcularLeadScore } from "../domain/leadScore";
 import { loadDataset, getCityForEngine } from "../repositories/rulesRepository";
 import { getApplications } from "../repositories/catalogRepository";
+import { getPortafolioPara } from "../repositories/portafolioRepository";
 import { insertDiagnosis, markEmailSent, type DiagnosisRecord, type DiagnosisRow } from "../repositories/diagnosisRepository";
 import { upsertPlayer, addPoints, awardBadge, registrarCiudadExplorada } from "../repositories/gamificationRepository";
 import { generarLeadId } from "../utils/leadId";
@@ -91,12 +92,24 @@ function toProyecto(body: DiagnosisBody): ProyectoInput {
   };
 }
 
+/**
+ * Tope de criterios por consulta, del modelo de diagnóstico de VITELSA: con más
+ * de tres la ruta se diluye. Se valida también aquí porque la interfaz puede
+ * cambiar, pero la regla es del dominio.
+ */
+const MAX_NECESIDADES_UI = 3;
+
 async function validateBody(body: DiagnosisBody): Promise<void> {
   if (typeof body.aplicacion !== "string" || body.aplicacion.trim() === "") {
     throw new ValidationError("La aplicación es obligatoria.");
   }
   if (body.necesidades !== undefined && !Array.isArray(body.necesidades)) {
     throw new ValidationError("`necesidades` debe ser un arreglo.");
+  }
+  if (Array.isArray(body.necesidadesUI) && body.necesidadesUI.length > MAX_NECESIDADES_UI) {
+    throw new ValidationError(
+      `Máximo ${MAX_NECESIDADES_UI} criterios por consulta; se recibieron ${body.necesidadesUI.length}.`,
+    );
   }
   const apps = await getApplications();
   if (!apps.some((a) => a.code === body.aplicacion)) {
@@ -127,7 +140,15 @@ export async function evaluate(body: DiagnosisBody): Promise<Record<string, unkn
 
   const { reglas, rutas, compatibilidad } = evaluarDiagnostico(proyecto, city, dataset);
 
+  // Referencia comercial VITELSA de los criterios elegidos. Es orientación de
+  // portafolio, no especificación: el propio modelo pide validarla contra el
+  // catálogo vigente.
+  const portafolio = await getPortafolioPara(
+    Array.isArray(body.necesidadesUI) ? body.necesidadesUI : [],
+  );
+
   return {
+    portafolio,
     reglasActivas: reglas.map((r) => ({
       code: r.code, nombre: r.nombre, nivelRiesgo: r.nivelRiesgo,
       advertencia: r.advertencia, profesionalRequerido: r.profesionalRequerido,

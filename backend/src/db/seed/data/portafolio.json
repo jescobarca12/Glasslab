@@ -1,0 +1,94 @@
+{
+  "version": "1.0",
+  "nota": "Portafolio comercial VITELSA por criterio, del modelo de diagnóstico (MODELO, agosto 2026). El propio documento advierte que estos nombres deben validarse contra el catálogo comercial vigente antes de publicarse, así que la app los muestra como referencia comercial, no como especificación.",
+  "criterios": [
+    {
+      "id": "seguridad",
+      "label": "Seguridad",
+      "requisito": "Vidrio de seguridad — NSR-10 Título K, K.4 / Mapa eólico (región) / Zona de riesgo sísmico",
+      "familiaVitelsa": "DUAL / TEMPER DUAL",
+      "proceso": "Vidrio Templado / Vidrio Laminado / Vidrio Templado-Laminado",
+      "indicador": "Mapa eólico (región) / Zona de riesgo sísmico",
+      "solucionEstandar": "Dual Arquitectura",
+      "solucionAltoDesempeno": "Temper Dual HS / Temper Dual FT / Multidual",
+      "orden": 1
+    },
+    {
+      "id": "calor",
+      "label": "Mucho calor",
+      "requisito": "Ciudad / Clima",
+      "familiaVitelsa": "TEMPER / TEMPER DUAL HS / TEMPER DUAL FT",
+      "proceso": "Vidrio Templado / Vidrio Laminado HS / Vidrio Laminado FT",
+      "indicador": "Reflexión de luz / Reflexión de calor / Coeficiente de sombra / SHGC < 0.50",
+      "solucionEstandar": "Dual Control Solar",
+      "solucionAltoDesempeno": "Dual PVB Control Solar / Dual Control Solar Low-E / DVH-Temper",
+      "orden": 2
+    },
+    {
+      "id": "frio",
+      "label": "Frío",
+      "requisito": "Ciudad / Clima",
+      "familiaVitelsa": "DVH / Insulado / Control Solar Low-E",
+      "proceso": "Vidrio DVH / Vidrio Low-E",
+      "indicador": "Vidrio de aislamiento térmico / Valor U < 5.5 W/m²·K",
+      "solucionEstandar": "DVH Insulado Incoloro",
+      "solucionAltoDesempeno": "DVH-Temper",
+      "orden": 3
+    },
+    {
+      "id": "ruido",
+      "label": "Afectación de ruido",
+      "requisito": "Nivel de ruido del entorno / Decreto 582 (Bogotá) u homólogo local",
+      "familiaVitelsa": "Dual Arquitectura / Dual Acústico",
+      "proceso": "Vidrio Laminado PVB Estándar / Vidrio Laminado PVB Acústico",
+      "indicador": "STC / OITC",
+      "solucionEstandar": "Temper Dual 5+5 / Dual 5+5",
+      "solucionAltoDesempeno": "Dual PVB Acústico / Temper Dual 6+8",
+      "orden": 4
+    },
+    {
+      "id": "deslumbramiento",
+      "label": "Exceso de luz natural",
+      "requisito": "Orientación de fachada / Área de ventana",
+      "familiaVitelsa": "TEMPER / TEMPER DUAL HS / TEMPER DUAL FT",
+      "proceso": "Vidrio Templado / Vidrio Laminado HS / Vidrio Laminado FT",
+      "indicador": "Vidrio de valor agregado / TLV % < 60%",
+      "solucionEstandar": "Tintado Gris-Verde",
+      "solucionAltoDesempeno": "Dual Earth Tone / PVB Color Ventanería / Dual Control Solar / Dual Low-E",
+      "orden": 5
+    },
+    {
+      "id": "condensacion",
+      "label": "Humedad interna",
+      "requisito": "Ciudad / Clima",
+      "familiaVitelsa": "DVH / Insulado / Control Solar Low-E",
+      "proceso": "Vidrio DVH / Vidrio Low-E",
+      "indicador": "Vidrio de aislamiento térmico / Valor U < 5.5 W/m²·K",
+      "solucionEstandar": "DVH Incoloro",
+      "solucionAltoDesempeno": "DVH-Temper Tintado / DVH Control Solar – Bajo Emisivo / DVH-Control Solar",
+      "orden": 6
+    },
+    {
+      "id": "sostenibilidad",
+      "label": "Sostenibilidad",
+      "requisito": "Certificaciones / Incentivos tributarios / Incentivos financieros",
+      "familiaVitelsa": "DVH / Insulado / TEMPER / TEMPER DUAL HS / TEMPER DUAL FT",
+      "proceso": "Vidrio DVH / Vidrio Templado / Vidrio Laminado HS / Vidrio Laminado FT",
+      "indicador": "SHGC / TLV % / Valor U < 5.5 W/m²·K",
+      "solucionEstandar": "DVH Incoloro / Tintado Gris-Verde",
+      "solucionAltoDesempeno": "Control Solar / Control Solar – Low-E",
+      "orden": 7
+    },
+    {
+      "id": "eficiencia",
+      "label": "Eficiencia energética",
+      "requisito": "Combina los indicadores de calor, frío y luz natural evaluados en conjunto",
+      "familiaVitelsa": "DVH / Insulado / Control Solar Low-E",
+      "proceso": "Vidrio DVH / Vidrio Low-E / Control Solar",
+      "indicador": "SHGC / TLV % / Valor U < 5.5 W/m²·K",
+      "solucionEstandar": "DVH Insulado Incoloro",
+      "solucionAltoDesempeno": "DVH alto desempeño: control solar + Low-E + acústica + seguridad",
+      "orden": 8
+    }
+  ]
+}

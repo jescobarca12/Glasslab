@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import { getPortafolio } from "../repositories/portafolioRepository";
 import { NotFoundError } from "../errors/AppError";
 import * as catalog from "../repositories/catalogRepository";
 
@@ -28,4 +29,9 @@ export async function listNeeds(req: Request, res: Response): Promise<void> {
 
 export async function listChallenges(_req: Request, res: Response): Promise<void> {
   res.status(200).json(await catalog.getChallenges());
+}
+
+/** GET /api/portfolio — portafolio comercial VITELSA por criterio (200). */
+export async function listPortafolio(_req: Request, res: Response): Promise<void> {
+  res.status(200).json(await getPortafolio());
 }

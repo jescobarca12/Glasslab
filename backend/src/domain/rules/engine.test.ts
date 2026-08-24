@@ -45,7 +45,9 @@ function proyectoDesdeReto(reto: any): ProyectoInput {
 // Resultado esperado por reto: reglas disparadas y familias de la ruta recomendada.
 const ESPERADO: Record<string, { reglas: string[]; familias: string[] }> = {
   reto1: { reglas: ["R-AC-01", "R-AC-04"], familias: ["acustico", "laminado", "dvh_laminado"] },
-  reto2: { reglas: ["R-SOL-01", "R-SOL-02"], familias: ["control_solar", "lowe", "dvh"] },
+  // R-SEG-04 entra desde que Cúcuta pasó a zona sísmica alta, dato que
+  // confirmaron la matriz maestra y los retos de esa ciudad.
+  reto2: { reglas: ["R-SEG-04", "R-SOL-01", "R-SOL-02"], familias: ["control_solar", "lowe", "dvh"] },
   reto3: { reglas: ["R-SEG-01", "R-SEG-04", "R-SEG-06"], familias: ["templado_laminado", "laminado", "multilaminado"] },
   reto4: { reglas: ["R-AC-01", "R-AC-03", "R-SOL-03"], familias: ["acustico", "laminado", "dvh_laminado", "dvh", "lowe"] },
   reto5: { reglas: ["R-COND-01", "R-SOL-03"], familias: ["dvh", "lowe"] },

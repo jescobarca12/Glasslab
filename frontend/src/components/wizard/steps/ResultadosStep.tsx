@@ -78,7 +78,7 @@ export function ResultadosStep() {
   if (evalReq.error) return <div className="error-box">{evalReq.error}</div>;
   if (!evalReq.data) return null;
 
-  const { rutas, compatibilidad, reglasActivas } = evalReq.data;
+  const { rutas, compatibilidad, reglasActivas, portafolio } = evalReq.data;
 
   return (
     <>
@@ -116,6 +116,34 @@ export function ResultadosStep() {
               {r.advertencia && <div style={{ fontSize: "0.85rem", color: "var(--muted)" }}>{r.advertencia}</div>}
             </div>
           ))}
+        </div>
+      )}
+
+      {portafolio && portafolio.length > 0 && (
+        <div className="card" style={{ marginTop: 18 }}>
+          <h3>Línea VITELSA de referencia</h3>
+          <p className="hint">
+            Portafolio comercial que corresponde a lo que elegiste. Es orientación de línea, no
+            especificación: debe confirmarse contra el catálogo vigente y la ficha técnica del producto.
+          </p>
+          <div className="tablewrap">
+            <table className="data-table">
+              <thead>
+                <tr><th>Criterio</th><th>Familia VITELSA</th><th>Estándar</th><th>Alto desempeño</th><th>Indicador</th></tr>
+              </thead>
+              <tbody>
+                {portafolio.map((p) => (
+                  <tr key={p.criterio}>
+                    <td><strong>{p.label}</strong></td>
+                    <td>{p.familiaVitelsa ?? "—"}</td>
+                    <td>{p.solucionEstandar ?? "—"}</td>
+                    <td>{p.solucionAltoDesempeno ?? "—"}</td>
+                    <td>{p.indicador ?? "—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
