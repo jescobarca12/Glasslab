@@ -10,6 +10,7 @@
     "start": "node dist/server.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --require ts-node/register --test src/domain/**/*.test.ts",
+    "verify": "ts-node --transpile-only scripts/verificar.ts",
     "db:extract": "ts-node scripts/extractDemoData.ts",
     "db:migrate": "ts-node src/db/migrate.ts",
     "db:seed": "ts-node src/db/seed/seed.ts",
