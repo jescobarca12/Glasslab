@@ -6,6 +6,7 @@ import type {
   EmailSessionResponse, EmailStatusResponse, RequestCodeResponse, VerifyCodeResponse,
   CertificationSummary, LabTopic, MarketingSummary,
   AdvisoryListResult, AdvisoryRequestBody, AdvisoryRow, Quiz, QuizResult,
+  CiudadConRetos, ProgresoCiudad, ResultadoReto, RetoCiudadResumen, RetoQuiz,
 } from "./types";
 
 export const getCities = (): Promise<City[]> => api.get("/cities");
@@ -17,6 +18,20 @@ export const getGlassFamilies = (): Promise<GlassFamily[]> => api.get("/glass-fa
 
 export const getChallenges = (): Promise<Challenge[]> => api.get("/challenges");
 export const getLabels = (): Promise<GroupedLabels> => api.get("/labels");
+
+// --- Retos por ciudad: GlassLab plantea el caso y evalúa el criterio ---
+export const getCiudadesConRetos = (): Promise<CiudadConRetos[]> => api.get("/city-challenges");
+export const getRetosDeCiudad = (cityCode: string): Promise<RetoCiudadResumen[]> =>
+  api.get(`/city-challenges/${encodeURIComponent(cityCode)}`);
+export const getRetoCiudad = (code: string): Promise<RetoQuiz> =>
+  api.get(`/city-challenges/reto/${encodeURIComponent(code)}`);
+export const responderRetoCiudad = (
+  code: string,
+  respuesta: { conceptos: string[]; validaciones: string[]; solucion: string; correo?: string },
+): Promise<ResultadoReto> =>
+  api.post(`/city-challenges/reto/${encodeURIComponent(code)}/answer`, respuesta);
+export const getProgresoCiudad = (cityCode: string, correo: string): Promise<ProgresoCiudad> =>
+  api.get(`/city-challenges/${encodeURIComponent(cityCode)}/progress?correo=${encodeURIComponent(correo)}`);
 
 /** El reto como examen: caso, especificaciones y opciones (sin la respuesta). */
 export const getChallengeQuiz = (code: string): Promise<Quiz> =>

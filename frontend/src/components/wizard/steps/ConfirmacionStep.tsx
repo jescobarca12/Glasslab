@@ -104,7 +104,7 @@ export function ConfirmacionStep() {
       </div>
 
       <CheckField
-        label="Quiero que un asesor técnico de VITELSA me contacte para avanzar con la especificación."
+        label="Hablar con un especialista VITELSA para avanzar con la especificación."
         checked={c.solicitaAsesoria}
         onChange={(v) => setConfirmacion({ solicitaAsesoria: v })}
       />

@@ -15,6 +15,7 @@
     "db:seed": "ts-node src/db/seed/seed.ts",
     "db:seed:admin": "ts-node src/db/seed/seedAdmin.ts",
     "db:seed:lab": "ts-node scripts/seedLabTopics.ts",
+    "db:seed:retos": "ts-node scripts/seedCityChallenges.ts",
     "db:reset": "ts-node src/db/migrate.ts --reset && ts-node src/db/seed/seed.ts && ts-node src/db/seed/seedAdmin.ts"
   },
   "dependencies": {

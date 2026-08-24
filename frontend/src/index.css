@@ -303,3 +303,68 @@ a:hover { color: var(--red); }
 .reto-opcion.ok .marca { color: #2f6b4f; }
 .reto-opcion.mal { border-color: var(--red); background: #fbe6e6; }
 .reto-opcion.mal .marca { color: var(--red); }
+
+/* Página inicial: los tres caminos */
+.home-intro { text-align: center; max-width: 62ch; margin: 8px auto 26px; }
+.home-intro h1 { margin-bottom: 6px; }
+.caminos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.camino {
+  display: flex; flex-direction: column; gap: 8px; padding: 26px 24px 24px;
+  background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--navy);
+  border-radius: var(--radius-sm); box-shadow: 0 1px 2px rgba(0, 42, 73, 0.05);
+}
+.camino-retos { border-top-color: var(--red); }
+.camino-num {
+  font-size: 0.78rem; font-weight: 800; letter-spacing: 0.14em; color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.camino h2 { margin: 0; color: var(--navy); font-size: 1.3rem; }
+.camino-bajada { margin: 0; color: var(--ink); }
+.camino-detalle { margin: 0 0 6px; font-size: 0.88rem; color: var(--muted); flex: 1; }
+.camino .btn { align-self: flex-start; }
+.home-pie { text-align: center; margin-top: 22px; }
+
+/* Retos por ciudad: chips de selección múltiple */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.chip {
+  padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); cursor: pointer;
+  background: var(--surface); font-family: inherit; font-size: 0.88rem; color: var(--ink);
+}
+.chip:hover { border-color: var(--navy); background: var(--navy-tint); }
+.chip.on { background: var(--navy); border-color: var(--navy); color: #fff; font-weight: 700; }
+
+.caso-situacion { border-left: 3px solid var(--navy); padding-left: 14px; }
+.ruta-tecnica {
+  font-weight: 700; color: var(--navy); background: var(--surface-2); padding: 12px 14px;
+  border-radius: var(--radius-sm); font-size: 0.94rem;
+}
+
+/* Nivel de criterio (persona), distinto de la calidad de la solución */
+.nivel-box { margin-top: 18px; padding: 16px; border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--surface-2); }
+.nivel-cab { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.nivel-track { height: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.nivel-fill { height: 100%; background: var(--navy); }
+.nivel-chip {
+  display: inline-block; padding: 3px 12px; border-radius: 999px; font-size: 0.78rem;
+  font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
+}
+.nivel-chip.mini { font-size: 0.66rem; padding: 1px 8px; margin-right: 6px; }
+.nivel-chip.explorer { background: #eaf0f4; color: var(--navy); }
+.nivel-chip.senior { background: #fdf7ec; color: #8a5c12; }
+.nivel-chip.master { background: #e7f3ec; color: #235340; }
+.nivel-chip.ninguno { background: var(--surface); color: var(--muted); border: 1px solid var(--line); }
+
+.resultado-nivel {
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; padding: 18px 20px;
+  border-radius: var(--radius-sm); margin-bottom: 14px;
+}
+.resultado-nivel .etiqueta { font-size: 1.4rem; font-weight: 800; }
+.resultado-nivel .puntos { font-weight: 700; opacity: 0.75; }
+.resultado-nivel.explorer { background: #eaf0f4; color: var(--navy); }
+.resultado-nivel.senior { background: #fdf7ec; color: #8a5c12; }
+.resultado-nivel.master { background: #e7f3ec; color: #235340; }
+
+.rec-box { border: 1px solid var(--line); border-left: 3px solid var(--navy); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 14px 16px; background: var(--surface-2); }
+.rec-box.alto { border-left-color: var(--red); }
+.rec-box h4 { margin: 0 0 6px; color: var(--navy); font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.rec-box p { margin: 0; font-size: 0.92rem; }

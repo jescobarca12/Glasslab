@@ -125,9 +125,11 @@ export function ResultadosStep() {
         composición final deben validarse con un especialista y el fabricante.
       </div>
 
-      <p className="hint" style={{ marginTop: 18 }}>
-        Continúa para enviarlo y recibir la copia por correo.
-      </p>
+      <div className="callout" style={{ marginTop: 18 }}>
+        <strong>¿Quieres avanzar con esta especificación?</strong> Continúa y, si lo pides, un
+        especialista de VITELSA te contacta para validar la composición final con el cálculo y el
+        sistema de instalación de tu proyecto.
+      </div>
     </>
   );
 }

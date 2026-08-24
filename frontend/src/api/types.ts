@@ -270,7 +270,67 @@ export interface EmailStatusResponse {
   verificado: boolean;
 }
 
-// --- Retos en modo examen ---
+// --- Retos por ciudad (Módulo B) ---
+
+export interface CiudadConRetos {
+  cityCode: string;
+  nombre: string;
+  contexto: string;
+  total: number;
+}
+
+export interface RetoCiudadResumen {
+  code: string;
+  orden: number;
+  titulo: string;
+  situacion: string | null;
+  foco: string[];
+}
+
+export interface RetoQuiz {
+  code: string;
+  cityCode: string;
+  titulo: string;
+  situacion: string | null;
+  opcionesConceptos: string[];
+  opcionesSolucion: string[];
+  opcionesValidaciones: string[];
+}
+
+export interface NivelAcumulado {
+  puntos: number;
+  maximo: number;
+  retosRespondidos: number;
+  nivel: "explorer" | "senior" | "master" | null;
+  etiqueta: string;
+  faltanParaSiguiente: number;
+}
+
+export interface ResultadoReto {
+  nivel: "explorer" | "senior" | "master";
+  puntos: number;
+  cobertura: number;
+  coberturaValidaciones: number;
+  sobrantes: string[];
+  faltaParaSubir: string[];
+  etiquetaNivel: string;
+  referencia: string | null;
+  criterioNivel: string | null;
+  recomendacionEstandar: string | null;
+  recomendacionAlto: string | null;
+  rutaEsperada: string[];
+  indicadores: string[];
+  validacionesPendientes: string[];
+  blockingRule: string | null;
+  acumulado?: NivelAcumulado;
+}
+
+export interface ProgresoCiudad extends NivelAcumulado {
+  cityCode: string;
+  resultados: Array<{ code: string; puntos: number; nivel: string }>;
+}
+
+// --- Retos en modo examen (versión anterior, sin uso en la interfaz) ---
 
 export interface QuizOption {
   id: string;

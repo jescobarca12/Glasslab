@@ -12,6 +12,7 @@ import * as emailVerification from "../controllers/emailVerificationController";
 import * as analytics from "../controllers/analyticsController";
 import * as advisory from "../controllers/advisoryController";
 import * as challengeQuiz from "../controllers/challengeQuizController";
+import * as cityChallenges from "../controllers/cityChallengeController";
 
 export const apiRouter = Router();
 
@@ -43,6 +44,13 @@ apiRouter.post("/diagnoses/evaluate", asyncHandler(diagnosis.evaluate));
 apiRouter.post("/diagnoses", asyncHandler(diagnosis.create));
 apiRouter.get("/diagnoses/:leadId/report.pdf", asyncHandler(diagnosis.downloadReport));
 apiRouter.get("/diagnoses/:leadId", asyncHandler(diagnosis.getOne));
+
+// --- Retos por ciudad (Módulo B: pon a prueba tu criterio) ---
+apiRouter.get("/city-challenges", asyncHandler(cityChallenges.listCities));
+apiRouter.get("/city-challenges/reto/:code", asyncHandler(cityChallenges.getQuiz));
+apiRouter.post("/city-challenges/reto/:code/answer", asyncHandler(cityChallenges.answer));
+apiRouter.get("/city-challenges/:cityCode/progress", asyncHandler(cityChallenges.progress));
+apiRouter.get("/city-challenges/:cityCode", asyncHandler(cityChallenges.listByCity));
 
 // --- Analítica de producto (la emite el asistente) ---
 apiRouter.post("/events", asyncHandler(analytics.track));

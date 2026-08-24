@@ -5,16 +5,18 @@ import { UsuarioProvider, useUsuario } from "./state/UsuarioContext";
 import { LabelsProvider } from "./state/LabelsContext";
 import { IdentidadGate } from "./components/IdentidadGate";
 import { Wizard } from "./components/wizard/Wizard";
-import { RetosScreen } from "./components/retos/RetosScreen";
+import { RetosCiudadScreen } from "./components/retos/RetosCiudadScreen";
+import { HomeScreen, type CaminoGlassLab } from "./components/HomeScreen";
 import { NivelesScreen } from "./components/niveles/NivelesScreen";
 import { LaboratorioScreen } from "./components/laboratorio/LaboratorioScreen";
 
-type Vista = "asistente" | "retos" | "laboratorio" | "niveles";
+type Vista = "home" | CaminoGlassLab | "niveles";
 
 const TABS: Array<{ id: Vista; label: string }> = [
-  { id: "asistente", label: "Asistente" },
-  { id: "retos", label: "Retos" },
-  { id: "laboratorio", label: "Laboratorio" },
+  { id: "home", label: "Inicio" },
+  { id: "asistente", label: "Especifica" },
+  { id: "laboratorio", label: "Aprende" },
+  { id: "retos", label: "Desafíate" },
   { id: "niveles", label: "Mi progreso" },
 ];
 
@@ -31,7 +33,7 @@ function UsuarioChip() {
 
 function Contenido() {
   const { usuario } = useUsuario();
-  const [vista, setVista] = useState<Vista>("asistente");
+  const [vista, setVista] = useState<Vista>("home");
 
   if (!usuario) return <IdentidadGate />;
 
@@ -50,8 +52,9 @@ function Contenido() {
         ))}
       </nav>
 
+      {vista === "home" && <HomeScreen onElegir={setVista} />}
       {vista === "asistente" && <Wizard />}
-      {vista === "retos" && <RetosScreen />}
+      {vista === "retos" && <RetosCiudadScreen />}
       {vista === "laboratorio" && <LaboratorioScreen />}
       {vista === "niveles" && <NivelesScreen />}
     </BorradorProvider>

@@ -209,12 +209,12 @@ export function construirRutas(flat: FlatAnswers, reglas: Rule[], families: Glas
 
   const recomendada = buildPath(
     "recomendada", [...altas, ...medias],
-    "Recomendada para tu proyecto",
+    "Recomendación estándar",
     "Equilibra seguridad, desempeño, estética, costo y viabilidad de producción.",
   );
   const altoDesempeno = buildPath(
     "alto_desempeno", [...altas, ...medias, ...bajas],
-    "Solución de alto desempeño",
+    "Recomendación de alto desempeño",
     "Prioriza confort, eficiencia energética, acústica, permanencia posrotura y/o sostenibilidad.",
   );
 
