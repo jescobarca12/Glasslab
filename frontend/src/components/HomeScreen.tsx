@@ -9,7 +9,8 @@ export type CaminoGlassLab = "asistente" | "laboratorio" | "retos";
 
 const CAMINOS: Array<{
   id: CaminoGlassLab;
-  numero: string;
+  /** Qué es cada camino, en una palabra. No van numerados: no es una secuencia. */
+  rotulo: string;
   titulo: string;
   bajada: string;
   cta: string;
@@ -17,7 +18,7 @@ const CAMINOS: Array<{
 }> = [
   {
     id: "asistente",
-    numero: "01",
+    rotulo: "Diagnóstico",
     titulo: "Especifica tu proyecto",
     bajada: "Encuentra la ruta de vidrio más adecuada según las características y necesidades de tu proyecto.",
     cta: "Iniciar especificación",
@@ -25,7 +26,7 @@ const CAMINOS: Array<{
   },
   {
     id: "laboratorio",
-    numero: "02",
+    rotulo: "Contenido",
     titulo: "Aprende",
     bajada: "Entiende qué hace cada tipo de vidrio: templado, laminado, control solar, Low-E, DVH, acústico.",
     cta: "Entrar al laboratorio",
@@ -33,7 +34,7 @@ const CAMINOS: Array<{
   },
   {
     id: "retos",
-    numero: "03",
+    rotulo: "Evaluación",
     titulo: "Pon a prueba tu criterio",
     bajada: "Resuelve situaciones reales de arquitectura y descubre tu nivel GlassLab.",
     cta: "Aceptar el reto",
@@ -55,7 +56,7 @@ export function HomeScreen({ onElegir }: { onElegir: (camino: CaminoGlassLab) =>
       <div className="caminos">
         {CAMINOS.map((c) => (
           <article key={c.id} className={`camino camino-${c.id}`}>
-            <span className="camino-num">{c.numero}</span>
+            <span className="camino-rotulo">{c.rotulo}</span>
             <h2>{c.titulo}</h2>
             <p className="camino-bajada">{c.bajada}</p>
             <p className="camino-detalle">{c.detalle}</p>

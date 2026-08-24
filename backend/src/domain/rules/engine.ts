@@ -31,6 +31,25 @@ const FAMILIAS_PROHIBIDAS_FINAL = new Set(["monolitico"]);
 /** Familia de respaldo si el filtro anterior dejara una ruta sin familias. */
 const FAMILIA_MINIMA_SEGURA = "templado";
 
+/**
+ * Escalón de la ruta de alto desempeño cuando el escenario no activó reglas.
+ *
+ * Sin esto las dos rutas salían idénticas —el mismo baseline repetido— y la
+ * herramienta prometía dos alternativas para mostrar una sola. La de alto
+ * desempeño sube un peldaño sin bajar seguridad, que es justo lo que la matriz
+ * pide de esa segunda opción.
+ */
+const ESCALON_ALTO_DESEMPENO: Record<string, string> = {
+  templado: "templado_laminado",
+  termoendurecido: "laminado",
+  laminado: "multilaminado",
+  templado_laminado: "multilaminado",
+  dvh: "dvh_laminado",
+  acustico: "dvh_laminado",
+  curvo: "templado_laminado",
+  multilaminado: "seguridad_especial",
+};
+
 // ---------------------------------------------------------------------------
 // Física de condensación (dewPointC / riesgoCondensacion del demo)
 // ---------------------------------------------------------------------------
@@ -150,7 +169,14 @@ export function construirRutas(flat: FlatAnswers, reglas: Rule[], families: Glas
     let fams: Set<string>;
     if (nivel === "recomendada") fams = new Set([...famsAlto, ...famsMedio]);
     else fams = new Set([...famsAlto, ...famsMedio, ...famsBajo]);
-    if (fams.size === 0) fams = new Set([baseline]);
+    if (fams.size === 0) {
+      // Sin reglas activas se parte del baseline de la aplicación; la ruta de
+      // alto desempeño sube un escalón para que sigan siendo dos alternativas.
+      const partida = nivel === "alto_desempeno"
+        ? ESCALON_ALTO_DESEMPENO[baseline] ?? baseline
+        : baseline;
+      fams = new Set([partida]);
+    }
     const resultado = [...fams].filter((f) => !FAMILIAS_PROHIBIDAS_FINAL.has(f) && findFamily(families, f));
     return resultado.length ? resultado : [FAMILIA_MINIMA_SEGURA];
   };

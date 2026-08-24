@@ -5,6 +5,7 @@ import { aBodyBackend } from "../../../domain/borrador";
 import { useAsync } from "../../../hooks/useAsync";
 import { evaluateDiagnosis, trackEvent } from "../../../api/endpoints";
 import type { EvaluateResponse, Route } from "../../../api/types";
+import { CantoVidrio } from "../CantoVidrio";
 
 function RouteCard({ ruta, elegida, onElegir }: { ruta: Route; elegida: boolean; onElegir: () => void }) {
   return (
@@ -13,13 +14,20 @@ function RouteCard({ ruta, elegida, onElegir }: { ruta: Route; elegida: boolean;
       <div className="prio">{ruta.prioridad}</div>
 
       <div>
+        {/* El espesor no se repite aquí: lo dice el canto, justo debajo. */}
         {ruta.composicionConceptual.map((f) => (
-          <span key={f.id} className="badge-fam">
-            {f.nombre}
-            {f.espesorOrientativo && <em className="espesor"> · {f.espesorOrientativo}</em>}
-          </span>
+          <span key={f.id} className="badge-fam">{f.nombre}</span>
         ))}
       </div>
+
+      {/* La primera familia de la ruta se dibuja de canto: es el vidrio que
+          define la solución y el espesor se entiende mejor viéndolo. */}
+      {(() => {
+        const conEspesor = ruta.composicionConceptual.find((f) => f.espesorOrientativo);
+        return conEspesor?.espesorOrientativo
+          ? <CantoVidrio espesor={conEspesor.espesorOrientativo} nombre={conEspesor.nombre} />
+          : null;
+      })()}
 
       {ruta.advertenciaEspesor && (
         <p className="hint" style={{ marginTop: 8 }}>{ruta.advertenciaEspesor}</p>
@@ -84,7 +92,11 @@ export function ResultadosStep() {
     <>
       <h2>Diagnóstico</h2>
       <p className="lead">
-        Dos rutas comparadas a partir de {reglasActivas.length} regla(s) técnica(s) activada(s) para tu escenario.
+        {reglasActivas.length === 0
+          ? "Dos rutas comparadas. Con los datos que diste no se activó ninguna regla específica: añade más detalle del proyecto para afinar el diagnóstico."
+          : reglasActivas.length === 1
+            ? "Dos rutas comparadas a partir de la regla técnica que activó tu escenario."
+            : `Dos rutas comparadas a partir de las ${reglasActivas.length} reglas técnicas que activó tu escenario.`}
       </p>
 
       <div className="routes">
