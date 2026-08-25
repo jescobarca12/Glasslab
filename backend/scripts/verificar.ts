@@ -15,7 +15,11 @@
 import { pool, closePool } from "../src/db/pool";
 
 const API = process.env["API"] ?? "http://localhost:4000";
-const CONTRA_PRODUCCION = API.includes("vercel.app");
+// Producción es todo lo que no sea la máquina de quien desarrolla: se detecta
+// por localhost y no por el dominio, porque el dominio cambia —glasslab.vercel.app,
+// glasslab.vitelsa.com.co— y una detección por nombre deja de valer justo cuando
+// se estrena uno nuevo, que es cuando más se corre esto.
+const CONTRA_PRODUCCION = !/^https?:\/\/(localhost|127\.0\.0\.1)([:/]|$)/.test(API);
 const CORREO = "verificacion@example.com";
 
 let ok = 0;
