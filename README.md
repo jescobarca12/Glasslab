@@ -102,11 +102,15 @@ cd backend && npm test      # tests del motor de reglas (los 8 retos de la demo)
 - **Datos de ejemplo.** El catálogo, las reglas, ciudades y retos provienen de la demo y
   son **datos de ejemplo que VITELSA debe validar**. Los disclaimers técnicos y legales
   (p. ej. "no reemplaza el cálculo de un profesional competente") se conservan a propósito.
-- **Integraciones pendientes.** El envío de correo y la sincronización de leads a
-  SharePoint/CRM están construidos como adaptadores con implementación de **relleno**
-  (`backend/src/integrations/`): registran en consola y guardan en `backend/.outbox/` sin
-  fingir un envío real. Se conectan los proveedores reales cuando VITELSA entregue
-  credenciales y formato (variables `EMAIL_PROVIDER` / `LEAD_SYNC_PROVIDER` en `.env`).
+- **Correo.** Los adaptadores viven en `backend/src/integrations/` y se eligen con
+  `EMAIL_PROVIDER`: `console` (relleno: registra y guarda en `backend/.outbox/` sin
+  fingir un envío), `smtp` (usuario y contraseña) y `graph` (**buzón compartido
+  `glasslab@vitelsa.com.co` por Microsoft Graph**, que es el destino previsto: un
+  buzón compartido no tiene contraseña propia, así que se envía en su nombre con una
+  aplicación de Entra ID y permiso `Mail.Send`; ver las variables `GRAPH_*` en
+  `.env.example`). Para comprobar el envío sin crear leads: `npm run email:probar -- alguien@dominio.com`.
+- **Integración pendiente.** La sincronización de leads a SharePoint/CRM sigue siendo
+  de relleno (`LEAD_SYNC_PROVIDER=file`), a la espera del formato de VITELSA.
 - **Antes de producción:** reemplazar la contraseña del admin y el `JWT_SECRET` del
   `.env`, y usar el método de autenticación real de VITELSA.
 
@@ -146,7 +150,9 @@ framework preset; déjalo en "Other").
 | `DATABASE_URL` | cadena "pooled" de Neon |
 | `JWT_SECRET` | un secreto largo y aleatorio |
 | `ADMIN_USERNAME` / `ADMIN_PASSWORD` | credenciales del panel (reemplazar las de ejemplo) |
-| `EMAIL_PROVIDER` / `LEAD_SYNC_PROVIDER` | `console` / `file` (relleno) por ahora |
+| `EMAIL_PROVIDER` | `graph` para el buzón de VITELSA (`smtp` o `console` en desarrollo) |
+| `GRAPH_TENANT_ID` / `GRAPH_CLIENT_ID` / `GRAPH_CLIENT_SECRET` | aplicación de Entra ID con `Mail.Send`; el secreto vence y hay que renovarlo |
+| `LEAD_SYNC_PROVIDER` | `file` (relleno) por ahora |
 
 **5. Deploy.** Vercel construye el frontend (`frontend/dist`) y publica la API en
 `/api/*`. El frontend llama a `/api` en el mismo dominio (sin CORS).

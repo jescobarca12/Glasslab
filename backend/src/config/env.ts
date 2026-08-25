@@ -43,6 +43,15 @@ export const env = {
     leadSyncProvider: optional("LEAD_SYNC_PROVIDER", "file"),
     vitelsaEmail: optional("VITELSA_EMAIL", "informacion@vitelsa.com.co"),
     outboxDir: optional("OUTBOX_DIR", ".outbox"),
+    // Buzon compartido glasslab@vitelsa.com.co: sin contrasena propia, se envia
+    // con las credenciales de una aplicacion de Entra ID (permiso Mail.Send).
+    graph: {
+      tenantId: optional("GRAPH_TENANT_ID", ""),
+      clientId: optional("GRAPH_CLIENT_ID", ""),
+      clientSecret: optional("GRAPH_CLIENT_SECRET", ""),
+      sender: optional("GRAPH_SENDER", "glasslab@vitelsa.com.co"),
+      senderName: optional("GRAPH_SENDER_NAME", "VITELSA GlassLab"),
+    },
     smtp: {
       host: optional("SMTP_HOST", ""),
       port: Number(optional("SMTP_PORT", "465")),

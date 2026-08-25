@@ -153,7 +153,7 @@ export function buildHtml(input: DiagnosisEmailInput): string {
 }
 
 /** Correo del código de verificación: la misma marca, en su versión mínima. */
-function buildVerificationHtml(input: VerificationEmailInput): string {
+export function buildVerificationHtml(input: VerificationEmailInput): string {
   return `
   <div style="background:${FONDO};padding:24px 12px;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;margin:0 auto;background:#ffffff;border:1px solid ${LINEA};border-radius:8px;font-family:Arial,Helvetica,sans-serif;">

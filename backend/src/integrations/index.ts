@@ -8,10 +8,13 @@ import { env } from "../config/env";
 import type { EmailService, LeadSyncService } from "./types";
 import { ConsoleEmailService } from "./consoleEmailService";
 import { SmtpEmailService } from "./smtpEmailService";
+import { GraphEmailService } from "./graphEmailService";
 import { FileLeadSyncService } from "./fileLeadSyncService";
 
 function crearEmailService(): EmailService {
   switch (env.integrations.emailProvider) {
+    case "graph":
+      return new GraphEmailService();
     case "smtp":
       return new SmtpEmailService();
     case "console":
