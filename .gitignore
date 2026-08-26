@@ -16,8 +16,10 @@ build/
 # Vercel
 .vercel/
 
-# Estado local del agente
-.claude/
+# Configuración local de Claude Code, salvo las skills del proyecto: esas
+# describen cómo se trabaja este código y sirven a quien lo herede.
+.claude/*
+!.claude/skills/
 
 # Logs y temporales
 *.log
