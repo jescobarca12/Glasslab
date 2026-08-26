@@ -148,6 +148,11 @@ export async function evaluate(body: DiagnosisBody): Promise<Record<string, unkn
   const proyecto = toProyecto(body);
   const dataset = await loadDataset();
   const city = body.proyecto?.ciudadId ? await getCityForEngine(body.proyecto.ciudadId) : null;
+  // La ciudad de la persona se guarda con el mismo nombre que la del proyecto:
+  // llega como código del catálogo y en el panel se leen una junto a la otra.
+  const ciudadPersona = body.persona?.ciudad
+    ? (await getCityForEngine(body.persona.ciudad))?.nombre ?? body.persona.ciudad
+    : undefined;
 
   const { reglas, rutas, compatibilidad } = evaluarDiagnostico(proyecto, city, dataset);
 
@@ -197,6 +202,11 @@ export async function create(body: DiagnosisBody): Promise<CreateResult> {
   const proyecto = toProyecto(body);
   const dataset = await loadDataset();
   const city = body.proyecto?.ciudadId ? await getCityForEngine(body.proyecto.ciudadId) : null;
+  // La ciudad de la persona se guarda con el mismo nombre que la del proyecto:
+  // llega como código del catálogo y en el panel se leen una junto a la otra.
+  const ciudadPersona = body.persona?.ciudad
+    ? (await getCityForEngine(body.persona.ciudad))?.nombre ?? body.persona.ciudad
+    : undefined;
   const { reglas, rutas, compatibilidad } = evaluarDiagnostico(proyecto, city, dataset);
 
   // Pedir asesoría en la confirmación equivale a pedir contacto comercial.
@@ -206,7 +216,7 @@ export async function create(body: DiagnosisBody): Promise<CreateResult> {
   const record: DiagnosisRecord = {
     leadId: generarLeadId(),
     user: {
-      name: body.persona?.nombre, email, phone: body.persona?.telefono, city: body.persona?.ciudad,
+      name: body.persona?.nombre, email, phone: body.persona?.telefono, city: ciudadPersona,
       // Empresa y cargo llegan del paso de confirmación; se acepta también en
       // `persona` por compatibilidad con clientes anteriores.
       company: body.confirmacion?.empresa ?? body.persona?.empresa,

@@ -32,7 +32,7 @@ export function AsesoriaStep() {
       nombre: persona.nombre,
       correo: persona.correo,
       telefono: telefono.trim(),
-      ciudad: borrador.proyecto.ciudadId,
+      ciudad: borrador.proyecto.ciudadId || persona.ciudad,
       proyecto: borrador.proyecto.nombre,
       horarioContacto: franja,
       notas: notas.trim(),

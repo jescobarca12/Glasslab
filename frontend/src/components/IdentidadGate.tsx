@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { personaInicial, type Persona } from "../domain/borrador";
 import { useUsuario } from "../state/UsuarioContext";
 import { useAsync } from "../hooks/useAsync";
+import { useFetch } from "../hooks/useFetch";
 import { ApiError } from "../api/client";
-import { requestEmailCode, startEmailSession, trackEvent, verifyEmailCode } from "../api/endpoints";
+import { getCities, requestEmailCode, startEmailSession, trackEvent, verifyEmailCode } from "../api/endpoints";
 import type { RequestCodeResponse } from "../api/types";
 import { PERFILES } from "../domain/catalogoUI";
 import { CheckField, SelectField, TextField } from "./ui/Fields";
@@ -75,6 +76,7 @@ export function IdentidadGate() {
   const [codigo, setCodigo] = useState("");
   const [esperaReenvio, setEsperaReenvio] = useState(0);
 
+  const ciudades = useFetch(getCities);
   const inicio = useAsync(iniciarIdentificacion);
   const regreso = useAsync(reingresar);
   const reenvio = useAsync(requestEmailCode);
@@ -83,7 +85,7 @@ export function IdentidadGate() {
   const set = (patch: Partial<Persona>) => setP((prev) => ({ ...prev, ...patch }));
   const correo = p.correo.trim().toLowerCase();
   const correoValido = CORREO_VALIDO.test(correo);
-  const datosValidos = p.nombre.trim() !== "" && correoValido && p.autorizacion;
+  const datosValidos = p.nombre.trim() !== "" && correoValido && p.ciudad !== "" && p.autorizacion;
 
   // Cuenta regresiva para habilitar el reenvío del código.
   useEffect(() => {
@@ -246,6 +248,11 @@ export function IdentidadGate() {
         <TextField label="Nombre" value={p.nombre} onChange={(v) => set({ nombre: v })} />
         <TextField label="Correo" type="email" value={p.correo} onChange={(v) => set({ correo: v })} />
         <TextField label="Teléfono" type="tel" hint="opcional" value={p.telefono} onChange={(v) => set({ telefono: v })} />
+        <SelectField
+          label="Ciudad" hint={ciudades.loading ? "cargando…" : undefined}
+          value={p.ciudad} onChange={(v) => set({ ciudad: v })}
+          options={(ciudades.data ?? []).map((c) => ({ value: c.code, label: `${c.nombre} (${c.departamento})` }))}
+        />
         <SelectField label="Perfil" value={p.perfil} onChange={(v) => set({ perfil: v })} options={OPCIONES_PERFIL} />
         {p.perfil === "otro" && (
           <TextField label="¿Cuál es tu perfil?" value={p.perfilOtro} onChange={(v) => set({ perfilOtro: v })} />

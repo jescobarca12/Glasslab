@@ -268,7 +268,9 @@ async function run(): Promise<void> {
   } else {
     await check("el diagnóstico guarda las dos capas, el interés y la calificación", async () => {
       const { status, body } = await post("/diagnoses", {
-        persona: { nombre: "Verificación", correo: CORREO, perfil: "arquitecto" },
+        // Ciudades distintas a propósito: se especifica desde una y se construye
+        // en otra, y el panel necesita las dos.
+        persona: { nombre: "Verificación", correo: CORREO, perfil: "arquitecto", ciudad: "bogota" },
         proyecto: { nombre: "Caso de prueba", ciudadId: "barranquilla", etapa: "construccion" },
         aplicacion: "baranda", aplicacionUI: "baranda",
         necesidades: ["seguridad"], necesidadesUI: ["seguridad"],
@@ -283,11 +285,13 @@ async function run(): Promise<void> {
       const { rows } = await pool.query(
         `SELECT application_ui, needs_ui, sustainability_interest, lead_score, lead_category,
                 user_position, estimated_date, requests_advisory, request_commercial_contact,
-                app_area, app_area_total
+                app_area, app_area_total, user_city, project_city
            FROM diagnoses WHERE lead_id = $1`, [leadId],
       );
       const d = rows[0];
       igual(d.application_ui, "baranda", "etiqueta elegida");
+      igual(d.user_city, "Bogotá", "ciudad de la persona");
+      igual(d.project_city, "Barranquilla", "ciudad del proyecto");
       igual(d.needs_ui.join(), "seguridad", "necesidades elegidas");
       igual(d.sustainability_interest, "LEED", "certificación");
       igual(d.user_position, "Jefe", "cargo");

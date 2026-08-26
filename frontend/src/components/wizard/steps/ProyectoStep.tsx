@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { useBorrador } from "../../../state/BorradorContext";
+import { useUsuario } from "../../../state/UsuarioContext";
 import { useLabel } from "../../../state/LabelsContext";
 import type { City } from "../../../api/types";
 import { SelectField, TextField } from "../../ui/Fields";
@@ -12,9 +14,18 @@ const ETAPAS = [
 
 export function ProyectoStep({ cities }: { cities: City[] }) {
   const { borrador, setProyectoInfo } = useBorrador();
+  const { usuario } = useUsuario();
   const label = useLabel();
   const info = borrador.proyecto;
   const ciudad = cities.find((c) => c.code === info.ciudadId);
+
+  // La ciudad del registro entra como propuesta y se puede cambiar: lo más común
+  // es especificar donde uno está, pero la obra puede estar en otra parte.
+  const ciudadPersona = usuario?.ciudad ?? "";
+  useEffect(() => {
+    if (info.ciudadId === "" && ciudadPersona !== "") setProyectoInfo({ ciudadId: ciudadPersona });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ciudadPersona]);
 
   return (
     <>

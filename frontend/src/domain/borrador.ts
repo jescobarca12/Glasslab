@@ -14,6 +14,12 @@ export interface Persona {
   nombre: string;
   correo: string;
   telefono: string;
+  /**
+   * Ciudad de la persona, que no siempre es la del proyecto: un especificador
+   * de Bogotá puede estar resolviendo una fachada en Barranquilla. Se piden por
+   * separado porque una habla del contacto y la otra del clima y el sismo.
+   */
+  ciudad: string;
   perfil: string;
   /** Texto libre cuando el perfil elegido es "otro". */
   perfilOtro: string;
@@ -21,7 +27,7 @@ export interface Persona {
 }
 
 export function personaInicial(): Persona {
-  return { nombre: "", correo: "", telefono: "", perfil: "", perfilOtro: "", autorizacion: false };
+  return { nombre: "", correo: "", telefono: "", ciudad: "", perfil: "", perfilOtro: "", autorizacion: false };
 }
 
 export interface ProyectoInfo {
@@ -107,7 +113,9 @@ export function aBodyBackend(b: Borrador, persona: Persona): Record<string, unkn
   return {
     persona: {
       nombre: persona.nombre, correo: persona.correo, telefono: persona.telefono,
-      ciudad: b.proyecto.ciudadId,
+      // La sesión de quien se registró antes de que se pidiera la ciudad no la
+      // trae: en ese caso sigue valiendo la del proyecto.
+      ciudad: persona.ciudad || b.proyecto.ciudadId,
       // Se guarda el id del perfil (agrupable en el panel) salvo cuando la
       // persona eligió "otro" y escribió el suyo.
       perfil: persona.perfil === "otro" && persona.perfilOtro.trim()
