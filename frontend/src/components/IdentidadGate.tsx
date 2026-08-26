@@ -12,6 +12,8 @@ const OPCIONES_PERFIL = PERFILES.map((p) => ({ value: p.id, label: p.label }));
 
 const SEGUNDOS_REENVIO = 60;
 
+const CORREO_VALIDO = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
+
 type Inicio =
   | { modo: "sesion"; token: string }
   | { modo: "codigo"; envio: RequestCodeResponse };
@@ -34,21 +36,54 @@ async function iniciarIdentificacion(correo: string, nombre: string): Promise<In
   }
 }
 
+type Regreso = { estado: "ok"; token: string } | { estado: "no_registrado" };
+
+/**
+ * Regreso de quien ya se registró antes: basta el correo.
+ *
+ * Los datos viven en el navegador, así que quien vuelve desde otro equipo —o
+ * después de limpiarlo— se encontraba con el formulario completo otra vez. Aquí
+ * solo se comprueba que el correo esté verificado; si no lo está, se dice y se
+ * ofrece el registro, en vez de mandar un código a un desconocido.
+ */
+async function reingresar(correo: string): Promise<Regreso> {
+  try {
+    const { token } = await startEmailSession(correo);
+    return { estado: "ok", token };
+  } catch (err) {
+    if (err instanceof ApiError && err.code === "EmailNotVerified") return { estado: "no_registrado" };
+    throw err;
+  }
+}
+
+/** Aviso constante: el correo automático es el que más cae en la bandeja equivocada. */
+function AvisoSpam({ que }: { que: string }) {
+  return (
+    <p className="hint">
+      ¿No lo ves? Revisa tu carpeta de <strong>correo no deseado</strong> o <strong>spam</strong>:
+      {" "}{que} llega a nombre de <strong>VITELSA GlassLab</strong>. Si lo encuentras ahí, marca el
+      mensaje como “No es spam” para que los siguientes te lleguen a la bandeja de entrada.
+    </p>
+  );
+}
+
 export function IdentidadGate() {
   const { login } = useUsuario();
   const [p, setP] = useState<Persona>(personaInicial);
-  const [paso, setPaso] = useState<"datos" | "codigo">("datos");
+  const [paso, setPaso] = useState<"datos" | "volver" | "codigo">("datos");
   const [envio, setEnvio] = useState<RequestCodeResponse | null>(null);
   const [codigo, setCodigo] = useState("");
   const [esperaReenvio, setEsperaReenvio] = useState(0);
 
   const inicio = useAsync(iniciarIdentificacion);
+  const regreso = useAsync(reingresar);
   const reenvio = useAsync(requestEmailCode);
   const verificacion = useAsync(verifyEmailCode);
 
   const set = (patch: Partial<Persona>) => setP((prev) => ({ ...prev, ...patch }));
   const correo = p.correo.trim().toLowerCase();
-  const datosValidos = p.nombre.trim() !== "" && /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(correo) && p.autorizacion;
+  const correoValido = CORREO_VALIDO.test(correo);
+  const datosValidos = p.nombre.trim() !== "" && correoValido && p.autorizacion;
 
   // Cuenta regresiva para habilitar el reenvío del código.
   useEffect(() => {
@@ -73,6 +108,13 @@ export function IdentidadGate() {
       return;
     }
     pasarAPasoCodigo(res.envio);
+  }
+
+  async function volverAEntrar() {
+    const res = await regreso.run(correo);
+    if (!res || res.estado !== "ok") return;
+    trackEvent("user_registered", { perfil: p.perfil, verificacion: "regreso" });
+    login(p, res.token);
   }
 
   async function reenviarCodigo() {
@@ -114,6 +156,8 @@ export function IdentidadGate() {
           />
         </div>
 
+        <AvisoSpam que="el código" />
+
         {verificacion.error && <div className="error-box">{verificacion.error}</div>}
         {reenvio.error && <div className="error-box">{reenvio.error}</div>}
 
@@ -144,6 +188,52 @@ export function IdentidadGate() {
     );
   }
 
+  if (paso === "volver") {
+    const noRegistrado = regreso.data?.estado === "no_registrado";
+    return (
+      <div className="card">
+        <h1>Vuelve a entrar</h1>
+        <p className="lead">
+          Escribe el correo con el que te registraste. Si ya lo confirmaste alguna vez, entras
+          directo: no hace falta repetir tus datos ni pedir otro código.
+        </p>
+
+        <div style={{ maxWidth: 380 }}>
+          <TextField
+            label="Correo" type="email" value={p.correo}
+            onChange={(v) => set({ correo: v })}
+          />
+        </div>
+
+        {noRegistrado && (
+          <div className="callout warn" style={{ marginTop: 12 }}>
+            No encontramos <strong>{correo}</strong> entre los correos confirmados. Puede ser otro
+            correo el que usaste, o que aún no hayas completado el registro.
+            <div className="btn-row" style={{ justifyContent: "flex-start", marginBottom: 0 }}>
+              <button type="button" className="btn" onClick={() => setPaso("datos")}>
+                Registrarme con este correo →
+              </button>
+            </div>
+          </div>
+        )}
+        {regreso.error && <div className="error-box">{regreso.error}</div>}
+
+        <div className="btn-row" style={{ justifyContent: "space-between" }}>
+          <button type="button" className="btn" onClick={() => setPaso("datos")}>
+            ← Es mi primera vez
+          </button>
+          <button
+            type="button" className="btn btn-primary"
+            disabled={!correoValido || regreso.loading}
+            onClick={volverAEntrar}
+          >
+            {regreso.loading ? "Comprobando…" : "Entrar →"}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="card">
       <h1>Bienvenido a VITELSA GlassLab</h1>
@@ -167,7 +257,12 @@ export function IdentidadGate() {
         onChange={(v) => set({ autorizacion: v })}
       />
       {inicio.error && <div className="error-box">{inicio.error}</div>}
-      <div className="btn-row" style={{ justifyContent: "flex-end" }}>
+      <div className="btn-row" style={{ justifyContent: "space-between" }}>
+        {/* Quien vuelve desde otro equipo no debería recorrer el formulario otra
+            vez: sus datos ya están, solo falta decir quién es. */}
+        <button type="button" className="btn" onClick={() => setPaso("volver")}>
+          Ya estoy registrado
+        </button>
         <button
           type="button"
           className="btn btn-primary"

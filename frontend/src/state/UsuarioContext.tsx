@@ -10,6 +10,8 @@ interface UsuarioContextValue {
   /** Token emitido por el backend al verificar el correo con el código OTP. */
   emailToken: string | null;
   login: (persona: Persona, emailToken: string) => void;
+  /** Completa datos de la persona ya identificada, sin tocar la sesión. */
+  actualizarUsuario: (patch: Partial<Persona>) => void;
   logout: () => void;
 }
 
@@ -43,6 +45,17 @@ export function UsuarioProvider({ children }: { children: ReactNode }) {
     setSesion({ usuario: normalizada, emailToken });
   }, []);
 
+  // Quien vuelve solo con el correo entra sin nombre ni perfil: el asistente
+  // los pide donde hacen falta y se guardan aquí, para no volver a preguntarlos.
+  const actualizarUsuario = useCallback((patch: Partial<Persona>) => {
+    setSesion((s) => {
+      if (!s.usuario) return s;
+      const usuario: Persona = { ...s.usuario, ...patch };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(usuario));
+      return { ...s, usuario };
+    });
+  }, []);
+
   const logout = useCallback(() => {
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(EMAIL_KEY);
@@ -51,8 +64,8 @@ export function UsuarioProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ usuario: sesion.usuario, emailToken: sesion.emailToken, login, logout }),
-    [sesion, login, logout],
+    () => ({ usuario: sesion.usuario, emailToken: sesion.emailToken, login, actualizarUsuario, logout }),
+    [sesion, login, actualizarUsuario, logout],
   );
   return <UsuarioContext.Provider value={value}>{children}</UsuarioContext.Provider>;
 }

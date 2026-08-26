@@ -12,14 +12,19 @@ import { CheckField, TextField } from "../../ui/Fields";
  */
 export function ConfirmacionStep() {
   const { borrador, setConfirmacion, retoActivo, reset } = useBorrador();
-  const { usuario } = useUsuario();
+  const { usuario, actualizarUsuario } = useUsuario();
   const guardar = useAsync(createDiagnosis);
   const informe = useAsync(descargarInforme);
 
   const persona = usuario!; // garantizado: el gate exige identificarse antes del asistente
   const c = borrador.confirmacion;
 
+  // Quien volvió solo con su correo entró sin nombre: es el único momento en que
+  // hace falta, porque es el que firma el informe y el que ve el asesor.
+  const faltaNombre = persona.nombre.trim() === "";
+
   const enviar = async (): Promise<void> => {
+    if (faltaNombre) return;
     const creado = await guardar.run(aBodyBackend(borrador, persona));
     if (!creado) return;
 
@@ -63,9 +68,16 @@ export function ConfirmacionStep() {
             guardada y un asesor podrá contactarte.
           </div>
         ) : (
-          <p className="hint" style={{ marginTop: 10 }}>
-            Te enviamos una copia a {persona.correo}.
-          </p>
+          <>
+            <p className="hint" style={{ marginTop: 10 }}>
+              Te enviamos una copia a {persona.correo}.
+            </p>
+            <p className="hint">
+              ¿No la ves? Revisa tu carpeta de <strong>correo no deseado</strong> o{" "}
+              <strong>spam</strong>: llega a nombre de <strong>VITELSA GlassLab</strong>. También
+              puedes descargar el informe aquí mismo.
+            </p>
+          </>
         )}
         {c.solicitaAsesoria && (
           <p className="hint">Un asesor técnico de VITELSA te contactará para avanzar con la especificación.</p>
@@ -95,6 +107,12 @@ export function ConfirmacionStep() {
       </p>
 
       <div className="grid-2">
+        {faltaNombre && (
+          <TextField
+            label="Nombre" hint="obligatorio" value={persona.nombre}
+            onChange={(v) => actualizarUsuario({ nombre: v })}
+          />
+        )}
         <TextField label="Empresa" hint="opcional" value={c.empresa} onChange={(v) => setConfirmacion({ empresa: v })} />
         <TextField label="Cargo" hint="opcional" value={c.cargo} onChange={(v) => setConfirmacion({ cargo: v })} />
         <TextField
@@ -117,12 +135,13 @@ export function ConfirmacionStep() {
       {c.fechaEstimada === "" && (
         <p className="hint">Indica la fecha estimada para poder enviar el diagnóstico.</p>
       )}
+      {faltaNombre && <p className="hint">Escribe tu nombre para poder enviar el diagnóstico.</p>}
       {guardar.error && <div className="error-box" style={{ marginTop: 10 }}>{guardar.error}</div>}
 
       <div className="btn-row" style={{ justifyContent: "flex-end" }}>
         <button
           type="button" className="btn btn-primary"
-          disabled={guardar.loading || c.fechaEstimada === ""}
+          disabled={guardar.loading || c.fechaEstimada === "" || faltaNombre}
           onClick={() => void enviar()}
         >
           {guardar.loading ? "Enviando…" : "Enviar mi diagnóstico →"}

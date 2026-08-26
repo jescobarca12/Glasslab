@@ -25,7 +25,9 @@ function UsuarioChip() {
   if (!usuario) return null;
   return (
     <div className="user-chip">
-      <span title={usuario.correo}>👤 {usuario.nombre}</span>
+      {/* Quien vuelve solo con el correo entra sin nombre: se muestra el correo,
+          que es lo que la identifica hasta que lo escriba. */}
+      <span title={usuario.correo}>👤 {usuario.nombre.trim() || usuario.correo}</span>
       <button type="button" className="btn btn-ghost btn-sm" onClick={logout}>Cerrar sesión</button>
     </div>
   );
