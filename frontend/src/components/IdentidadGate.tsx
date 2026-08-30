@@ -4,7 +4,9 @@ import { useUsuario } from "../state/UsuarioContext";
 import { useAsync } from "../hooks/useAsync";
 import { useFetch } from "../hooks/useFetch";
 import { ApiError } from "../api/client";
-import { getCities, requestEmailCode, startEmailSession, trackEvent, verifyEmailCode } from "../api/endpoints";
+import {
+  getCities, requestEmailCode, saveUserProfile, startEmailSession, trackEvent, verifyEmailCode,
+} from "../api/endpoints";
 import type { RequestCodeResponse } from "../api/types";
 import { PERFILES } from "../domain/catalogoUI";
 import { CheckField, SelectField, TextField } from "./ui/Fields";
@@ -68,6 +70,25 @@ function AvisoSpam({ que }: { que: string }) {
   );
 }
 
+/**
+ * Deja el perfil en el servidor además de en este navegador.
+ *
+ * El panel solo veía a quien terminaba un diagnóstico; quien entraba, miraba y
+ * se iba no existía para VITELSA. Es informativo: si falla, la persona entra
+ * igual, y el correo verificado ya la deja registrada de todos modos.
+ */
+function guardarPerfil(p: Persona, correo: string): void {
+  void saveUserProfile({
+    correo,
+    nombre: p.nombre.trim(),
+    telefono: p.telefono.trim(),
+    ciudad: p.ciudad,
+    perfil: p.perfil,
+    perfilOtro: p.perfilOtro.trim(),
+    autorizacion: p.autorizacion,
+  }).catch(() => { /* el registro del perfil nunca bloquea la entrada */ });
+}
+
 export function IdentidadGate() {
   const { login } = useUsuario();
   const [p, setP] = useState<Persona>(personaInicial);
@@ -106,6 +127,7 @@ export function IdentidadGate() {
     if (!res) return;
     if (res.modo === "sesion") {
       trackEvent("user_registered", { perfil: p.perfil, verificacion: "sesion" });
+      guardarPerfil(p, correo);
       login(p, res.token);
       return;
     }
@@ -129,6 +151,7 @@ export function IdentidadGate() {
     if (!res) return;
     trackEvent("email_verified", {});
     trackEvent("user_registered", { perfil: p.perfil, verificacion: "codigo" });
+    guardarPerfil(p, correo);
     login(p, res.token);
   }
 

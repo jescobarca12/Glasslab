@@ -9,6 +9,7 @@ import * as labels from "../controllers/labelsController";
 import * as rulesAdmin from "../controllers/rulesAdminController";
 import * as citiesAdmin from "../controllers/citiesAdminController";
 import * as emailVerification from "../controllers/emailVerificationController";
+import * as users from "../controllers/usersController";
 import * as analytics from "../controllers/analyticsController";
 import * as advisory from "../controllers/advisoryController";
 import * as challengeQuiz from "../controllers/challengeQuizController";
@@ -39,6 +40,9 @@ apiRouter.post("/auth/email/request-code", asyncHandler(emailVerification.reques
 apiRouter.post("/auth/email/verify", asyncHandler(emailVerification.verify));
 apiRouter.post("/auth/email/session", asyncHandler(emailVerification.startSession));
 apiRouter.get("/auth/email/status", asyncHandler(emailVerification.status));
+
+// --- Perfil del usuario del asistente (lo guarda el registro) ---
+apiRouter.post("/users/profile", asyncHandler(users.saveProfile));
 
 // --- Diagnósticos / motor de reglas ---
 apiRouter.post("/diagnoses/evaluate", asyncHandler(diagnosis.evaluate));
@@ -72,6 +76,8 @@ apiRouter.get("/admin/leads.csv", requireAuth, asyncHandler(admin.exportLeadsCsv
 apiRouter.get("/admin/leads", requireAuth, asyncHandler(admin.listLeads));
 apiRouter.get("/admin/leads/:leadId", requireAuth, asyncHandler(admin.getLead));
 apiRouter.get("/admin/advisory-requests", requireAuth, asyncHandler(advisory.list));
+apiRouter.get("/admin/users.csv", requireAuth, asyncHandler(users.exportUsersCsv));
+apiRouter.get("/admin/users", requireAuth, asyncHandler(users.listUsers));
 
 // Tableros de lectura: los abren admin y viewer, como los leads.
 apiRouter.get("/admin/analytics/marketing", requireAuth, asyncHandler(analytics.marketing));

@@ -7,6 +7,7 @@ import type {
   CertificationSummary, LabTopic, MarketingSummary,
   AdvisoryListResult, AdvisoryRequestBody, AdvisoryRow, Quiz, QuizResult,
   CiudadConRetos, ProgresoCiudad, ResultadoReto, RetoCiudadResumen, RetoQuiz,
+  UserListResult, UserProfileBody,
 } from "./types";
 
 export const getCities = (): Promise<City[]> => api.get("/cities");
@@ -60,6 +61,13 @@ export const startEmailSession = (correo: string): Promise<EmailSessionResponse>
 export const getEmailStatus = (correo: string): Promise<EmailStatusResponse> =>
   api.get(`/auth/email/status?correo=${encodeURIComponent(correo)}`);
 
+/**
+ * Guarda en el servidor el perfil de quien se acaba de identificar, para que el
+ * panel vea a todo el que se registra y no solo a quien termina un diagnóstico.
+ */
+export const saveUserProfile = (perfil: UserProfileBody): Promise<void> =>
+  api.post("/users/profile", perfil);
+
 export const evaluateDiagnosis = (body: unknown): Promise<EvaluateResponse> =>
   api.post("/diagnoses/evaluate", body);
 export const createDiagnosis = (body: unknown): Promise<CreatedDiagnosis> =>
@@ -92,6 +100,9 @@ export const adminGetLead = (token: string, leadId: string): Promise<LeadDetail>
 export const adminListAdvisory = (token: string, limit = 25, offset = 0): Promise<AdvisoryListResult> =>
   api.authGet(`/admin/advisory-requests?limit=${limit}&offset=${offset}`, token);
 
+export const adminListUsers = (token: string, limit = 25, offset = 0): Promise<UserListResult> =>
+  api.authGet(`/admin/users?limit=${limit}&offset=${offset}`, token);
+
 export const adminGetMarketing = (token: string): Promise<MarketingSummary> =>
   api.authGet("/admin/analytics/marketing", token);
 export const adminGetCertifications = (token: string): Promise<CertificationSummary> =>
@@ -119,6 +130,13 @@ export const adminUpdateCity = (token: string, code: string, payload: CityUpdate
 /** Descarga el CSV de leads como Blob (endpoint protegido, requiere cabecera Bearer). */
 export async function adminExportLeadsCsv(token: string): Promise<Blob> {
   const res = await fetch("/api/admin/leads.csv", { headers: { Authorization: `Bearer ${token}` } });
+  if (res.status === 401) emitUnauthorized();
+  if (!res.ok) throw new ApiError(res.status, "ExportError", "No se pudo exportar el CSV.");
+  return res.blob();
+}
+
+export async function adminExportUsersCsv(token: string): Promise<Blob> {
+  const res = await fetch("/api/admin/users.csv", { headers: { Authorization: `Bearer ${token}` } });
   if (res.status === 401) emitUnauthorized();
   if (!res.ok) throw new ApiError(res.status, "ExportError", "No se pudo exportar el CSV.");
   return res.blob();

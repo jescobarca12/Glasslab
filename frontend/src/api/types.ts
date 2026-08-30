@@ -397,6 +397,42 @@ export interface AdvisoryRow {
   attended: boolean;
 }
 
+// --- Usuarios registrados en el asistente ---
+
+/** Perfil que el asistente envía al identificarse. */
+export interface UserProfileBody {
+  correo: string;
+  nombre: string;
+  telefono: string;
+  ciudad: string;
+  perfil: string;
+  perfilOtro: string;
+  autorizacion: boolean;
+}
+
+export interface RegisteredUser {
+  email: string;
+  nombre: string | null;
+  telefono: string | null;
+  /** Code de la ciudad; `ciudadNombre` es la versión legible. */
+  ciudad: string | null;
+  ciudadNombre: string | null;
+  perfil: string | null;
+  perfilOtro: string | null;
+  /** null cuando el consentimiento no consta (registros anteriores). */
+  autorizacion: boolean | null;
+  registradoEn: string;
+  actualizadoEn: string | null;
+  diagnosticos: number;
+  asesorias: number;
+  ultimoDiagnostico: string | null;
+}
+
+export interface UserListResult {
+  items: RegisteredUser[];
+  total: number;
+}
+
 export interface AdvisoryListResult {
   items: AdvisoryRow[];
   total: number;
